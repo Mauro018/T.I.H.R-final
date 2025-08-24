@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %} | Tu Idea Hecha Realidad</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Productos/css/styles1.css' %}">
+</head>
+<body>
+    {% block content %}{% endblock %}
+    
+{% block header %}
+
+    <header>
+        <h1 style="text-align: center;" class="div">
+            <img src="{% static 'Productos/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
+            ¡Gangazos!
+        </h1>
+        <p class="subtitulo">Descuentos especiales por tiempo limitado.</p>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home2' %}">Inicio</a></li>
+                <li><a href="{% url 'home3' %}">Gangazos</a></li>
+                <li><a href="{% url 'about' %}">Sobre Gangazos y Reglas</a></li>
+                <li><a href="{% url 'productos' %}">Productos en Oferta</a></li>
+                <li><a href="{% url 'contact' %}">Contactenos</a></li>
+                <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+{% endblock %}
+
+<section>
+    <div>
+        <h2>CARPINTERIA</h2>
+        <main>
+            <div>
+                <div>
+                    <div>
+                        <div>
+                            <div>
+                                <h3>Sillas:</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contenedor-articulos" id="contenedorArticulos">
+                        <div class="articulo">
+                            <img src="{% static 'Productos/img/Sillas copy.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <h3>Silla de terraza</h3>
+                                <p>Ahora esta a $120.000</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <img src="{% static 'Productos/img/Sillas 2.jpg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <h3>Silla adirondack</h3>
+                                <p>Ahora esta a $140.000</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <img src="{% static 'Productos/img/Sillas 3 copy.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <h3>Silla de comedor</h3>
+                                <p>Ahora esta a $160.000</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</section>
+
+    <footer>
+        <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+    </footer>
+    </body>
+</html>

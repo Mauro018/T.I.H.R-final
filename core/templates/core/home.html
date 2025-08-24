@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %} | ¡Oferta Exclusiva!</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+{% block header %}
+
+    <header>
+        <h1 style="text-align: center;" class="div">
+            <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
+            Gangazos
+        </h1>
+        <p class="subtitulo">Descuento especial por tiempo limitado.</p>
+        <nav>
+            <br>
+            <ul>
+                <li><a href="{% url 'home' %}">Inicio</a></li>
+                <li><a href="{% url 'reglas' %}">Sobre Gangazos y Reglas</a></li>
+                <li><a href="{% url 'productos2' %}">Productos en Oferta</a></li>
+                <li><a href="{% url 'contactenos' %}">Contactenos</a></li>
+                <br>
+                <ul>
+                    <br><li class="right-aligned-button"><a href="{% url 'login' %}">Iniciar sesión</a></li>
+                    <li class="right-aligned-button"><a href="{% url 'registro' %}">Registro</a></li>
+                </ul>
+            </ul>
+            <br>
+        </nav>
+    </header>
+
+{% endblock %}
+
+    <section>
+        <div>
+            <h2>¡Gangazos! DISFRUTA BUENOS PRODUCTOS EN OFERTA Y DE BUENA CALIDAD.</h2>
+            <P>Disfruta de nuevos productos y en oferta que puedes que puedes llevar a buen precio 
+                y de buena calidad, donde apollas a personas y empresas que se dedican a hacer estos productos a base 
+                de ideas por los usuarios de nuestra plataforma. ¡Disfruta de nuestros productos en oferta!</P>
+        </div>
+        <div>
+            <h2>Carpinteria</h2>
+            <p>En Tu Idea Hecha Realidad, diseñamos y creamos productos únicos, adaptados a tus necesidades y gustos. Trabajamos con la carpinteria 
+                para hacer diseños unicos en nuestras subcategorias a base de las ideas de nuestros usuarios y clientes, trabajamos en compañia de la 
+                empresa <b>""""""""""</b> para garanrizar diseños de alta calidad y originalidad.</p>
+            <p>Siguiendo al pie de la letra la idea de nuestros clientes y teniendo en sus necesidades para la realizacion del producto, diseñamos de 
+                acuerdo con las reglas de usuario para la creacion de las ideas para garantizar su seguridad y la nuestra.</p>
+        </div>
+        <div class="contenedor-articulos" id="contenedorArticulos">
+        <div class="contenedor-articulos" id="contenedorArticulos">
+        <div class="articulo">
+            <img src="{% static 'core/img/Cat carpintería.jpeg' %}" alt="Imagen del Producto 1">
+            <div class="contenido-articulo">
+                <h3>MESAS</h3>
+                <p>Creacion de mesas a medida para la cultura, con un diseño elegante y moderno, diseñados a partir de sus ideas y gustos, 
+                    manteniendo la simplicidad y la elegancia de estas mesas.</p>
+            </div>
+        </div>
+
+        <div class="articulo">
+            <img src="{% static 'core/img/Sillas.jpeg' %}" alt="Imagen del Producto 2"> 
+            <div class="contenido-articulo">
+                <h3>SILLAS</h3>
+                <p>Creacion de sillas a medida para la cultura, con un diseño elegante y moderno, diseñados a partir de sus ideas y gustos, 
+                    manteniendo la simplicidad y la elegancia de estas sillas.</p>
+            </div>
+        </div>
+
+        <div class="articulo">
+            <img src="{% static 'core/img/Armario.jpeg' %}" alt="Imagen del Producto 3">
+            <div class="contenido-articulo">
+                <h3>ARMARIOS</h3>
+                <p>Creacion de armarios a medida para la cultura, con un diseño elegante y moderno, diseñados a partir de sus ideas y gustos, 
+                    manteniendo la simplicidad y la elegancia de estas armarios.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalDetalle" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+            <h2 id="modalTitulo"></h2>
+            <img id="modalImagen" src="" alt="Imagen del Producto" style="width:100%; height:auto; max-height: 350px; object-fit: contain; margin-bottom: 15px;">
+            <p id="modalDescripcion"></p>
+            <div id="modalPrecio" style="font-size: 1.5em; font-weight: bold; color: #28a745; margin-top: 10px;"></div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+
+    <section>
+        <div>
+            <h2>¿Por qué aprovechar los diferentes gangazos?</h2>
+            <p>Aprovechar los gangazos no solo es una excelente manera de comprar de forma inteligente, 
+                sino también una oportunidad de maximizar el valor de cada peso que inviertes. Aquí te explicamos por qué:</p>
+            <ul>
+                <li><p><b>Beneficio 1: Ahorra dinero.</b></p>
+                <li><p>Los gangazos te permiten acceder a productos y servicios a precios reducidos sin sacrificar la calidad. 
+                    Esto significa que puedes cuidar tu presupuesto, comprar más por menos y destinar tus ahorros a otras prioridades 
+                    o gustos personales. Ideal para quienes quieren cuidar su economía sin dejar de disfrutar de lo mejor.</p></li>
+                </li>
+                <li><p><b>Beneficio 2: Obtén calidad superior.</b></p>
+                <li><p>Muchas ofertas especiales incluyen artículos de alta gama o con excelente reputación en el mercado. Al aprovechar 
+                    estos descuentos, puedes llevarte a casa productos de gran calidad que quizás no adquirirías a precio completo. Es la 
+                    oportunidad perfecta para elevar tus estándares sin elevar tus gastos.</p></li>
+                </li>
+                <li><p><b>Beneficio 3: Disfruta de características exclusivas.</b></p>
+                <li><p>Algunos gangazos incluyen ediciones limitadas, productos con diseños únicos o servicios con beneficios adicionales 
+                    que normalmente no están disponibles. Esto te permite disfrutar de una experiencia más personalizada y especial, 
+                    diferenciándote con artículos o servicios únicos y de alto valor.</p></li>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <div>
+            <h2></h2>
+        </div>
+    </section>
+    <section>
+        <div class=".div">
+            <h2>¡Actúa ahora!</h2>
+            <p>La oferta termina pronto. ¡No esperes más!</p>
+            <img class="div" src="{% static 'core/img/Descuento.jfif' %}" alt="Descuentos" height="400" width="400">
+        </div>
+        <br>
+        <br>
+        <p>Para saber mas sobre nuestros productos, registrate o inicia sesión.</p>
+    </section>
+
+    <section class="comments-section">
+  <div class="container">
+    <h2 class="text-center mb-4">Comentarios de nuestros clientes</h2>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="comment-box p-4 mb-3 border rounded">
+          <h5>Laura G.</h5>
+          <p>Los productos son de excelente calidad y el servicio al cliente es inmejorable. ¡Definitivamente volveré a comprar!</p>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="comment-box p-4 mb-3 border rounded">
+          <h5>Carlos S.</h5>
+          <p>Me encanta el enfoque sostenible de la empresa. Es genial poder comprar productos de alta calidad sabiendo que también cuidan el medio ambiente.</p>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="comment-box p-4 mb-3 border rounded">
+          <h5>Ana M.</h5>
+          <p>El envío fue muy rápido y los productos llegaron en perfectas condiciones. ¡Muy satisfecha con mi compra!</p>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="comment-box p-4 mb-3 border rounded">
+          <h5>Juan P.</h5>
+          <p>La variedad de productos es excelente y los precios son muy competitivos. Recomiendo esta tienda a todos mis amigos y familiares.</p>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="comment-box p-4 mb-3 border rounded">
+          <h5>Sofía R.</h5>
+          <p>Tenía una duda sobre un producto y el equipo de soporte me ayudó de manera muy eficiente y amable. ¡Gran experiencia de compra!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <footer>
+        <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+    </footer>
+
+
+
+    </body>
+</html>-

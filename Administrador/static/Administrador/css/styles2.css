@@ -1,0 +1,145 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f7fa;
+}
+
+.dashboard-container {
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+aside {
+    background-color: #2b3e50;
+    color: #e0e6ec;
+    padding: 2rem 1.5rem; 
+    border-top-right-radius: 1rem; 
+    border-bottom-right-radius: 1rem; 
+    box-shadow: 6px 0 15px rgba(0, 0, 0, 0.1); 
+    display: flex;
+    flex-direction: column;
+    width: 18rem; 
+    transition: width 0.3s ease; 
+}
+
+aside h2 {
+    font-size: 1.875rem;
+    font-weight: 700; 
+    margin-bottom: 2.5rem; 
+    color: #8bbcdc; 
+    letter-spacing: -0.025em; 
+}
+
+aside nav ul li {
+    margin-bottom: 1.25rem; 
+}
+
+aside nav ul li a {
+    display: flex; 
+    align-items: center;
+    padding: 0.875rem 1.25rem; 
+    border-radius: 0.625rem; 
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    color: #e0e6ec;
+    text-decoration: none; 
+    font-weight: 500; 
+}
+
+aside nav ul li a:hover {
+    background-color: #3b5266;
+    color: #ffffff;
+    transform: translateX(5px); 
+}
+
+.logout-button {
+    display: block;
+    width: 80%;
+    text-align: center;
+    padding: 0.875rem 1.25rem;
+    background-color: #e76f51; 
+    color: white;
+    font-weight: 600;
+    border-radius: 0.625rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: auto; 
+    box-shadow: 0 4px 10px rgba(231, 111, 81, 0.3); 
+}
+
+.logout-button:hover {
+    background-color: #e05e40; 
+    transform: translateY(-2px); 
+}
+
+main {
+    flex-grow: 1;
+    padding: 2.5rem; 
+    overflow-y: auto; 
+}
+
+main header {
+    margin-bottom: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e0e6ec; 
+}
+
+main h1 {
+    font-size: 2.5rem; 
+    font-weight: 700;
+    color: #334e68; 
+    letter-spacing: -0.03em;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 2rem; 
+}
+
+.card {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem; 
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+}
+
+.card:hover {
+    transform: translateY(-8px) scale(1.01); 
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); 
+}
+
+.card h3 {
+    font-size: 1.5rem; 
+    font-weight: 600;
+    color: #334e68;
+    margin-bottom: 1rem;
+}
+
+.card p {
+    color: #627d98; 
+    margin-bottom: 1.5rem;
+    line-height: 1.6; 
+}
+
+.card button {
+    background-color: #5d9cec; 
+    color: white;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem; 
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    align-self: flex-start;
+    box-shadow: 0 4px 10px rgba(93, 156, 236, 0.3); 
+}
+
+.card button:hover {
+    background-color: #4a8ad8; 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(93, 156, 236, 0.4);
+}

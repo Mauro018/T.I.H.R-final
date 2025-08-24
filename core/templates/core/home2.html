@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %} | ¡Oferta Exclusiva!</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+{% block header %}
+
+    <header>
+        <h1 style="text-align: center;" class="div">
+            <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
+            Tu Idea Hecha Realidad
+        </h1>
+        <br>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home2' %}">Inicio</a></li>
+                <li><a href="{% url 'home3' %}">Gangazos</a></li>
+                <li><a href="{% url 'idea' %}">Crear Idea</a></li>
+                <li><a href="{% url 'about' %}">Reglas</a></li>
+                <li><a href="{% url 'portafolio' %}">Categorias</a></li>
+                <li><a href="{% url 'carrito' %}">Carrito</a></li>
+                <li><a href="{% url 'contact' %}">Contactenos</a></li>
+                <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+{% endblock %}
+
+    <section>
+        <div>
+            <h2>Qué Hacemos</h2>
+            <p>En "Tu Idea Hecha Realidad", te ofrecemos la posibilidad de diseñar y crear productos únicos, adaptados a tus necesidades y gustos.  Desde el concepto inicial hasta la producción final, te acompañamos en cada paso del proceso para garantizar que el resultado supere tus expectativas.  Trabajamos con diversos materiales y técnicas para hacer realidad cualquier idea que tengas.</p>
+        </div>
+        <div>
+            <h2>Misión</h2>
+            <p>Nuestra misión es transformar tus ideas en productos tangibles y personalizados, impulsando la creatividad y la innovación.</p>
+            <img class ="div" src="{% static 'core/img/pixlr-image-generator-5049adc0-a6bb-4ab8-b7c2-f52726a9611f.png' %}" width="300" height="300">
+        </div>
+        <div>
+            <h2>Visión</h2>
+            <p>Ser la plataforma líder en la creación de productos personalizados, reconocida por la calidad, la originalidad y la satisfacción del cliente.</p>
+            <img class="div" src="{% static 'core/img/pixlr-image-generator-62c93141-82e3-46c2-8f04-59972acd7f41.png' %}" width="300" height="300">
+        </div>
+    </section>
+
+    <section>
+        <div>
+            <h2></h2>
+        </div>
+    </section>
+    <section>
+        <div>
+            <h2>¡Tu idea hecha realidad! DISFRUTA BUENOS PRODUCTOS Y DE BUENA CALIDAD.</h2>
+            <P>Disfruta de nuevos productos que puedes hechos a mano y con buena calidad hechos por ti mismo, y pudes comprar ideas hechas 
+                por los usuarios de nuestra plataforma. ¡Disfruta de nuestros productos!</P>
+        </div>
+        <div>
+            <h2>Carpinteria</h2>
+            <p>En Tu Idea Hecha Realidad, diseñamos y creamos productos únicos, adaptados a tus necesidades y gustos. Trabajamos con la carpinteria 
+                para hacer diseños unicos en nuestras subcategorias a base de las ideas de nuestros usuarios y clientes, trabajamos en compañia de la 
+                empresa <b>""""""""""</b> para garanrizar diseños de alta calidad y originalidad.</p>
+            <p>Siguiendo al pie de la letra la idea de nuestros clientes y teniendo en sus necesidades para la realizacion del producto, diseñamos de 
+                acuerdo con las reglas de usuario para la creacion de las ideas para garantizar su seguridad y la nuestra.</p>
+        </div>
+        <div class="contenedor-articulos" id="contenedorArticulos">
+        <div class="contenedor-articulos" id="contenedorArticulos">
+        <div class="articulo">
+            <img src="{% static 'core/img/Cat carpintería.jpeg' %}" alt="Imagen del Producto 1">
+            <div class="contenido-articulo">
+                <h3>MESAS</h3>
+                <p>Creacion de mesas a medida para la cultura, con un diseño elegante y moderno, diseñados a partir de sus ideas y gustos, 
+                    manteniendo la simplicidad y la elegancia de estas mesas.</p>
+            </div>
+        </div>
+
+        <div class="articulo">
+            <img src="{% static 'core/img/Sillas.jpeg' %}" alt="Imagen del Producto 2"> 
+            <div class="contenido-articulo">
+                <h3>SILLAS</h3>
+                <p>Creacion de sillas a medida para la cultura, con un diseño elegante y moderno, diseñados a partir de sus ideas y gustos, 
+                    manteniendo la simplicidad y la elegancia de estas sillas.</p>
+            </div>
+        </div>
+
+        <div class="articulo">
+            <img src="{% static 'core/img/Armario.jpeg' %}" alt="Imagen del Producto 3">
+            <div class="contenido-articulo">
+                <h3>ARMARIOS</h3>
+                <p>Creacion de armarios a medida para la cultura, con un diseño elegante y moderno, diseñados a partir de sus ideas y gustos, 
+                    manteniendo la simplicidad y la elegancia de estas armarios.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalDetalle" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+            <h2 id="modalTitulo"></h2>
+            <img id="modalImagen" src="" alt="Imagen del Producto" style="width:100%; height:auto; max-height: 350px; object-fit: contain; margin-bottom: 15px;">
+            <p id="modalDescripcion"></p>
+            <div id="modalPrecio" style="font-size: 1.5em; font-weight: bold; color: #28a745; margin-top: 10px;"></div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    
+<section class="comments-section">
+  <div class="container">
+    <h2 class="text-center mb-4">Comentarios de nuestros clientes</h2>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="comment-box p-4 mb-3 border rounded">
+          <h5>Laura G.</h5>
+          <p>Los productos son de excelente calidad y el servicio al cliente es inmejorable. ¡Definitivamente volveré a comprar!</p>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="comment-box p-4 mb-3 border rounded">
+          <h5>Carlos S.</h5>
+          <p>Me encanta el enfoque sostenible de la empresa. Es genial poder comprar productos de alta calidad sabiendo que también cuidan el medio ambiente.</p>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="comment-box p-4 mb-3 border rounded">
+          <h5>Ana M.</h5>
+          <p>El envío fue muy rápido y los productos llegaron en perfectas condiciones. ¡Muy satisfecha con mi compra!</p>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="comment-box p-4 mb-3 border rounded">
+          <h5>Juan P.</h5>
+          <p>La variedad de productos es excelente y los precios son muy competitivos. Recomiendo esta tienda a todos mis amigos y familiares.</p>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="comment-box p-4 mb-3 border rounded">
+          <h5>Sofía R.</h5>
+          <p>Tenía una duda sobre un producto y el equipo de soporte me ayudó de manera muy eficiente y amable. ¡Gran experiencia de compra!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <section>
+        <div>
+            <h2></h2>
+        </div>
+    </section>
+    <footer>
+        <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+    </footer>
+
+    </body>
+</html>

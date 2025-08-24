@@ -1,0 +1,551 @@
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5; /* Light grey background for overall page */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background: linear-gradient(135deg, #004d99, #00264d); /* Modern gradient blue */
+    color: #ffffff; /* White text for contrast */
+    padding: 1.5rem 1rem; /* Increased padding */
+    text-align: center;
+    border-radius: 0 0 15px 15px; /* Rounded bottom corners */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth */
+    margin-bottom: 30px; /* More space below header */
+    position: relative; /* Needed for pseudo-elements or subtle effects */
+    overflow: hidden; /* Ensures inner elements don't spill out with effects */
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.1), transparent 70%); /* Subtle light effect */
+    pointer-events: none;
+}
+
+header h1 {
+    margin: 0;
+    color: #ffffff; /* Ensure white color */
+    font-size: 2.8rem; /* Larger, more prominent title */
+    font-weight: 800; /* Bolder font */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); /* Text shadow for elegance */
+    display: flex; /* Make h1 a flex container to align logo and text */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    text-align: center;
+}
+
+header h1 img {
+    border-radius: 40%;
+}
+
+/* New style for the logo image inside the h1 */
+.header-logo {
+    width: 50px; /* Size of the logo */
+    height: 50px;
+    margin-right: 15px; /* Space between logo and text */
+    border-radius: 50%; /* Make it round if desired */
+    box-shadow: 0 0 10px rgba(0,0,0,0.2); /* Subtle shadow for the logo */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+header .subtitulo { /* Using the class directly for better specificity */
+    color: #e0e6eb; /* Lighter white for subtitle */
+    font-size: 1.25rem; /* Slightly larger subtitle */
+    margin-top: 0.5rem; /* Closer to the title */
+    margin-bottom: 1.5rem; /* Space before navigation */
+    font-weight: 300; /* Lighter font weight for subtitle */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+nav {
+    background-color: rgba(0, 0, 0, 0.2); /* Semi-transparent overlay on header background */
+    padding: 0.75rem 0; /* Slightly more vertical padding */
+    border-radius: 8px; /* Rounded corners for the nav bar itself */
+    display: block; /* Changed to block to take full width */
+    margin: 1rem auto 0 auto; /* Center the nav horizontally */
+    -webkit-backdrop-filter: blur(5px); /* Frosted glass effect */
+    backdrop-filter: blur(5px); /* For Safari support */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2); /* Inner shadow for depth */
+    width: 90%; /* Make nav wider to accommodate flex alignment */
+    max-width: 1200px; /* Limit max width */
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0 1rem; /* Add some horizontal padding to the ul itself */
+    margin: 0;
+    display: flex;
+    justify-content: flex-start; /* Changed to flex-start to allow margin-left: auto to work */
+    align-items: center; /* Vertically align items in the middle */
+    flex-wrap: wrap; /* Allow items to wrap to the next line if space is insufficient */
+    gap: 0.4rem; /* Reduced gap for "glued" effect */
+}
+
+nav ul li {
+    margin: 0;
+}
+
+/* New rule: Push the first element with 'right-aligned-button' class to the right */
+nav ul li.right-aligned-button:first-of-type {
+    margin-left: auto;
+}
+
+nav ul li a {
+    color: #ffffff; /* White text for navigation links */
+    text-decoration: none;
+    font-weight: 600; /* Bolder links */
+    padding: 0.6rem 1rem; /* Reduced horizontal padding for a tighter fit, preventing overlap */
+    border-radius: 25px; /* More rounded, pill-like shape */
+    transition: background-color 0.4s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Smooth transitions */
+    font-size: 1rem; /* Slightly reduced font size to help longer text fit */
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.1); /* Subtle button background */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle button shadow */
+    white-space: nowrap; /* Prevent text from wrapping inside the button */
+}
+
+nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.25); /* Lighter background on hover */
+    transform: translateY(-3px); /* More pronounced lift effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+    color: #fff; /* Ensure text remains white on hover */
+}
+
+/* Original CSS (retained and merged with new styles) */
+main {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    background-color: #cecece;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+footer {
+    background-color: #003366;
+    padding: 1rem;
+    text-align: center;
+    margin-top: 2rem;
+    border-radius: 8px;
+}
+
+footer p {
+    text-align: center;
+    color: #ffffff;
+}
+
+h1 {
+    text-align: left;
+    color: #1e08e7;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #1e08e7;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+    color: rgb(245, 243, 243);
+}
+
+p {
+    color: rgb(0, 0, 0);
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.dashboard-container, .login-container {
+    max-width: 1000px;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 14px;
+    color: #555;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+button {
+    width: 30%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+header h2 { /* This rule seems to conflict with the header h1, keeping for now */
+    color: #010101;
+    font-size: 24px;
+    margin: 0;
+}
+
+header .logout-button {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+header .logout-button:hover {
+    background-color: #c82333;
+}
+
+.main-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu-column {
+    width: 25%;
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.menu-column ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.menu-column li {
+    margin: 15px 0;
+}
+
+.menu-column a {
+    text-decoration: none;
+    font-size: 18px;
+    color: #007BFF;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #007BFF;
+    display: block;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu-column a:hover {
+    background-color: #007BFF;
+    color: #fff;
+}
+
+.content-column {
+    width: 70%;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.content-column p {
+    font-size: 18px;
+    color: #333;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: #ffffff; /* Ensure this applies to general links not specifically styled */
+}
+
+a:hover {
+    color: #ffffff;
+}
+
+header .hearder-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+body {
+    font-family: Arial, sans-serif; /* This conflicts with 'Inter', keeping 'Inter' from the first body rule */
+    margin: 20px; /* This conflicts with margin:0, padding:0, keeping 0 from the first body rule */
+    background-color: #f4f4f4; /* This conflicts, keeping #f0f2f5 */
+    color: #333;
+}
+.contenedor-articulos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.articulo {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+.articulo:hover {
+    transform: translateY(-5px);
+}
+.articulo img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+}
+.contenido-articulo {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.contenido-articulo h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #0056b3;
+}
+.contenido-articulo p {
+    font-size: 0.9em;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+.articulo-precio {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #28a745;
+    margin-bottom: 10px;
+}
+.articulo-boton {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border: none;
+}
+.articulo-boton:hover {
+    background-color: #0056b3;
+}
+
+/* Modal styles (retained) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+}
+.modal-contenido {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    position: relative;
+}
+.cerrar-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.cerrar-modal:hover,
+.cerrar-modal:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.div{
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+}
+
+/* Header p conflicts, using .subtitulo for header specific paragraph */
+header p {
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+h3 {
+    color: #1f71ec;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+input, textarea {
+    display: block;
+    margin-bottom: 10px;
+    padding: 5px;
+    width: 300px;
+}
+
+.chat-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.chat-header {
+    background-color: #0066cc;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 1px solid #004080;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.message {
+    background-color: #e0e0e0;
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    align-self: flex-start;
+}
+
+.message.bot {
+    background-color: #d0f0f0;
+    align-self: flex-end;
+}
+
+.chat-input {
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    display: flex;
+    gap: 5px;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.chat-input button {
+    background-color: #0066cc;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.chat-input button:hover {
+    background-color: #004080;
+}
+
+.chat-container.minimized {
+    height: auto;
+    width: 300px;
+}
+
+.chat-container.minimized .chat-messages,
+.chat-container.minimized .chat-input {
+    display: none;
+}

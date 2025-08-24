@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %} | ¡Oferta Exclusiva!</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+{% block header %}
+
+    <header>
+        <h1 style="text-align: center;" class="div">
+            <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
+            Tu Idea Hecha Realidad
+        </h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home2' %}">Inicio</a></li>
+                <li><a href="{% url 'home3' %}">Gangazos</a></li>
+                <li><a href="{% url 'idea' %}">Crear Idea</a></li>
+                <li><a href="{% url 'about' %}">Reglas</a></li>
+                <li><a href="{% url 'portafolio' %}">Categorias</a></li>
+                <li><a href="{% url 'contact' %}">Contactenos</a></li>
+                <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+{% endblock %}
+    <section>
+        <div class="contenedor-articulos" id="contenedorArticulos">
+                        <div class="articulo">
+                            <div class="contenido-articulo">
+                                <main>
+                                <h1>Contáctenos</h1>
+                                    <h2>Formulario de Contacto</h2>
+                                        <form>
+                                                <label for="nombre">Nombre:</label>
+                                                <input
+                                                    type="nombre"
+                                                    id="nombre"
+                                                    name="nombre"
+                                                    placeholder="Tu Nombre Completo"
+                                                    aria-label="Nombre">
+                                            <br>
+                                                <label for="email" >Email:</label>
+                                                <input
+                                                    type="email"
+                                                    id="email"
+                                                    name="email"
+                                                    placeholder="tu.email@ejemplo.com"
+                                                    aria-label="Email">
+                                            <br>
+                                                <label for="mensaje" >Mensaje:</label>
+                                                <textarea
+                                                    id="mensaje"
+                                                    name="mensaje"
+                                                    placeholder="Escribe tu mensaje aquí..."
+                                                    aria-label="Mensaje"></textarea>
+                                            <br>
+                                                <button type="submit">Enviar Mensaje</button>
+                                        </form>
+                                </main>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <div class="contenido-articulo">
+                                <main>
+                                <h3>Información de Contacto</h3>
+                                <p><span class="font-semibold">Teléfono:</span> +57 321 289 2950</p>
+                                <p><span class="font-semibold">Oficina:</span> Sena Centro de Industria y Construcción</p>
+                                <p><span class="font-semibold">Dirección:</span> Carrera: 50B sur N° 143C 06, Ibague-tolima, Colombia</p>
+                                <div class="mt-6">
+                                    <iframe
+                                        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1672.5634065279357!2d-75.14789084920932!3d4.40200811199637!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2sco!4v1748759398333!5m2!1ses!2sco"
+                                        width="100%"
+                                        height="250"
+                                        style="border:0;"
+                                        allowfullscreen=""
+                                        loading="lazy"
+                                        referrerpolicy="no-referrer-when-downgrade"
+                                        class="rounded-lg shadow-md"></iframe>
+                                </div>
+                            </main>
+                            </div>
+                        </div>
+                    </div>
+    </section>
+
+{% block footer %}
+<footer>
+    <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+</footer>
+{% endblock %}
+</body>
+</html>

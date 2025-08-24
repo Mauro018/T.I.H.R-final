@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard del Administrador</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Administrador/css/styles2.css' %}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside>
+            <h2>Dashboard de Administrador</h2>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboard' %}">Inicio</a></li>
+                    <li><a href="{% url 'usuarios' %}">Gestión de usuarios</a></li>
+                    <li><a href="{% url 'Gproductos' %}">Gestión de productos</a></li>
+                </ul>
+            </nav>
+            <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+        </aside>
+
+        <main>
+            <header>
+                <h1>Bienvenido al Panel de Administración</h1>
+            </header>
+
+            <div class="grid-container">
+                <!-- Tarjeta de Ejemplo 1 -->
+                <div class="card">
+                    <h3>Gestión de Usuarios</h3>
+                    <p>Administra los usuarios de tu plataforma. Puedes añadir, editar o eliminar usuarios, así como asignar roles y permisos.</p>
+                </div>
+
+                <!-- Tarjeta de Ejemplo 2 -->
+                <div class="card">
+                    <h3>Gestión de Productos</h3>
+                    <p>Controla el inventario de tus productos. Añade nuevos productos, actualiza los existentes y organiza por categorías.</p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</body>
+</html>

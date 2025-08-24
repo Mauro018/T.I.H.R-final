@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %} | ¡Oferta Exclusiva!</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+{% block header %}
+
+    <header>
+        <h1 style="text-align: center;" class="div">
+            <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
+            ¡Gangazos!
+        </h1>
+        <p class="subtitulo">Descuentos especiales por tiempo limitado.</p>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home2' %}">Inicio</a></li>
+                <li><a href="{% url 'home3' %}">Gangazos</a></li>
+                <li><a href="{% url 'idea' %}">Crear Idea</a></li>
+                <li><a href="{% url 'about' %}">Reglas</a></li>
+                <li><a href="{% url 'productos' %}">Ofertas</a></li>
+                <li><a href="{% url 'carrito' %}">Carrito</a></li>
+                <li><a href="{% url 'contact' %}">Contactenos</a></li>
+                <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+{% endblock %}
+
+    <section>
+        <div>
+            <h2></h2>
+        </div>
+    </section>
+    <section>
+        <div>
+            <h2>¡Gangazos! DISFRUTA BUENOS PRODUCTOS EN OFERTA Y DE BUENA CALIDAD.</h2>
+            <P>Disfruta de nuevos productos y en oferta que puedes que puedes llevar a buen precio 
+                y de buena calidad, donde apollas a personas y empresas que se dedican a hacer estos productos a base 
+                de ideas por los usuarios de nuestra plataforma. ¡Disfruta de nuestros productos en oferta!</P>
+        </div>
+        <div>
+            <h2><b>Carpinteria:</b></h2>
+        </div>
+        <div class="contenedor-articulos" id="contenedorArticulos">
+        <div class="contenedor-articulos" id="contenedorArticulos">
+        <div class="articulo">
+            <img src="{% static 'core/img/Cat carpintería.jpeg' %}" alt="Imagen del Producto 1">
+            <div class="contenido-articulo">
+                <h3>MESAS</h3>
+                <p>La mayoria de nuestras mesas estan a 20% de descuento hasta mañana.</p>
+            </div>
+        </div>
+
+        <div class="articulo">
+            <img src="{% static 'core/img/Sillas.jpeg' %}" alt="Imagen del Producto 2"> 
+            <div class="contenido-articulo">
+                <h3>SILLAS</h3>
+                <p>La mayoria de nuestras sillas estan a 26% de descuento hasta mañana.</p>
+            </div>
+        </div>
+
+        <div class="articulo">
+            <img src="{% static 'core/img/Armario.jpeg' %}" alt="Imagen del Producto 3">
+            <div class="contenido-articulo">
+                <h3>ARMARIOS</h3>
+                <p>La mayoria de nuestros armarios estan a 17% de descuento hasta mañana.</p>
+            </div>
+        </div>
+
+        <div class="articulo">
+            <img src="{% static 'core/img/Cajonera.jpeg' %}" alt="Imagen del Producto 4">
+            <div class="contenido-articulo">
+                <h3>CAJONERAS</h3>
+                <p>La mayoria de nuestras cajoneras estan a 15% de descuento hasta mañana.</p>
+            </div>
+        </div>
+
+        <div class="articulo">
+            <img src="{% static 'core/img/Escritorio.jpeg' %}" alt="Imagen del Producto 5">
+            <div class="contenido-articulo">
+                <h3>ESCRITORIOS</h3>
+                <p>La mayoria de nuestros escritorios estan a 23% de descuento hasta mañana.</p>
+            </div>
+        </div>
+
+        <div class="articulo">
+            <img src="{% static 'core/img/Utensilios.jpeg' %}" alt="Imagen del Producto 4">
+            <div class="contenido-articulo">
+                <h3>UTENSILIOS</h3>
+                <p>La mayoria de nuestros utensilios estan a 15% de descuento hasta mañana.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalDetalle" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+            <h2 id="modalTitulo"></h2>
+            <img id="modalImagen" src="" alt="Imagen del Producto" style="width:100%; height:auto; max-height: 350px; object-fit: contain; margin-bottom: 15px;">
+            <p id="modalDescripcion"></p>
+            <div id="modalPrecio" style="font-size: 1.5em; font-weight: bold; color: #28a745; margin-top: 10px;"></div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+
+    <section>
+        <div>
+            <h2>¿Por qué aprovechar los diferentes gangazos?</h2>
+            <p>Aprovechar los gangazos no solo es una excelente manera de comprar de forma inteligente, 
+                sino también una oportunidad de maximizar el valor de cada peso que inviertes. Aquí te explicamos por qué:</p>
+            <ul>
+                <li><p><b>Beneficio 1: Ahorra dinero.</b></p>
+                <li><p>Los gangazos te permiten acceder a productos y servicios a precios reducidos sin sacrificar la calidad. 
+                    Esto significa que puedes cuidar tu presupuesto, comprar más por menos y destinar tus ahorros a otras prioridades 
+                    o gustos personales. Ideal para quienes quieren cuidar su economía sin dejar de disfrutar de lo mejor.</p></li>
+                </li>
+                <li><p><b>Beneficio 2: Obtén calidad superior.</b></p>
+                <li><p>Muchas ofertas especiales incluyen artículos de alta gama o con excelente reputación en el mercado. Al aprovechar 
+                    estos descuentos, puedes llevarte a casa productos de gran calidad que quizás no adquirirías a precio completo. Es la 
+                    oportunidad perfecta para elevar tus estándares sin elevar tus gastos.</p></li>
+                </li>
+                <li><p><b>Beneficio 3: Disfruta de características exclusivas.</b></p>
+                <li><p>Algunos gangazos incluyen ediciones limitadas, productos con diseños únicos o servicios con beneficios adicionales 
+                    que normalmente no están disponibles. Esto te permite disfrutar de una experiencia más personalizada y especial, 
+                    diferenciándote con artículos o servicios únicos y de alto valor.</p></li>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <div>
+            <h2></h2>
+        </div>
+    </section>
+    <section>
+        <div class=".div">
+            <h2>¡Actúa ahora!</h2>
+            <p>La oferta termina pronto. ¡No esperes más!</p>
+            <img class="div" src="{% static 'core/img/Descuento.jfif' %}" alt="Descuentos" height="400" width="400">
+            <br>
+            <button><a href="{% url 'productos' %}">¡Gangazos!</a></button>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+    </footer>
+    </body>
+</html>

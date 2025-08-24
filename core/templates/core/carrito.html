@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Carrito de Compras</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/EstilosCarrito.css' %}">
+</head>
+<body>
+    <div class="main-page-wrapper">
+        <header class="navbar">
+            <nav>
+                <ul>
+                    <li><a href="{% url 'home2' %}">Inicio</a></li>
+                    <li><a href="{% url 'home3' %}">Gangazos</a></li>
+                    <li><a href="{% url 'idea' %}">Crea tu Idea</a></li>
+                    <li><a href="{% url 'about' %}">Sobre Gangazos y Reglas</a></li>
+                    <li><a href="{% url 'portafolio' %}">Categorias</a></li>
+                    <li><a href="{% url 'carrito' %}">Carrito</a></li>
+                    <li><a href="{% url 'contact' %}">Contactenos</a></li>
+                    <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="shopping-cart-content">
+            <h1>Carrito de Compras</h1>
+
+            <div id="cart-container">
+                </div>
+
+            <div id="empty-cart-message">
+                <p>Tu carrito está vacío. ¡Explora nuestros productos y añade tus favoritos!</p>
+                <a href="{% url 'portafolio' %}" class="btn-add-products">Añadir un Producto</a>
+            </div>
+
+            <div id="checkout-section" style="display: none;">
+                <button id="checkout-button" class="btn-checkout">Proceder al Pago</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Obtener elementos del DOM
+        const cartContainer = document.getElementById('cart-container');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const checkoutSection = document.getElementById('checkout-section');
+        const checkoutButton = document.getElementById('checkout-button');
+
+        // Esta función simula la adición de productos. En un proyecto real, esto vendría de una base de datos o de la interacción del usuario.
+        function addProductToCart(product) {
+            // Ocultar el mensaje de carrito vacío
+            emptyCartMessage.style.display = 'none';
+
+            // Crear el elemento HTML para el producto
+            const productElement = document.createElement('div');
+            productElement.className = 'cart-item';
+            productElement.innerHTML = `
+                <h3>${product.name}</h3>
+                <p>Precio: $${product.price}</p>
+            `;
+            cartContainer.appendChild(productElement);
+
+            // Mostrar el botón de pago
+            checkoutSection.style.display = 'block';
+        }
+
+        // Agregar un "listener" al botón de pago
+        checkoutButton.addEventListener('click', () => {
+            // Redirigir a la página de métodos de pago
+            // Reemplaza 'nombre_de_la_url_de_pago' con el nombre de tu URL en Django (urls.py)
+            window.location.href = "{% url 'MetodosPago' %}";
+        });
+
+        // Ejemplo de uso: Simular que un producto ha sido añadido.
+        // En tu proyecto real, llamarías a esta función desde el botón "Añadir al carrito" de la página de productos.
+        const exampleProduct = {
+            name: "Zapatos Deportivos",
+            price: 55.99
+        };
+        // Para probar, descomenta la siguiente línea para ver cómo se añade el producto y aparece el botón.
+        // addProductToCart(exampleProduct);
+
+        // Lógica inicial para comprobar si el carrito tiene productos al cargar la página
+        // En un proyecto real, aquí harías una llamada a la API para verificar si hay productos en la sesión del usuario.
+        // Por ahora, asumiremos que no hay productos al cargar la página.
+    </script>
+</body>
+</html>

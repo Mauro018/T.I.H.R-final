@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %} | Tu Idea Hecha Realidad</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+    <!-- <script src="{% static 'core/javascript/chatbot.js' %}"></script> -->
+</head>
+<body>
+    {% block content %}{% endblock %}
+    
+{% block header %}
+
+    <header>
+        <h1 style="text-align: center;" class="div">
+            <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
+            Tu Idea Hecha Realidad
+        </h1>
+        <br>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home2' %}">Inicio</a></li>
+                <li><a href="{% url 'home3' %}">Gangazos</a></li>
+                <li><a href="{% url 'idea' %}">Crear Idea</a></li>
+                <li><a href="{% url 'about' %}">Reglas</a></li>
+                <li><a href="{% url 'portafolio' %}">Categorias</a></li>
+                <li><a href="{% url 'contact' %}">Contactenos</a></li>
+                <li><a href="{% url 'carrito' %}">Carrito</a></li>
+                <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+{% endblock %}
+
+<section>
+    <div>
+        <h2>CARPINTERIA</h2>
+        <br>
+        <main>
+            <div>
+                <div>
+                    <div>
+                        <div>
+                            <div>
+                                <h3>Mesas</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contenedor-articulos" id="contenedorArticulos">
+                        <div class="articulo">
+                            <img src="{% static 'core/img/Mesa.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <h3>Mesa para uno</h3>
+                                <p>Ahora esta a $170.000.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <img src="{% static 'core/img/Mesa 2.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <h3>Mesa familiar rectangular</h3>
+                                <p>Ahora esta a $270.000.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <img src="{% static 'core/img/Mesa 3.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <h3>Mesa familiar redonda</h3>
+                                <p>Ahora esta a $230.000.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button><a href="#">Conocer más</a></button>
+                </div>
+            </div>
+        </main>
+        <br>
+        <br>
+        <main>
+            <div>
+                <div>
+                    <div>
+                        <div>
+                            <div>
+                                <h3>Sillas</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contenedor-articulos" id="contenedorArticulos">
+                        <div class="articulo">
+                            <img src="{% static 'core/img/Sillas.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <h3>Silla de terraza</h3>
+                                <p>Ahora esta a $115.000.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <img src="{% static 'core/img/Sillas 2.jpg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <h3>Silla adirondack</h3>
+                                <p>Ahora esta a $130.000.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <img src="{% static 'core/img/Sillas 3.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <h3>Silla de comedor</h3>
+                                <p>Ahora esta a $110.000.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button><a href="#">Conocer más</a></button>
+                </div>
+            </div>
+        </main>
+        <br>
+        <br>
+        <main>
+            <div>
+                <div>
+                    <div>
+                        <div>
+                            <div>
+                                <h3>Armarios</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contenedor-articulos" id="contenedorArticulos">
+                        <div class="articulo">
+                            <img src="{% static 'core/img/Armario.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <h3>Armario sin puertas</h3>
+                                <p>Ahora esta a $270.000.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <img src="{% static 'core/img/Armario 2.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <h3>Armario antiguo</h3>
+                                <p>Ahora esta a $290.000.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <img src="{% static 'core/img/Armario 3.webp' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <h3>Armario moderno color negro</h3>
+                                <p>Ahora esta a $210.000.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button><a href="#">Conocer más</a></button>
+                </div>
+            </div>
+        </main>
+    </div>
+</section>
+
+    <footer>
+        <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+    </footer>
+    
+    <!-- <div class="chat-container minimized" id="chat-container">
+        <div class="chat-header" id="chat-header">
+            Chat con Asesor
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            </div>
+        <div class="chat-input" id="chat-input">
+            <input type="text" id="chat-input-text" placeholder="Escribe tu mensaje...">
+            <button id="chat-send-button">Enviar</button>
+        </div>
+    </div> -->
+    </body>
+</html>

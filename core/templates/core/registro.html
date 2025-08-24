@@ -1,0 +1,68 @@
+<!-- templates/registro.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/StylesRegistro.css' %}">
+
+</head>
+<body>
+    <div class="container">
+        <form class="form-glass" method="POST" id="registerForm">
+            {% csrf_token %}
+            <h2>Registro</h2>
+
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="input-group">
+                <input type="text"
+                       name="usernameCliente"
+                       placeholder="Crear nombre de usuario"
+                       required
+                       value="{{ request.POST.usernameCliente|default:'' }}">
+            </div>
+
+            <div class="input-group">
+                <input type="email"
+                       name="email"
+                       placeholder="Email"
+                       required
+                       value="{{ request.POST.email|default:'' }}">
+            </div>
+
+            <div class="input-group">
+                <input type="password"
+                       name="passwordCliente"
+                       placeholder="Contraseña"
+                       required
+                       id="password">
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                Registrarse
+            </button>
+
+            <div class="login-link">
+                ¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- The back button section -->
+    <div class="back-link-container">
+        <a href="{% url 'home' %}" class="btn-back-to-home">← Volver a Inicio</a>
+    </div>
+
+</body>
+</html>

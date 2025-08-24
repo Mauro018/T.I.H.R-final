@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %} | ¡Oferta Exclusiva!</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+{% block header %}
+
+    <header>
+        <h1 style="text-align: center;" class="div">
+            <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
+            Tu Idea Hecha Realidad y Gangazos
+        </h1>
+        <p class="subtitulo">Descuento especial por tiempo limitado.</p>
+        <nav>
+            <br>
+            <ul>
+                <li><a href="{% url 'home' %}">Inicio</a></li>
+                <li><a href="{% url 'reglas' %}">Sobre Gangazos y Reglas</a></li>
+                <li><a href="{% url 'productos2' %}">Productos en Oferta</a></li>
+                <li><a href="{% url 'contactenos' %}">Contactenos</a></li>
+                <br>
+                <ul>
+                    <br><li class="right-aligned-button"><a href="{% url 'login' %}">Iniciar sesión</a></li>
+                    <li class="right-aligned-button"><a href="{% url 'registro' %}">Registro</a></li>
+                </ul>
+            </ul>
+            <br>
+        </nav>
+    </header>
+
+{% endblock %}
+
+{% block footer %}
+<section>
+    <div>
+        <h2>¿Qué son los Gangazos?</h2>
+            <p>Los Gangazos son una oferta especial y exclusiva que brindamos a nuestros clientes como parte 
+                de una estrategia para premiar su fidelidad y ofrecerles productos de alta calidad a precios 
+                reducidos. Se trata de descuentos significativos aplicados a artículos seleccionados dentro 
+                de nuestras distintas categorías de productos, disponibles solo por un tiempo limitado.</p>
+            <p>Esta promoción está diseñada para que los clientes puedan acceder a productos populares o de 
+                gran demanda a precios mucho más accesibles que los habituales. Al tratarse de una oferta 
+                temporal, los Gangazos generan una excelente oportunidad de ahorro, ideal para quienes buscan 
+                aprovechar al máximo su presupuesto sin sacrificar calidad.</p>
+            <br>
+        <h2>Beneficios de los Gangazos:</h2>
+            <ul>
+                <li><p><b>- Descuento especial: </b>Los productos incluidos en los Gangazos cuentan con una rebaja 
+                considerable en su precio original.</p></li>
+                <li><p><b>- Tiempo limitado: </b>Estas ofertas están disponibles solo durante un periodo específico, 
+                por lo que recomendamos estar atentos para no perderlas.</p></li>
+                <li><p><b>- Exclusividad: </b>Es una promoción diseñada especialmente para nuestros clientes, como 
+                parte de nuestros beneficios únicos.</p></li>
+                <li><p><b>- Garantía de satisfacción: </b>Todos los productos incluidos en Gangazos mantienen nuestra 
+                garantía de satisfacción, lo que significa que el cliente puede comprar con confianza, 
+                sabiendo que su compra está respaldada.</p></li>
+            </ul>
+            <br>
+        <h2>En Resumen</h2>
+            <p>Los Gangazos son una oportunidad única para obtener productos seleccionados con grandes descuentos, 
+                por tiempo limitado y con el respaldo de nuestra garantía. Es una forma de agradecer a nuestros 
+                clientes y permitirles acceder a ofertas imperdibles que no encontrarán en otro momento.</p>
+    </div>
+</section>
+<br>
+<section>
+    <div>
+        <h1>Reglas para Pedidos de Clientes</h1>
+        <h2>REGLAS GENERALES SOBRE LO QUE LOS CLIENTES PUEDEN PEDIR</h2>
+        <ul>
+            <li><strong><p>Diseño y Personalización</p></strong>
+                <ul>
+                    <li><p>- Especificar medidas y dimensiones exactas.</p></li>
+                    <li><p>- Elegir materiales y acabados dentro de las opciones disponibles.</p></li>
+                    <li><p>- Pedir modificaciones dentro de los límites de seguridad y factibilidad técnica.</p></li>
+                    <li><p>- Solicitar bocetos, planos o muestras previas si el proveedor lo permite.</p></li>
+                    <li><p>- Preguntar por opciones de personalización (colores, detalles estéticos, grabados, etc.).</p></li>
+                </ul>
+            </li>
+            <li><strong><p>Materiales y Construcción</p></strong>
+                <ul>
+                    <li><p>- Pedir materiales certificados o ecológicos, si están disponibles.</p></li>
+                    <li><p>- Solicitar que el producto cumpla con normativas de seguridad y calidad.</p></li>
+                    <li><p>- Pedir asesoría sobre durabilidad y mantenimiento del producto.</p></li>
+                </ul>
+            </li>
+            <li><strong><p>Tiempo y Entrega</p></strong>
+                <ul>
+                    <li><p>- Pedir un estimado de tiempo de fabricación e instalación.</p></li>
+                    <li><p>- Solicitar garantía en caso de defectos de fabricación (si aplica).</p></li>
+                    <li><p>- Preguntar por opciones de envío o instalación según las políticas del proveedor.</p></li>
+                </ul>
+            </li>
+            <li><strong><p>Seguridad y Normativas</p></strong>
+                <ul>
+                    <li><p>- Exigir que el producto sea estable, funcional y seguro.</p></li>
+                    <li><p>- Solicitar certificaciones de calidad si el producto lo requiere.</p></li>
+                    <li><p>- Preguntar sobre normas de seguridad en instalaciones y estructuras.</p></li>
+                </ul>
+            </li>
+            <li><strong><p>Pagos y Contratos</p></strong>
+                <ul>
+                    <li><p>- Pedir información clara sobre costos y formas de pago.</p></li>
+                    <li><p>- Solicitar un contrato o comprobante de pedido con las condiciones acordadas.</p></li>
+                    <li><p>- Preguntar por opciones de financiamiento o pagos a plazos (si el negocio lo ofrece).</p></li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>REGLAS GENERALES SOBRE LO QUE LOS CLIENTES NO PUEDEN PEDIR</h2>
+        <ul>
+            <li><strong><p>Diseños Ilegales o Inapropiados</p></strong>
+                <ul>
+                    <li><p>- Productos con símbolos ofensivos, obscenos o de incitación al odio.</p></li>
+                    <li><p>- Copias exactas de diseños protegidos por derechos de autor sin permiso.</p></li>
+                    <li><p>- Construcciones o modificaciones que incumplan normativas de seguridad o legales.</p></li>
+                </ul>
+            </li>
+            <li><strong><p>Materiales o Procesos Inseguros</p></strong>
+                <ul>
+                    <li><p>- Uso de materiales de baja calidad que comprometan la seguridad.</p></li>
+                    <li><p>- Estructuras sin refuerzos adecuados que puedan ser peligrosas.</p></li>
+                    <li><p>- Instalaciones eléctricas, de gas o plomería sin cumplir normativas.</p></li>
+                </ul>
+            </li>
+            <li><strong><p>Exigencias Irrealistas</p></strong>
+                <ul>
+                    <li><p>- Plazos de entrega imposibles sin afectar la calidad.</p></li>
+                    <li><p>- Cambios de última hora cuando el trabajo ya está avanzado.</p></li>
+                    <li><p>- Descuentos o precios fuera de las tarifas establecidas por el proveedor.</p></li>
+                </ul>
+            </li>
+            <li><strong><p>Riesgos y Responsabilidades No Cubiertas</p></strong>
+                <ul>
+                    <li><p>- Garantía sobre daños causados por mal uso o falta de mantenimiento del cliente.</p></li>
+                    <li><p>- Instalaciones en zonas de alto riesgo sin evaluación previa.</p></li>
+                    <li><p>- Responsabilidad sobre permisos de construcción o normativas locales que el cliente debe gestionar.</p></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</section>
+<footer>
+    <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+</footer>
+{% endblock %}
+</body>
+</html>

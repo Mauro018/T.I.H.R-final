@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %} | ¡Oferta Exclusiva!</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+{% block header %}
+
+    <header>
+        <h1 style="text-align: center;" class="div">
+            <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
+            ¡Gangazos!
+        </h1>
+        <p class="subtitulo">Descuentos especiales por tiempo limitado.</p>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home2' %}">Inicio</a></li>
+                <li><a href="{% url 'home3' %}">Gangazos</a></li>
+                <li><a href="{% url 'idea' %}">Crear Idea</a></li>
+                <li><a href="{% url 'about' %}">Reglas</a></li>
+                <li><a href="{% url 'productos' %}">Ofertas</a></li>
+                <li><a href="{%url 'carrito' %}">Carrito</a></li>
+                <li><a href="{% url 'contact' %}">Contactenos</a></li>
+                <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+{% endblock %}
+
+    <section>
+        <div>
+            <h2>CARPINTERIA</h2>
+            <br>
+        </div>
+        <main>
+            <div>
+                <h3>Mesas</h3>
+                <div>
+                    <div class="contenedor-articulos" id="contenedorArticulos">
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Mesa para uno:</b></p>
+                                        <p>Piezas únicas hechas a mano para una sola persona, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Mesa.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>La mesa para uno tiene un Gangazo del 12%.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Mesa familiar rectangular:</b></p>
+                                        <p>Piezas únicas hechas a mano para dos o mas personas, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Mesa 2.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>La mesa familiar rectangular tiene un Gangazo del 15%.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Mesa familiar redonda:</b></p>
+                                        <p>Piezas únicas hechas a mano para dos o mas personas, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Mesa 3.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>La mesa familiar redonda tiene un Gangazo del 13%.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button><a href="{% url 'ceramica' %}">Conocer más</a></button>
+                </div>
+            </div>
+        </main>
+        <br>
+        <br>
+        <main>
+            <div>
+                <h3>Sillas</h3>
+                <div>
+                    <div class="contenedor-articulos" id="contenedorArticulos">
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Silla de terraza:</b></p>
+                                        <p>Piezas únicas hechas a mano para la comodidad del cliente, reflejando la creatividad de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Sillas.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>La silla de terraza tiene un Gangazo del 10%.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Silla adirondack:</b></p>
+                                        <p>Piezas únicas hechas a mano para la comodidad del cliente, reflejando la creatividad de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Sillas 2.jpg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>La silla adirondack tiene un Gangazo del 15%.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Silla de comedor:</b></p>
+                                        <p>Piezas únicas hechas a mano para la comodidad del cliente, reflejando la creatividad de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Sillas 3.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>La silla de comedor tiene un Gangazo del 13%.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button><a href="{% url 'vidrieria' %}">Conocer más</a></button>
+                </div>
+            </div>
+        </main>
+        <br>
+        <br>
+        <main>
+            <div>
+                <h3>Armarios</h3>
+                <div>
+                    <div class="contenedor-articulos" id="contenedorArticulos">
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Armario sin puertas:</b></p>
+                                        <p>Piezas únicas hechas a mano para la organización del cliente, reflejando la creatividad de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Armario.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>El armario sin puertas tiene un Gangazo del 10%.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Armario antiguo:</b></p>
+                                        <p>Piezas únicas hechas a mano para la organización del cliente, reflejando la creatividad de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Armario 2.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>El armario antiguo tiene un Gangazo del 15%.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Armario moderno:</b></p>
+                                        <p>Piezas únicas hechas a mano para la organización del cliente, reflejando la creatividad de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Armario 3.webp' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>El armario moderno color negro tiene un Gangazo del 13%.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button><a href="{% url 'carpinteria' %}">Conocer más</a></button>
+                </div>
+            </div>
+        </main>
+        <br>
+        <br>
+        <main>
+            <div>
+                <h3>Cajoneras</h3>
+                <div>
+                    <div class="contenedor-articulos" id="contenedorArticulos">
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Cajonera armany nuez:</b></p>
+                                        <p>Piezas únicas hechas a mano para tener un diseño discreto y con mucho espacio, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Cajonera1.webp' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>La cajonera armany nuez tiene un Gangazo del 10%.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Cajonera de 8 cajones:</b></p>
+                                        <p>Piezas únicas hechas a mano para tener un diseño discreto y con mucho espacio, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Cajonera2.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>La cajonera de 8 cajones tiene un Gangazo del 15%.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Cajonera 5 cajones wengue:</b></p>
+                                        <p>Proporcionamos una amplia gama de accesorios metálicos, desde herrajes hasta tornillería, 
+                                            para completar tus proyectos con precisión y durabilidad.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Cajonera3.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>La cajonera 5 cajones wengue tiene un Gangazo del 13%.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button><a href="{% url 'metaleria' %}">Conocer más</a></button>
+                </div>
+            </div>
+        </main>
+        <br>
+        <br>
+        <main>
+            <div>
+                <h3>Escritorios</h3>
+                <div>
+                    <div class="contenedor-articulos" id="contenedorArticulos">
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Escritorio ejecutivo en l:</b></p>
+                                        <p>Piezas únicas hechas a mano para tener un diseño discreto y con mejor disponibilidad de espacio, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Escritorio.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>El escritorio ejecutivo en l tiene un Gangazo del 13%.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Escritorio moderno:</b></p>
+                                        <p>Piezas únicas hechas a mano para tener un diseño discreto y con mejor disponibilidad de espacio, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Escritorio1.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>El escritorio moderno tiene un Gangazo del 15%.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Escritorio simple de 3 cajones:</b></p>
+                                        <p>Piezas únicas hechas a mano para tener un diseño discreto y con mejor disponibilidad de espacio, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Escritorio2.webp' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>El escritorio simple de 3 cajones tiene un Gangazo del 13%.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button><a href="{% url 'marroquineria' %}">Conocer más</a></button>
+                </div>
+            </div>
+        </main>
+        <br>
+        <br>
+        <main>
+            <div>
+                <h3>Utensilios</h3>
+                <div>
+                    <div class="contenedor-articulos" id="contenedorArticulos">
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Cucharas:</b></p>
+                                        <p>Piezas únicas hechas a mano para mantener un diseño clasico y funcionalidad, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Cucharas.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>Laa cucharas tiene un Gangazo del 10%.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Rodillos:</b></p>
+                                        <p>Piezas únicas hechas a mano para mantener un diseño clasico y funcionalidad, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/Rodillo.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>Los rodillos tienen un Gangazo del 15%.</p>
+                            </div>
+                        </div>
+                        <div class="articulo">
+                            <div>
+                                <div>
+                                    <div class="contenido-articulo">
+                                        <p><b>Tablas de picar:</b></p>
+                                        <p>Piezas únicas hechas a mano para mantener un diseño clasico y funcionalidad, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'core/img/TablaPicar.jpeg' %}" alt="Imagen del Producto 1">
+                            <div class="contenido-articulo">
+                                <p>Las tablas de picar tienen un Gangazo del 13%.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button><a href="{% url 'tapiceria' %}">Conocer más</a></button>
+                </div>
+            </div>
+        </main>
+    </section>
+    <footer>
+        <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+    </footer>
+</body>
+</html>

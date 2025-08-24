@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+        {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/StylesLogin.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <form class="form" method="POST">
+            {% csrf_token %}
+
+            <h1>Iniciar Sesión</h1>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="input-group">
+                <input type="text"
+                       name="usernameCliente"
+                       placeholder="Nombre de usuario"
+                       required
+                       value="{{ request.POST.usernameCliente|default:'' }}">
+            </div>
+
+            <div class="input-group">
+                <input type="password"
+                       name="passwordCliente"
+                       placeholder="Contraseña"
+                       required>
+            </div>
+            
+            <button type="submit" class="btn btn-registrar">
+                Iniciar Sesión
+            </button>
+        </form>
+
+        <div class="register-link">
+            ¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate</a>
+        </div>
+    </div>
+    <!-- New div for the back button -->
+    <div class="back-link-container">
+        <a href="{% url 'home' %}" class="btn-back-to-home">← Volver a Inicio</a>
+    </div>
+</body>
+</html>

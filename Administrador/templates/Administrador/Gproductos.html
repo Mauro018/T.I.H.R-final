@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard del Administrador</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Administrador/css/styles2.css' %}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside>
+            <h2>Dashboard de Administrador</h2>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboard' %}">Inicio</a></li>
+                    <li><a href="{% url 'usuarios' %}">Gestión de usuarios</a></li>
+                    <li><a href="{% url 'Gproductos' %}">Gestión de productos</a></li>
+                </ul>
+            </nav>
+            <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+        </aside>
+    {% block content %}
+    <main>
+        <h1>Listado de Productos</h1>
+        <ul>
+            {% for armario in armarios %}
+            <li>{{ armario.nombre3 }}</li>
+            {% endfor %}
+        </ul>
+    </main>
+    {% endblock %}
+    </div>
+</body>
+</html>

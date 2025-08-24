@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Métodos de Pago</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/EstilosCarrito.css' %}">
+    <style>
+        /* Estilos específicos para la página de pago (puedes moverlos a un archivo CSS) */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+        }
+        .payment-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+        }
+        .order-summary {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+        }
+        .order-summary h2 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .order-summary p {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 1.1em;
+            color: #555;
+        }
+        .order-summary p strong {
+            font-size: 1.2em;
+            color: #000;
+        }
+        .payment-methods {
+            margin-bottom: 20px;
+        }
+        .payment-methods label {
+            display: block;
+            margin: 15px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .payment-methods label:hover,
+        .payment-methods input[type="radio"]:checked + span + .payment-details {
+            border-color: #007bff;
+            background-color: #eaf6ff;
+        }
+        .payment-methods input[type="radio"] {
+            margin-right: 15px;
+        }
+        .payment-details {
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        .payment-details.hidden {
+            display: none;
+        }
+        .payment-details input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .payment-details .card-fields {
+            display: flex;
+            justify-content: space-between;
+        }
+        .payment-details .card-fields input {
+            width: 48%;
+        }
+        .btn-confirm-payment {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn-confirm-payment:hover {
+            background-color: #218838;
+        }
+        .back-button {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-button:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="payment-container">
+        <h1>Selecciona un método de pago</h1>
+
+        <div class="order-summary">
+            <h2>Resumen del Pedido</h2>
+            <p><span>Productos:</span> <span>$150.00</span></p>
+            <p><span>Envío:</span> <span>$5.00</span></p>
+            <p><strong><span>Total:</span></strong> <strong><span>$155.00</span></strong></p>
+        </div>
+
+        <form id="payment-form">
+            <div class="payment-methods">
+                <label>
+                    <input type="radio" name="payment-method" value="credit-card" checked> <span>Tarjeta de Crédito</span>
+                    <div id="credit-card-details" class="payment-details">
+                        <input type="text" placeholder="Número de Tarjeta" required>
+                        <input type="text" placeholder="Nombre en la Tarjeta" required>
+                        <div class="card-fields">
+                            <input type="text" placeholder="MM/AA" required>
+                            <input type="text" placeholder="CVV" required>
+                        </div>
+                    </div>
+                </label>
+
+                <label>
+                    <input type="radio" name="payment-method" value="debit-card"> <span>Tarjeta de Débito</span>
+                    <div id="debit-card-details" class="payment-details hidden">
+                        <input type="text" placeholder="Número de Tarjeta" required>
+                        <input type="text" placeholder="Nombre en la Tarjeta" required>
+                        <div class="card-fields">
+                            <input type="text" placeholder="MM/AA" required>
+                            <input type="text" placeholder="CVV" required>
+                        </div>
+                    </div>
+                </label>
+
+                <label>
+                    <input type="radio" name="payment-method" value="nequi"> <span>Nequi</span>
+                    <div id="nequi-details" class="payment-details hidden">
+                        <p>Ingresa tu número de teléfono de Nequi. Recibirás una notificación en tu app para confirmar el pago.</p>
+                        <input type="tel" placeholder="Número de teléfono Nequi" required>
+                    </div>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-confirm-payment">Confirmar Pago</button>
+        </form>
+
+        <a href="{% url 'carrito' %}" class="back-button">Volver al Carrito</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const paymentForm = document.getElementById('payment-form');
+            const paymentMethodsRadios = document.getElementsByName('payment-method');
+            
+            // Referencias a los divs de detalles de cada método de pago
+            const creditCardDetails = document.getElementById('credit-card-details');
+            const debitCardDetails = document.getElementById('debit-card-details');
+            const nequiDetails = document.getElementById('nequi-details');
+            
+            // Función para mostrar/ocultar los campos según el método de pago seleccionado
+            function togglePaymentDetails() {
+                // Ocultar todos los divs de detalles
+                creditCardDetails.classList.add('hidden');
+                debitCardDetails.classList.add('hidden');
+                nequiDetails.classList.add('hidden');
+
+                // Mostrar solo el div del método seleccionado
+                const selectedMethod = document.querySelector('input[name="payment-method"]:checked').value;
+                if (selectedMethod === 'credit-card') {
+                    creditCardDetails.classList.remove('hidden');
+                } else if (selectedMethod === 'debit-card') {
+                    debitCardDetails.classList.remove('hidden');
+                } else if (selectedMethod === 'nequi') {
+                    nequiDetails.classList.remove('hidden');
+                }
+            }
+
+            // Añadir un evento 'change' a todos los radio buttons
+            paymentMethodsRadios.forEach(radio => {
+                radio.addEventListener('change', togglePaymentDetails);
+            });
+
+            // Lógica para el envío del formulario
+            paymentForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Evitar el envío del formulario por defecto
+
+                const selectedMethod = document.querySelector('input[name="payment-method"]:checked').value;
+
+                // Lógica de validación y simulación de pago
+                if (selectedMethod === 'credit-card') {
+                    alert('Pago con Tarjeta de Crédito procesado. ¡Gracias por tu compra!');
+                } else if (selectedMethod === 'debit-card') {
+                    alert('Pago con Tarjeta de Débito procesado. ¡Gracias por tu compra!');
+                } else if (selectedMethod === 'nequi') {
+                    alert('Solicitud de pago enviada a Nequi. Por favor, confirma en la app.');
+                }
+                
+                // Aquí iría la lógica para enviar los datos al backend de Django para procesar el pago.
+                // Por ejemplo, usando Fetch API para hacer una solicitud POST.
+                // fetch('/procesar_pago/', { ... });
+                
+                // Simular el redireccionamiento a una página de confirmación de pago
+                // window.location.href = "{% url 'confirmacion_pago' %}";
+            });
+
+            // Llamar a la función al cargar la página para mostrar el método por defecto (tarjeta de crédito)
+            togglePaymentDetails();
+        });
+    </script>
+</body>
+</html>
