@@ -1,30 +1,56 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Carrito de Compras</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'core/css/EstilosCarrito.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tu Idea Hecha Realidad</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
 </head>
 <body>
-    <div class="main-page-wrapper">
-        <header class="navbar">
-            <nav>
-                <ul>
-                    <li><a href="{% url 'home2' %}">Inicio</a></li>
-                    <li><a href="{% url 'home3' %}">Gangazos</a></li>
-                    <li><a href="{% url 'idea' %}">Crea tu Idea</a></li>
-                    <li><a href="{% url 'about' %}">Sobre Gangazos y Reglas</a></li>
-                    <li><a href="{% url 'portafolio' %}">Categorias</a></li>
-                    <li><a href="{% url 'carrito' %}">Carrito</a></li>
-                    <li><a href="{% url 'contact' %}">Contactenos</a></li>
-                    <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
-                </ul>
-            </nav>
-        </header>
 
-        <main class="shopping-cart-content">
+<!-- BARRA LATERAL (MENÚ + FILTROS) -->
+<div class="sidebar">
+  <h2 class="h2-side">Menú</h2>
+  <ul>
+    <li><a href="{% url 'home3' %}">Gangazos</a></li>
+    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
+    <li><a href="{% url 'portafolio' %}">Categorías</a></li>
+    <li><a href="{% url 'carrito' %}">Carrito</a></li>
+    <li><a href="{% url 'contact' %}">Contáctenos</a></li>
+    <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+  </ul>
+
+  <!-- FILTROS -->
+  <div class="filtros">
+    <h3>Filtrar productos</h3>
+
+    <label for="categoria">Categoría:</label>
+    <select id="categoria">
+      <option value="">Todas</option>
+      <option value="mesas">Mesas</option>
+      <option value="sillas">Sillas</option>
+      <option value="armarios">Armarios</option>
+    </select>
+
+    <label for="precio">Precio máximo:</label>
+    <input type="range" id="precio" min="0" max="500" step="10" oninput="document.getElementById('precioValor').innerText = this.value + ' $'">
+    <span id="precioValor">250 $</span>
+
+    <label>
+      <input type="checkbox" id="disponible"> Solo disponibles
+    </label>
+
+    <button onclick="aplicarFiltros()">Aplicar filtros</button>
+  </div>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="main-content-wrapper">
+  
+
+  <!-- Aquí va tu contenido: artículos, productos, etc. -->
+    <main class="shopping-cart-content">
             <h1>Carrito de Compras</h1>
 
             <div id="cart-container">
@@ -32,7 +58,7 @@
 
             <div id="empty-cart-message">
                 <p>Tu carrito está vacío. ¡Explora nuestros productos y añade tus favoritos!</p>
-                <a href="{% url 'portafolio' %}" class="btn-add-products">Añadir un Producto</a>
+                <a href="{% url 'portafolio' %}" class="a" class="btn-add-products">Añadir un Producto</a>
             </div>
 
             <div id="checkout-section" style="display: none;">
@@ -86,5 +112,21 @@
         // En un proyecto real, aquí harías una llamada a la API para verificar si hay productos en la sesión del usuario.
         // Por ahora, asumiremos que no hay productos al cargar la página.
     </script>
+    
+    <script>
+  function aplicarFiltros() {
+    const categoria = document.getElementById('categoria').value;
+    const precioMax = document.getElementById('precio').value;
+    const disponible = document.getElementById('disponible').checked;
+
+    console.log('Aplicando filtros...');
+    console.log('Categoría:', categoria);
+    console.log('Precio máximo:', precioMax);
+    console.log('Disponible:', disponible);
+
+    // Aquí puedes implementar la lógica de filtrado con JavaScript o usar AJAX con Django
+  }
+</script>
+
 </body>
 </html>
