@@ -15,7 +15,7 @@ body {
     background-color: #003366; /* Azul oscuro para la barra de navegación */
     align-items: center;
     padding: 25px 0; /* Padding vertical */
-    color: white;
+    color: black;
     width: 100%; /* La barra de navegación ocupa el 100% del ancho del viewport */
     box-sizing: border-box; /* Incluye padding en el ancho total */
     /* La sombra se moverá al .page-container si queremos que el cuadro la tenga */
@@ -64,7 +64,7 @@ body {
 }
 
 .cart-button a {
-    color: white !important;
+    color: rgb(45, 113, 158) !important;
     text-decoration: none;
     border-bottom: none !important;
 }
@@ -108,7 +108,7 @@ body {
 
 .empty-cart-message {
     padding: 60px; /* Más padding */
-    border: 1px dashed #ccc;
+    border: 1px dashed #0c0c0c;
     border-radius: 8px;
     color: #666;
     font-size: 1.2em; /* Letras más grandes en el mensaje */
@@ -121,7 +121,7 @@ body {
 .btn-add-products {
     display: inline-block;
     background-color: #28a745;
-    color: white;
+    color: rgb(0, 0, 0);
     padding: 15px 30px; /* Botón más grande */
     border-radius: 5px;
     text-decoration: none;
@@ -173,5 +173,9 @@ body {
     .empty-cart-message {
         padding: 40px;
         width: 95%;
+        color: black
     }
+}
+.a{
+    color: black;
 }
