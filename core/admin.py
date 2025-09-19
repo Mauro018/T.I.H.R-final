@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import User, UserAdmin, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserClientes
+from .models import UserAdmin, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserClientes
 
-admin.site.register(User)
 admin.site.register(UserAdmin)
 admin.site.register(Mesas)
 admin.site.register(Sillas)

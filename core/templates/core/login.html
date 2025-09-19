@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-        {% load static %}
+    {% load static %}
     <link rel="stylesheet" href="{% static 'core/css/StylesLogin.css' %}">
 </head>
 <body>
     <div class="login-container">
-        <form class="form" method="POST">
+        <form class="form" method="POST" action="{% url 'login' %}">
             {% csrf_token %}
-
             <h1>Iniciar Sesión</h1>
-
+            
             {% if messages %}
                 {% for message in messages %}
                     <div class="message {{ message.tags }}">
@@ -34,11 +33,12 @@
                 <input type="password"
                        name="passwordCliente"
                        placeholder="Contraseña"
-                       required>
+                       required
+                       id="password">
             </div>
             
             <button type="submit" class="btn btn-registrar">
-                <a href="{% url 'home3' %}">Iniciar Sesión</a>
+                Iniciar Sesión
             </button>
         </form>
 
