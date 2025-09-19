@@ -1,7 +1,7 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
-from .forms import LoginForm, LoginFormAdmin, AgregarForm
-from .models import UserClientes, UserAdmin, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios
+from .forms import LoginForm, LoginFormAdmin, AgregarForm, LoginFormEmpresa
+from .models import UserClientes, UserAdmin, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserEmpresa
 from .logic import obtener_respuesta
 
 html_base = """
@@ -64,6 +64,19 @@ def LoginAdmin_view(request):
     else:
         form = LoginFormAdmin()
     return render(request,'core/loginAdmin.html', {'form': form})
+
+def LoginEmpresa_view(request):
+    if request.method == 'POST':
+        form = LoginFormEmpresa(request.POST)
+        if form.is_valid():
+            usernameEmpresa = form.cleaned_data['usernameEmpresa']
+            passwordEmpresa = form.cleaned_data['passwordEmpresa']
+            try:
+                userEmpresa = UserEmpresa.objects.get(usernameEmpresa=usernameEmpresa, passwordEmpresa=passwordEmpresa)
+                return redirect('')
+            except UserEmpresa.DoesNotExist:
+                error_message = "Usuario o contraseña incorrectos"
+                return render(request, 'core/loginEmpresa.html', {'error_message': error_message})
 
 def Logout_view(request):
     logout(request)

@@ -58,3 +58,6 @@ class UserClientes(models.Model):
     def __str__(self):
         return self.usernameCliente
     
+class UserEmpresa(models.Model):
+    usernameEmpresa= models.CharField(max_length=100, unique=True)
+    passwordEmpresa = models.CharField(max_length=100)

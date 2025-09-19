@@ -14,3 +14,7 @@ class AgregarForm(forms.ModelForm):
     class Meta:
         model = UserClientes
         fields = ['usernameCliente','passwordCliente']
+
+class LoginFormEmpresa(forms.Form):
+    usernameEmpresa = forms.CharField(max_length=100)
+    passwordEmpresa = forms.CharField(max_length=100, widget=forms.PasswordInput)

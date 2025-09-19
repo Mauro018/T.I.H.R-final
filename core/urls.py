@@ -17,4 +17,5 @@ urlpatterns = [
     path ('MetodosPago', views.MetodosPago, name='MetodosPago'),
     path('',include('Productos.urls')),
     path('',include('Administrador.urls')),
+    path('',include('Empresas.urls')),
 ]
