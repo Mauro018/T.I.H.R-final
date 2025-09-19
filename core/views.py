@@ -1,6 +1,5 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
-from django.contrib import messages
 from .forms import LoginForm, LoginFormAdmin, AgregarForm
 from .models import UserClientes, UserAdmin, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios
 from .logic import obtener_respuesta
@@ -38,20 +37,17 @@ def Login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('usernameCliente')
-            password = form.cleaned_data.get('passwordCliente')
-            
+            usernameCliente = form.cleaned_data['usernameCliente']
+            passwordCliente = form.cleaned_data['passwordCliente']
             try:
-                user = UserClientes.objects.get(usernameCliente=username, passwordCliente=password)
-                
-                messages.success(request, "¡Inicio de sesión exitoso!")
+                user = UserClientes.objects.get(usernameCliente=usernameCliente, passwordCliente=passwordCliente)
                 return redirect('home3')
             except UserClientes.DoesNotExist:
-                messages.error(request, "Nombre de usuario o contraseña incorrectos.")
+                error_message = "Usuario o contraseña incorrectos"
+                return render(request, 'core/login.html', {'error_message': error_message})
     else:
         form = LoginForm()
-        
-    return render(request, 'core/login.html', {'form': form})
+    return render(request,'core/login.html', {'form': form})
 
 def LoginAdmin_view(request):
     if request.method == 'POST':
