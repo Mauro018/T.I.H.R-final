@@ -77,6 +77,9 @@ def LoginEmpresa_view(request):
             except UserEmpresa.DoesNotExist:
                 error_message = "Usuario o contraseña incorrectos"
                 return render(request, 'core/loginEmpresa.html', {'error_message': error_message})
+    else:
+        form = LoginFormEmpresa()
+    return render(request,'core/loginEmpresa.html', {'form': form})
 
 def Logout_view(request):
     logout(request)
