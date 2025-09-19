@@ -9,31 +9,50 @@
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
 </head>
 <body>
-    {% block content %}{% endblock %}
+<!-- BARRA LATERAL (MENÚ + FILTROS) -->
+<div class="sidebar">
+  <h2 class="h2-side">Menú</h2>
+  <ul>
+    <li><a href="{% url 'home3' %}">Gangazos</a></li>
+    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
+    <li><a href="{% url 'productos' %}">Ofertas</a></li>
+    <li><a href="{% url 'carrito' %}">Carrito</a></li>
+    <li><a href="{% url 'contact' %}">Contáctenos</a></li>
+    <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+  </ul>
 
-{% block header %}
+  <!-- FILTROS -->
+  <div class="filtros">
+    <h3>Filtrar productos</h3>
 
-    <header>
-        <h1 style="text-align: center;" class="div">
-            <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
-            ¡Gangazos!
-        </h1>
-        <p class="subtitulo">Descuentos especiales por tiempo limitado.</p>
-        <nav>
-            <ul>
-                <li><a href="{% url 'home2' %}">Inicio</a></li>
-                <li><a href="{% url 'home3' %}">Gangazos</a></li>
-                <li><a href="{% url 'idea' %}">Crear Idea</a></li>
-                <li><a href="{% url 'about' %}">Reglas</a></li>
-                <li><a href="{% url 'productos' %}">Ofertas</a></li>
-                <li><a href="{%url 'carrito' %}">Carrito</a></li>
-                <li><a href="{% url 'contact' %}">Contactenos</a></li>
-                <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
-            </ul>
-        </nav>
-    </header>
+    <label for="categoria">Categoría:</label>
+    <select id="categoria">
+      <option value="">Todas</option>
+      <option value="mesas">Mesas</option>
+      <option value="sillas">Sillas</option>
+      <option value="armarios">Armarios</option>
+    </select>
 
-{% endblock %}
+    <label for="precio">Precio máximo:</label>
+    <input type="range" id="precio" min="0" max="500" step="10" oninput="document.getElementById('precioValor').innerText = this.value + ' $'">
+    <span id="precioValor">250 $</span>
+
+    <label>
+      <input type="checkbox" id="disponible"> Solo disponibles
+    </label>
+
+    <button onclick="aplicarFiltros()">Aplicar filtros</button>
+  </div>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="main-content-wrapper">
+  <header>
+    <h1 class="div" style="text-align: center;">
+      <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="75" height="75">
+      Tu Idea Hecha Realidad
+    </h1>
+  </header>
 
     <section>
         <div>
@@ -367,5 +386,21 @@
     <footer>
         <p>&copy; 2025 Tu Idea Hecha Realidad</p>
     </footer>
+</div>
+
+<script>
+  function aplicarFiltros() {
+    const categoria = document.getElementById('categoria').value;
+    const precioMax = document.getElementById('precio').value;
+    const disponible = document.getElementById('disponible').checked;
+
+    console.log('Aplicando filtros...');
+    console.log('Categoría:', categoria);
+    console.log('Precio máximo:', precioMax);
+    console.log('Disponible:', disponible);
+
+    // Aquí puedes implementar la lógica de filtrado con JavaScript o usar AJAX con Django
+  }
+</script>
 </body>
 </html>

@@ -9,35 +9,30 @@
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
 </head>
 <body>
-    {% block content %}{% endblock %}
 
-{% block header %}
+    <div class="sidebar">
+    <h2 class="h2-side">Menú</h2>
 
-    <header>
-        <h1 style="text-align: center;" class="div">
-            <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
-            Gangazos
-        </h1>
-        <p class="subtitulo">Descuento especial por tiempo limitado.</p>
-        <nav>
-            <br>
-            <ul>
-                <li><a href="{% url 'home' %}">Inicio</a></li>
-                <li><a href="{% url 'reglas' %}">Sobre Gangazos y Reglas</a></li>
-                <li><a href="{% url 'productos2' %}">Productos en Oferta</a></li>
-                <li><a href="{% url 'contactenos' %}">Contactenos</a></li>
-                
-                <ul>
-                    
-                    <li class="right-aligned-button"><a href="{% url 'registro' %}">Registro</a></li>
-                </ul>
+        <ul>
+            <li><a href="{% url 'home' %}">Inicio</a></li>
+            <li><a href="{% url 'reglas' %}">Sobre Gangazos y Reglas</a></li>
+            <li><a href="{% url 'productos2' %}">Productos en Oferta</a></li>
+            <li><a href="{% url 'contactenos' %}">Contactenos</a></li>
+            <br><br><br><br><br><br><br><br><br>   
+            <ul>  
+                <li class="right-aligned-button"><a href="{% url 'registro' %}">Registro</a></li>
             </ul>
-            <br>
-        </nav>
-    </header>
+        </ul>
+    </div>
 
-{% endblock %}
-
+    <div class="main-content-wrapper">
+        <header>
+            <h1 style="text-align: center;" class="div">
+                <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
+                Gangazos
+            </h1>
+            <p class="subtitulo">Descuento especial por tiempo limitado.</p>
+        </header>
     <section>
         <div>
             <h2>¡Gangazos! DISFRUTA BUENOS PRODUCTOS EN OFERTA Y DE BUENA CALIDAD.</h2>
@@ -178,7 +173,7 @@
     <footer>
         <p>&copy; 2025 Tu Idea Hecha Realidad</p>
     </footer>
-
+</div>
 
 
     </body>
