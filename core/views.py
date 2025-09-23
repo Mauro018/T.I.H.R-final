@@ -1,7 +1,7 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
-from .forms import LoginForm, LoginFormAdmin, AgregarForm, LoginFormEmpresa
-from .models import UserClientes, UserAdmin, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserEmpresa
+from .forms import LoginForm, LoginFormAdmin, AgregarForm, LoginFormEmpresa, IdeaForm
+from .models import UserClientes, UserAdmin, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserEmpresa, Idea
 from .logic import obtener_respuesta
 
 html_base = """
@@ -144,3 +144,25 @@ def chatbot(request):
 
     # Pasa el historial completo a la plantilla
     return render(request, "chatbot.html", {"chat_history": request.session['chat_history']})
+
+def ideas_view(request):
+    """
+    Maneja la creación y visualización de ideas usando ModelForm.
+    """
+    if request.method == 'POST':
+        form = IdeaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Redirige para evitar el reenvío del formulario
+            return redirect('idea')
+    else:
+        form = IdeaForm()
+
+    # Recupera todas las ideas de la base de datos
+    ideas = Idea.objects.all()
+    
+    # Renderiza la plantilla con el formulario y la lista de ideas
+    return render(request, 'core/idea.html', {
+        'form': form,
+        'ideas': ideas
+        })

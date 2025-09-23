@@ -57,58 +57,40 @@
   <!-- Aquí va tu contenido: artículos, productos, etc. -->
    <section>
     <main>
-        <div>
-            <div>
-                <div>
-                    <h2>Agregar una Nueva Idea a Crear</h2>
-                    <p>¿Tienes una idea que quieres desarrollar o compartir? Completa el siguiente formulario:</p>
+    <section>
+      <div class="dashboard-container">
+        <h2>Agregar una Nueva Idea a Crear</h2>
+        <p>¿Tienes una idea que quieres desarrollar o compartir? Completa el siguiente formulario:</p>
+        
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="articulo-boton">Publicar Idea</button>
+        </form>
+      </div>
 
-                    <form action="#" method="POST">
-                        <div class="form-group">
-                            <label for="titulo">Título de tu Idea:</label>
-                            <input type="text" id="titulo" name="titulo" placeholder="Ej. Cajonera de estilo antiguo y acabado rustico." required>
-                        </div>
+      <hr>
 
-                        <div class="form-group">
-                            <label for="descripcion">Descripción Breve:</label>
-                            <textarea id="descripcion" name="descripcion" rows="4" placeholder="Explica brevemente en qué consiste tu idea..." required></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="autor">Tu nombre o seudónimo:</label>
-                            <input type="text" id="autor" name="autor" placeholder="Ej. Juan Pérez">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="categoria">Categoría:</label>
-                            <input type="text" id="categoria" name="categoria" placeholder="Ej. Armarios, Escritorios, Cajoneras...">
-                        </div>
-
-                        <button type="submit">Publicar Idea</button>
-                    </form>
-
-                    <h3>Ideas Publicadas</h3>
-                    <div class="contenedor-articulos">
-                        <div class="articulo">
-                            <img src="#" alt="Idea 1">
-                            <div class="contenido-articulo">
-                                <h3>Mesa 1</h3>
-                                <p>Mesa redonda de 2 metros de ancho.</p>
-                            </div>
-                        </div>
-
-                        <div class="articulo">
-                            <img src="#" alt="Idea 2">
-                            <div class="contenido-articulo">
-                                <h3>Cajonera 1</h3>
-                                <p>Cajonera de 10 cajones de 2 metros de ancho.</p>
-                            </div>
-                        </div>
-                    </div>
+      <div class="dashboard-container">
+        <h2>Ideas Publicadas</h2>
+        {% if ideas %}
+          <div class="contenedor-articulos">
+            {% for idea in ideas %}
+              <div class="articulo">
+                <div class="contenido-articulo">
+                  <h3>{{ idea.titulo }}</h3>
+                  <p>{{ idea.descripcion }}</p>
+                  <p><strong>Autor:</strong> {{ idea.autor }}</p>
                 </div>
-            </div>
-        </div>
-    </main>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p>Aún no hay ideas publicadas. ¡Sé el primero en compartir la tuya!</p>
+        {% endif %}
+      </div>
+    </section>
+  </main>
 </section>
 
 

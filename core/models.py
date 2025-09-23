@@ -61,3 +61,14 @@ class UserClientes(models.Model):
 class UserEmpresa(models.Model):
     usernameEmpresa= models.CharField(max_length=100, unique=True)
     passwordEmpresa = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.usernameEmpresa
+    
+class Idea(models.Model):
+    titulo = models.CharField(max_length=100)
+    descripcion = models.CharField(max_length=250, default='', blank=True,null=True)
+    autor = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.titulo

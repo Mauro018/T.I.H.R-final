@@ -1,5 +1,5 @@
 from django import forms
-from .models import UserClientes
+from .models import UserClientes, Idea
 
 class LoginForm(forms.Form):
     usernameCliente = forms.CharField(max_length=100)
@@ -18,3 +18,11 @@ class AgregarForm(forms.ModelForm):
 class LoginFormEmpresa(forms.Form):
     usernameEmpresa = forms.CharField(max_length=100)
     passwordEmpresa = forms.CharField(max_length=100, widget=forms.PasswordInput)
+
+class IdeaForm(forms.ModelForm):
+    class Meta:
+        model = Idea
+        fields = ['titulo', 'descripcion', 'autor']
+        widgets = {
+            'descripcion': forms.Textarea(attrs={'rows': 5}),
+        }
