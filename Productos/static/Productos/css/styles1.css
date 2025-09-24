@@ -123,7 +123,7 @@ main {
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    background-color: #cecece;
+    background: linear-gradient(135deg, #49bcff 0%, #e6e7e9 100%);
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
@@ -716,3 +716,33 @@ h1 {
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
+
+.seccion-at {
+    /* Fondo Transparente Inicial */
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(5px);
+
+    /* Estilos Base */
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: #333;
+    
+    /* Animación (Transición) */
+    transition: 
+        background-color 0.4s ease-out,
+        box-shadow 0.4s ease-out,
+        transform 0.4s ease-out;
+}
+
+/* Estado al pasar el mouse (HOVER) */
+.seccion-at:hover {
+    /* Sombra más marcada */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 123, 255, 0.5);
+    
+    /* Efecto de elevación y zoom */
+    transform: translateY(-2px) scale(1.01);
+}
+

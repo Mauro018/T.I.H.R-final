@@ -39,5 +39,6 @@ urlpatterns = [
     path('idea/', views.ideas_view, name='idea'),
     path('',include('Productos.urls')),
     path('',include('Administrador.urls')),
+    path('',include('Empresas.urls')),
     path('admin/', admin.site.urls),
 ]

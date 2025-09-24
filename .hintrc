@@ -6,7 +6,8 @@
     "axe/structure": [
       "default",
       {
-        "list": "off"
+        "list": "off",
+        "listitem": "off"
       }
     ],
     "no-inline-styles": "off",
@@ -35,6 +36,14 @@
       {
         "frame-title": "off",
         "image-alt": "off"
+      }
+    ],
+    "compat-api/css": [
+      "default",
+      {
+        "ignore": [
+          "backdrop-filter"
+        ]
       }
     ]
   }

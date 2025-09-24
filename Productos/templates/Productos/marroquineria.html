@@ -26,21 +26,16 @@
   <div class="filtros">
     <h3>Filtrar productos</h3>
 
-    <label for="categoria">Categoría:</label>
+    <h2 for="categoria" class="h2-side">Categoría:</h2>
     <select id="categoria">
-      <option value="">Todas</option>
-      <option value="mesas">Mesas</option>
-      <option value="sillas">Sillas</option>
-      <option value="armarios">Armarios</option>
+        <option value="">Elegir Categoria</option> 
+        <option value="carpinteria">Armarios</option>
+        <option value="marroquineria">Escritorios</option>
+        <option value="vidrieria">Sillas</option>
+        <option value="metaleria">Cajoneras</option>
+        <option value="ceramica">Mesas</option>
+        <option value="tapiceria">Utensilios</option>
     </select>
-
-    <label for="precio">Precio máximo:</label>
-    <input type="range" id="precio" min="0" max="500" step="10" oninput="document.getElementById('precioValor').innerText = this.value + ' $'">
-    <span id="precioValor">250 $</span>
-
-    <label>
-      <input type="checkbox" id="disponible"> Solo disponibles
-    </label>
 
     <button onclick="aplicarFiltros()">Aplicar filtros</button>
   </div>
@@ -59,7 +54,7 @@
 <section>
     <div>
         <h2>CARPINTERIA</h2>
-        <main>
+        <section class="seccion-at">
             <div>
                 <div>
                     <div>
@@ -94,7 +89,7 @@
                     </div>
                 </div>
             </div>
-        </main>
+        </section>
     </div>
 </section>
 
@@ -104,17 +99,19 @@
     </div>
 <script>
   function aplicarFiltros() {
-    const categoria = document.getElementById('categoria').value;
-    const precioMax = document.getElementById('precio').value;
-    const disponible = document.getElementById('disponible').checked;
+        const categoria = document.getElementById('categoria').value;
+        console.log('Aplicando filtros y redirigiendo...');
+        console.log('Categoría seleccionada:', categoria);
 
-    console.log('Aplicando filtros...');
-    console.log('Categoría:', categoria);
-    console.log('Precio máximo:', precioMax);
-    console.log('Disponible:', disponible);
-
-    // Aquí puedes implementar la lógica de filtrado con JavaScript o usar AJAX con Django
-  }
+        if (categoria) {
+            const urlRedireccion = '/' + categoria + '/';
+            
+            console.log('Redirigiendo a:', urlRedireccion);
+            window.location.href = urlRedireccion;
+        } else {
+            window.location.href = '/productos/'; 
+        }
+    }
 </script>
     </body>
 </html>

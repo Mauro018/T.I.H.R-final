@@ -26,21 +26,16 @@
   <div class="filtros">
     <h3>Filtrar productos</h3>
 
-    <label for="categoria">Categoría:</label>
+    <h2 for="categoria" class="h2-side">Categoría:</h2>
     <select id="categoria">
-      <option value="">Todas</option>
-      <option value="mesas">Mesas</option>
-      <option value="sillas">Sillas</option>
-      <option value="armarios">Armarios</option>
+        <option value="">Elegir Categoria</option> 
+        <option value="carpinteria">Armarios</option>
+        <option value="marroquineria">Escritorios</option>
+        <option value="vidrieria">Sillas</option>
+        <option value="metaleria">Cajoneras</option>
+        <option value="ceramica">Mesas</option>
+        <option value="tapiceria">Utensilios</option>
     </select>
-
-    <label for="precio">Precio máximo:</label>
-    <input type="range" id="precio" min="0" max="500" step="10" oninput="document.getElementById('precioValor').innerText = this.value + ' $'">
-    <span id="precioValor">250 $</span>
-
-    <label>
-      <input type="checkbox" id="disponible"> Solo disponibles
-    </label>
 
     <button onclick="aplicarFiltros()">Aplicar filtros</button>
   </div>
@@ -98,6 +93,7 @@
                                 <p><span class="font-semibold">Teléfono:</span> +57 321 289 2950</p>
                                 <p><span class="font-semibold">Oficina:</span> Sena Centro de Industria y Construcción</p>
                                 <p><span class="font-semibold">Dirección:</span> Carrera: 50B sur N° 143C 06, Ibague-tolima, Colombia</p>
+                                <section class="seccion-at">
                                 <div class="mt-6">
                                     <iframe
                                         src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1672.5634065279357!2d-75.14789084920932!3d4.40200811199637!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2sco!4v1748759398333!5m2!1ses!2sco"
@@ -109,6 +105,7 @@
                                         referrerpolicy="no-referrer-when-downgrade"
                                         class="rounded-lg shadow-md"></iframe>
                                 </div>
+                                </section>
                             </main>
                             </div>
                         </div>
@@ -121,17 +118,19 @@
 </div>
 <script>
   function aplicarFiltros() {
-    const categoria = document.getElementById('categoria').value;
-    const precioMax = document.getElementById('precio').value;
-    const disponible = document.getElementById('disponible').checked;
+        const categoria = document.getElementById('categoria').value;
+        console.log('Aplicando filtros y redirigiendo...');
+        console.log('Categoría seleccionada:', categoria);
 
-    console.log('Aplicando filtros...');
-    console.log('Categoría:', categoria);
-    console.log('Precio máximo:', precioMax);
-    console.log('Disponible:', disponible);
-
-    // Aquí puedes implementar la lógica de filtrado con JavaScript o usar AJAX con Django
-  }
+        if (categoria) {
+            const urlRedireccion = '/' + categoria + '/';
+            
+            console.log('Redirigiendo a:', urlRedireccion);
+            window.location.href = urlRedireccion;
+        } else {
+            window.location.href = '/productos/'; 
+        }
+    }
 </script>
 </body>
 </html>

@@ -25,21 +25,16 @@
   <div class="filtros">
     <h3>Filtrar productos</h3>
 
-    <label for="categoria">Categoría:</label>
+    <h2 for="categoria" class="h2-side">Categoría:</h2>
     <select id="categoria">
-      <option value="">Todas</option>
-      <option value="mesas">Mesas</option>
-      <option value="sillas">Sillas</option>
-      <option value="armarios">Armarios</option>
+        <option value="">Elegir Categoria</option> 
+        <option value="carpinteria">Armarios</option>
+        <option value="marroquineria">Escritorios</option>
+        <option value="vidrieria">Sillas</option>
+        <option value="metaleria">Cajoneras</option>
+        <option value="ceramica">Mesas</option>
+        <option value="tapiceria">Utensilios</option>
     </select>
-
-    <label for="precio">Precio máximo:</label>
-    <input type="range" id="precio" min="0" max="500" step="10" oninput="document.getElementById('precioValor').innerText = this.value + ' $'">
-    <span id="precioValor">250 $</span>
-
-    <label>
-      <input type="checkbox" id="disponible"> Solo disponibles
-    </label>
 
     <button onclick="aplicarFiltros()">Aplicar filtros</button>
   </div>
@@ -54,23 +49,20 @@
     </h1>
   </header>
 
-  <!-- Aquí va tu contenido: artículos, productos, etc. -->
-   <section>
-        <div>
-            <h2></h2>
-        </div>
-    </section>
     <section>
         <div>
+            <section class="seccion-at">
             <h2>¡Gangazos! DISFRUTA BUENOS PRODUCTOS EN OFERTA Y DE BUENA CALIDAD.</h2>
             <P>Disfruta de nuevos productos y en oferta que puedes que puedes llevar a buen precio 
                 y de buena calidad, donde apollas a personas y empresas que se dedican a hacer estos productos a base 
                 de ideas por los usuarios de nuestra plataforma. ¡Disfruta de nuestros productos en oferta!</P>
+            </section>
         </div>
+        <br>
+        <section class="seccion-at">
         <div>
             <h2><b>Carpinteria:</b></h2>
         </div>
-        <div class="contenedor-articulos" id="contenedorArticulos">
         <div class="contenedor-articulos" id="contenedorArticulos">
         <div class="articulo">
             <img src="{% static 'core/img/Cat carpintería.jpeg' %}" alt="Imagen del Producto 1">
@@ -119,52 +111,47 @@
                 <p>La mayoria de nuestros utensilios estan a 15% de descuento hasta mañana.</p>
             </div>
         </div>
-    </div>
-
-    <div id="modalDetalle" class="modal">
-        <div class="modal-contenido">
-            <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
-            <h2 id="modalTitulo"></h2>
-            <img id="modalImagen" src="" alt="Imagen del Producto" style="width:100%; height:auto; max-height: 350px; object-fit: contain; margin-bottom: 15px;">
-            <p id="modalDescripcion"></p>
-            <div id="modalPrecio" style="font-size: 1.5em; font-weight: bold; color: #28a745; margin-top: 10px;"></div>
         </div>
-    </div>
-
-        </div>
+        </section>
     </section>
-
+    <br>
     <section>
+        <section class="seccion-at">
         <div>
             <h2>¿Por qué aprovechar los diferentes gangazos?</h2>
             <p>Aprovechar los gangazos no solo es una excelente manera de comprar de forma inteligente, 
                 sino también una oportunidad de maximizar el valor de cada peso que inviertes. Aquí te explicamos por qué:</p>
             <ul>
+                <section class="seccion-at">
                 <li><p><b>Beneficio 1: Ahorra dinero.</b></p>
                 <li><p>Los gangazos te permiten acceder a productos y servicios a precios reducidos sin sacrificar la calidad. 
                     Esto significa que puedes cuidar tu presupuesto, comprar más por menos y destinar tus ahorros a otras prioridades 
                     o gustos personales. Ideal para quienes quieren cuidar su economía sin dejar de disfrutar de lo mejor.</p></li>
                 </li>
+                </section>
+                <br>
+                <section class="seccion-at">
                 <li><p><b>Beneficio 2: Obtén calidad superior.</b></p>
                 <li><p>Muchas ofertas especiales incluyen artículos de alta gama o con excelente reputación en el mercado. Al aprovechar 
                     estos descuentos, puedes llevarte a casa productos de gran calidad que quizás no adquirirías a precio completo. Es la 
                     oportunidad perfecta para elevar tus estándares sin elevar tus gastos.</p></li>
                 </li>
+                </section>
+                <br>
+                <section class="seccion-at">
                 <li><p><b>Beneficio 3: Disfruta de características exclusivas.</b></p>
                 <li><p>Algunos gangazos incluyen ediciones limitadas, productos con diseños únicos o servicios con beneficios adicionales 
                     que normalmente no están disponibles. Esto te permite disfrutar de una experiencia más personalizada y especial, 
                     diferenciándote con artículos o servicios únicos y de alto valor.</p></li>
                 </li>
+                </section>
             </ul>
         </div>
+        </section>
     </section>
-
+    <br>
     <section>
-        <div>
-            <h2></h2>
-        </div>
-    </section>
-    <section>
+        <section class="seccion-at">
         <div class=".div">
             <h2>¡Actúa ahora!</h2>
             <p>La oferta termina pronto. ¡No esperes más!</p>
@@ -172,6 +159,7 @@
             <br>
             <button><a href="{% url 'productos' %}">¡Gangazos!</a></button>
         </div>
+        </section>
     </section>
 
   <footer>
@@ -181,17 +169,19 @@
 
 <script>
   function aplicarFiltros() {
-    const categoria = document.getElementById('categoria').value;
-    const precioMax = document.getElementById('precio').value;
-    const disponible = document.getElementById('disponible').checked;
+        const categoria = document.getElementById('categoria').value;
+        console.log('Aplicando filtros y redirigiendo...');
+        console.log('Categoría seleccionada:', categoria);
 
-    console.log('Aplicando filtros...');
-    console.log('Categoría:', categoria);
-    console.log('Precio máximo:', precioMax);
-    console.log('Disponible:', disponible);
-
-    // Aquí puedes implementar la lógica de filtrado con JavaScript o usar AJAX con Django
-  }
+        if (categoria) {
+            const urlRedireccion = '/' + categoria + '/';
+            
+            console.log('Redirigiendo a:', urlRedireccion);
+            window.location.href = urlRedireccion;
+        } else {
+            window.location.href = '/productos/'; 
+        }
+    }
 </script>
 
 </body>
