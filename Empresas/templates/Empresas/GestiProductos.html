@@ -22,13 +22,39 @@
     {% block content %}
     <main>
         <h1>Listado de Productos</h1>
-        <ul>
-            {% for armario in armarios %}
-            <li>{{ armario.nombre3 }}</li>
-            {% endfor %}
-        </ul>
+
+        <div class="add-product">
+            <a href="{% url 'agregar_producto2' %}" class="button">Agregar Nuevo Producto</a>
+        
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nombre del Producto</th>
+                    <th>Descripcion</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for armario in armarios %}
+                <tr>
+                    <td>{{ armario.nombre3 }}</td>
+                    <td>{{ armario.descripcion3 }}</td>
+                    <td>{{ armario.precio3 }}</td>
+                    <td>
+
+                        <a href ="{% url 'editar_producto2' armario.id %}" class="button">Editar</a>
+                        <a href ="{% url 'eliminar_producto2' armario.id %}" class="button">Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    
+                    {% endfor %}
+
+
     </main>
     {% endblock %}
     </div>
 </body>
-</html>
+</html>                                                                                                                                                                                                                                                                                                                                                                                              

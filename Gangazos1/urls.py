@@ -38,6 +38,7 @@ urlpatterns = [
     path('carrito', views.carrito, name='carrito'),
     path('MetodosPago', views.MetodosPago, name='MetodosPago'),
     path('idea/', views.ideas_view, name='idea'),
+    path('perfilUsuario/', views.perfilUsuario_view, name='perfilUsuario'),
     path('',include('Productos.urls')),
     path('',include('Administrador.urls')),
     path('',include('Empresas.urls')),

@@ -166,3 +166,6 @@ def ideas_view(request):
         'form': form,
         'ideas': ideas
         })
+    
+def perfilUsuario_view(request):
+    return render(request,'core/perfilUsuario.html')

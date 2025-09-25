@@ -143,3 +143,94 @@ main h1 {
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(93, 156, 236, 0.4);
 }
+
+/* ---------------------------------
+Estilos para la Tabla
+--------------------------------- */
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* Colapsa los bordes de las celdas */
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0, 38, 255, 0.1); /* Sombra suave para el contenedor de la tabla */
+    background-color: #fff; /* Fondo blanco para la tabla */
+    border-radius: 8px; /* Bordes redondeados */
+    overflow: hidden; /* Oculta el contenido que se desborda, necesario para los bordes redondeados */
+}
+
+/* Estilos para el encabezado de la tabla */
+thead {
+    background-color: #1a3051; /* El color azul oscuro que se ve en la imagen */
+    color: #fff;
+}
+
+th {
+    padding: 15px;
+    text-align: left;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Estilos para las filas del cuerpo de la tabla */
+tbody tr {
+    border-bottom: 1px solid #ddd; /* Línea separadora entre filas */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2; /* Color de fondo gris claro para filas pares */
+}
+
+/* Estilos para las celdas de datos */
+td {
+    padding: 15px;
+    color: #333; /* Color de texto para el contenido de las celdas */
+}
+
+/* Efecto al pasar el cursor sobre las filas */
+tbody tr:hover {
+    background-color: #e9ecef; /* Un color más claro al pasar el mouse por la fila */
+}
+
+
+
+td .action-links a {
+    text-decoration: none;
+    color: #3498db; /* Color azul para los enlaces */
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+td .action-links a:hover {
+    color: #2980b9; /* Color de enlace al pasar el cursor */
+}
+
+.button {
+    background-color: #5d9cec;
+    color: white;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem; 
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    align-self: flex-start;
+    box-shadow: 0 4px 10px rgba(93, 156, 236, 0.3); 
+    text-decoration: none; /* Asegura que el enlace no tenga subrayado */
+}
+.button:hover {
+    background-color: #4a8ad8; 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(93, 156, 236, 0.4);
+}
+
+/* Estilos para el botón de agregar producto */
+.add-product-button {
+    background-color: #28a745; /* Color verde */
+    color: white;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem; 
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    align-self: flex-start;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3); 
+    text-decoration: none; /* Asegura que el enlace no tenga subrayado */
+    margin-bottom: 20px; /* Espacio debajo del botón */
+}

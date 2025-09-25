@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% load static %}
+    <link rel="stylesheet" href="{% static 'Empresas/css/stylesagg2.css' %}">
+    <title>Agregar Producto</title>
+</head>
+<body>
+
+    <h1>Agregar Nuevo Producto</h1>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <label for="id_nombre">Nombre:</label>
+        <input type="text" name="nombre" id="id_nombre" required>
+        <br><br>
+
+        <label for="id_descripcion">Descripción:</label>
+        <textarea name="descripcion" id="id_descripcion" rows="4"></textarea>
+        <br><br>
+
+        <label for="id_precio">Precio:</label>
+        <input type="number" name="precio" id="id_precio" step="0.01" required>
+        <br><br>
+
+        <label for="id_imagen">Imagen:</label>
+        <input type="file" name="imagen" id="id_imagen" accept="image/*">
+        <br><br>
+
+        <label for="id_categoria">Categoría:</label>
+        <select name="categoria" id="id_categoria">
+            <option value="">Selecciona una categoría</option>
+            <option value="mesas">Mesas</option>
+            <option value="armarios">Armarios</option>
+            <option value="cajoneras">Cajoneras</option>
+            <option value="escritorios">Escritorios</option>
+            <option value="sillas">Sillas</option>
+            <option value="utensilios">Utensilios</option>
+        </select>
+        <br><br>
+
+        <button type="submit">Guardar Producto</button>
+    </form>
+    
+    
+    
+
+</body>
+</html>
