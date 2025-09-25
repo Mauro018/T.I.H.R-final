@@ -31,6 +31,7 @@ urlpatterns = [
     path('registro/',views.registro,name='registro'),
     path('login/',views.Login_view,name='login'),
     path('loginAdmin/',views.LoginAdmin_view,name='loginAdmin'),
+    path('loginEmpresa/',views.LoginEmpresa_view,name='loginEmpresa'),
     path('logout/',views.Logout_view,name='logout'),
     path('home2/',views.Home2_view,name='home2'),
     path('home3/',views.Home3_view,name='home3'),

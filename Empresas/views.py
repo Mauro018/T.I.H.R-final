@@ -4,7 +4,7 @@ from core.models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensil
 # Create your views here.
 
 def Dasboard_view(request):
-    return render(request,'Empresas/dashboard.html')
+    return render(request,'Empresas/dashboardEmpresa.html')
 
 def GestionarProductos_view(request):
     return render(request,'Empresas/GestiProductos.html')

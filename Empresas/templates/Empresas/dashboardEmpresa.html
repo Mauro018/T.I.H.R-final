@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard del Administrador</title>
+    <title>Dashboard de la Empresa</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'Empresas/css/styles3.css' %}">
 </head>
 <body>
     <div class="dashboard-container">
         <aside>
-            <h2>Dashboard de Administrador</h2>
+            <h2>Dashboard de Empresa</h2>
             <nav>
                 <ul>
-                    <li><a href="{% url 'dashboard' %}">Inicio</a></li>
-                    <li><a href="{% url 'empresa' %}">Datos de la empresa</a></li>
+                    <li><a href="{% url 'dashboardEmpresa' %}">Inicio</a></li>
                     <li><a href="{% url 'GestiProductos' %}">Gestión de productos</a></li>
                 </ul>
             </nav>
@@ -23,7 +22,7 @@
 
         <main>
             <header>
-                <h1>Bienvenido al Panel de Administración</h1>
+                <h1>Bienvenido al Panel de la Empresa</h1>
             </header>
 
             <div class="grid-container">

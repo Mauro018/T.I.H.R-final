@@ -73,7 +73,7 @@ def LoginEmpresa_view(request):
             passwordEmpresa = form.cleaned_data['passwordEmpresa']
             try:
                 userEmpresa = UserEmpresa.objects.get(usernameEmpresa=usernameEmpresa, passwordEmpresa=passwordEmpresa)
-                return redirect('')
+                return redirect('dashboardEmpresa')
             except UserEmpresa.DoesNotExist:
                 error_message = "Usuario o contraseña incorrectos"
                 return render(request, 'core/loginEmpresa.html', {'error_message': error_message})
