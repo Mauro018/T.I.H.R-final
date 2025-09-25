@@ -22,8 +22,51 @@ def Armarios_view(request):
     context = {'armarios':armarios}
     return render(request, 'Administrador/Gproductos.html', context)
 
-def sillas_view(request):
-    Productos = Sillas.objects.all()
-    context = {'productos':Productos}
-    return render(request, 'Administrador/Sillas.html', context)
+def Sillas_view(request):
+    sillas = Sillas.objects.all()
+    context = {'sillas':sillas}
+    return render(request, 'Administrador/Gproductos.html', context)
 
+def agregar_producto_view(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
+        precio = request.POST.get('precio')
+        imagen = request.FILES.get('imagen')
+
+        nuevo_producto = Armarios(
+            nombre3=nombre,
+            descripcion3=descripcion,
+            precio3=precio,
+            imagen3=imagen
+        )
+        nuevo_producto.save()
+        return redirect('Gproductos')
+
+    return render(request, 'Administrador/agregar_producto.html')
+
+def editar_producto_view(request, producto_id):
+    try:
+        producto = Armarios.objects.get(id=producto_id)
+    except Armarios.DoesNotExist:
+        return redirect('Gproductos')
+
+    if request.method == 'POST':
+        producto.nombre3 = request.POST.get('nombre')
+        producto.descripcion3 = request.POST.get('descripcion')
+        producto.precio3 = request.POST.get('precio')
+        if 'imagen' in request.FILES:
+            producto.imagen3 = request.FILES['imagen']
+        producto.save()
+        return redirect('Gproductos')
+
+    context = {'producto': producto}
+    return render(request, 'Administrador/editar_producto.html', context)
+
+def eliminar_producto_view(request, producto_id):
+    try:
+        producto = Armarios.objects.get(id=producto_id)
+        producto.delete()
+    except Armarios.DoesNotExist:
+        pass
+    return redirect('Gproductos')
