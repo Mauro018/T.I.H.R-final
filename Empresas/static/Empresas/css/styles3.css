@@ -234,3 +234,73 @@ td .action-links a:hover {
     text-decoration: none; /* Asegura que el enlace no tenga subrayado */
     margin-bottom: 20px; /* Espacio debajo del botón */
 }
+
+.seccion-at {
+    /* Fondo Transparente Inicial */
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(5px);
+
+    /* Estilos Base */
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: #333;
+    
+    /* Animación (Transición) */
+    transition: 
+        background-color 0.4s ease-out,
+        box-shadow 0.4s ease-out,
+        transform 0.4s ease-out;
+}
+
+/* Estado al pasar el mouse (HOVER) */
+.seccion-at:hover {
+    /* Sombra más marcada */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 123, 255, 0.5);
+    
+    /* Efecto de elevación y zoom */
+    transform: translateY(-2px) scale(1.01);
+}
+
+.contenedor-articulos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.articulo {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+.articulo:hover {
+    transform: translateY(-5px);
+}
+
+.contenido-articulo {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.contenido-articulo h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #0056b3;
+}
+.contenido-articulo p {
+    font-size: 0.9em;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    flex-grow: 1;
+}

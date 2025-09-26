@@ -14,7 +14,8 @@
             <nav>
                 <ul>
                     <li><a href="{% url 'dashboardEmpresa' %}">Inicio</a></li>
-                    <li><a href="{% url 'GestiProductos' %}">Gestión de productos</a></li>
+                    <li><a href="{% url 'GestiProductos' %}">Gestión de productos</a></li> 
+                    <li><a href="{% url 'listid' %}">Lista de ideas</a></li>
                 </ul>
             </nav>
             <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
@@ -36,6 +37,7 @@
                 <div class="card">
                     <h3>Gestión de Productos</h3>
                     <p>Controla el inventario de tus productos. Añade nuevos productos, actualiza los existentes y organiza por categorías.</p>
+                    
                 </div>
 
             </div>

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from core.models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios
+from core.models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, Idea
+from core.forms import IdeaForm
 
 # Create your views here.
 
@@ -57,3 +58,31 @@ def eliminar_producto_view2(request, producto_id):
     except Armarios.DoesNotExist:
         pass
     return redirect('GestiProductos')
+
+def listid(request):
+    return render(request,'Empresas/listid.html')
+
+def ideas_view2(request):
+    """
+    Maneja la creación y visualización de ideas usando ModelForm.
+    """
+    if request.method == 'POST':
+        form = IdeaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Redirige para evitar el reenvío del formulario
+            return redirect('idea')
+    else:
+        form = IdeaForm()
+
+    # Recupera todas las ideas de la base de datos
+    ideas = Idea.objects.all()
+    
+    # Renderiza la plantilla con el formulario y la lista de ideas
+    return render(request, 'Empresas/listid.html', {
+        'form': form,
+        'ideas': ideas
+        })
+    
+def perfilUsuario_view(request):
+    return render(request,'Empresas/listid.html')

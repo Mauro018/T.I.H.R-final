@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ideas Publicadas</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'Empresas/css/styles3.css' %}">
+</head>
+<body>
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <aside>
+  <h2>Dashboard de Empresa</h2>
+  <nav>
+    <ul>
+        <li><a href="{% url 'dashboardEmpresa' %}">Inicio</a></li>
+        <li><a href="{% url 'GestiProductos' %}">Gestión de productos</a></li> 
+        <li><a href="{% url 'listid' %}">Lista de ideas</a></li>
+    </ul>
+  </nav>
+  <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+</aside>
+
+
+  <!-- Main content -->
+  <main>
+    <header>
+      <h1>Ideas Publicadas</h1>
+    </header>
+
+    <section class="seccion-at">
+        <h2>Ideas Publicadas</h2>
+        {% if ideas %}
+          <div class="contenedor-articulos">
+            {% for idea in ideas %}
+              <div class="articulo">
+                <div class="contenido-articulo">
+                  <h3>{{ idea.titulo }}</h3>
+                  <p>{{ idea.descripcion }}</p>
+                  <p><strong>Autor:</strong> {{ idea.autor }}</p>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p>Aún no hay ideas publicadas. ¡Sé el primero en compartir la tuya!</p>
+        {% endif %}
+      </section>
+  </main>
+</div>
+</body>
+</html>
