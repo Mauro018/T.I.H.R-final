@@ -14,9 +14,10 @@
             <img src="{% static 'core/img/Perfil.png' %}" alt="Perfil" class="header-logo">
             <h1>Perfil</h1>
             <p class="subtitulo">Bienvenido a tu perfil</p>
-            <button><a href="{% url 'home3' %}">← Volver a inicio</a></li></button>
-            <br>
-            <button><a href="{% url 'logout' %}">Cerrar Sesión</a></button>
+            <div class="contenedor-botones">
+                <a href="{% url 'home3' %}" class="btn-perfil-inline"><button>← Volver a inicio</button></a>
+                <a href="{% url 'logout' %}" class="btn-perfil-inline"><button>Cerrar Sesión</button></a>
+            </div>
         </header>
         <br>
         <section class="seccion-at">
