@@ -126,6 +126,8 @@ main {
     background: linear-gradient(135deg, #49bcff 0%, #e6e7e9 100%);
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 footer {
@@ -555,17 +557,10 @@ input, textarea {
 .main-content-wrapper {
     margin-left: 270px;
     padding: 20px;
+    width: calc(100% - 180px);
+    box-sizing: border-box;
 }
 
-@media (max-width: 768px) {
-    .sidebar {
-        display: none;
-    }
-
-    .main-content-wrapper {
-        margin-left: 0;
-    }
-}
 * {
     margin: 0;
     padding: 0;
@@ -808,4 +803,125 @@ h1 {
 
 .btn-perfil-inline:hover button {
     background-color: #0056b3;
+}
+
+.contacto-fila-container {
+    /* Layout en columnas (vertical) en lugar de filas */
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px 40px; /* Más padding lateral */
+    max-width: 100%; /* Usa todo el ancho disponible */
+    width: 100%; /* Usa el 100% del ancho disponible */
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+
+/* Estilo para cada tarjeta de la fila (Formulario e Información) */
+.contacto-tarjeta-estilo {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* Sombra elegante */
+    transition: all 0.3s ease-in-out;
+    padding: 60px; /* Más espacio interno */
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.contacto-tarjeta-estilo:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+/* Título de las secciones dentro de la tarjeta */
+.contacto-tarjeta-estilo h3 {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #007BFF;
+    text-align: center;
+    border-bottom: 2px solid #007BFF33;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+    margin-top: 0; /* Asegura que no haya margen superior indeseado */
+}
+
+/* Contenedor del formulario */
+.formulario-cuerpo {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Grupo de campo (Label + Input/Textarea) */
+.grupo-campo-custom label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1em;
+}
+
+/* Estilos para los campos de texto del formulario */
+.formulario-cuerpo input[type="text"],
+.formulario-cuerpo input[type="email"],
+.formulario-cuerpo textarea {
+    width: 100%;
+    padding: 12px 18px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background-color: #f9f9f9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box; 
+    margin: 0;
+}
+
+.formulario-cuerpo input:focus,
+.formulario-cuerpo textarea:focus {
+    border-color: #007BFF;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.formulario-cuerpo textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Estilo del botón de envío */
+.btn-enviar-contacto {
+    width: 100%;
+    padding: 14px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    margin-top: 10px;
+    /* Sobreescribe estilos globales de button */
+    display: block; 
+}
+
+.btn-enviar-contacto:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para la Información de Contacto */
+.info-contacto-detalles p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #555;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
