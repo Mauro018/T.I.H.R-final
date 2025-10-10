@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -58,7 +58,31 @@
         
         <form method="post">
           {% csrf_token %}
-          {{ form.as_p }}
+          
+          <!-- Título -->
+          <div style="margin-bottom: 20px;">
+            <label for="id_titulo" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 1em; text-align: center;">Título:</label>
+            {{ form.titulo }}
+          </div>
+          
+          <!-- Descripción mejorada -->
+          <div class="description-container">
+            <label for="id_descripcion">Descripción:</label>
+            <textarea 
+              name="descripcion" 
+              id="id_descripcion" 
+              class="description-textarea"
+              placeholder="Describe tu idea detalladamente... ¿Qué quieres crear? ¿Qué características debería tener?"
+              required
+            >{{ form.descripcion.value|default:'' }}</textarea>
+          </div>
+          
+          <!-- Autor -->
+          <div style="margin-bottom: 20px;">
+            <label for="id_autor" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 1em; text-align: center;">Autor:</label>
+            {{ form.autor }}
+          </div>
+          
           <button type="submit" class="articulo-boton">Publicar Idea</button>
         </form>
       </section>
@@ -108,4 +132,3 @@
 
 </body>
 </html>
-

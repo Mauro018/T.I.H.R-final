@@ -925,3 +925,44 @@ h1 {
     align-items: center;
     gap: 10px;
 }
+
+.description-container {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    
+    .description-container label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+      font-size: 1em;
+      text-align: center;
+    }
+    
+    .description-textarea {
+      width: 100%;
+      min-height: 150px;
+      padding: 15px;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      font-size: 1em;
+      font-family: inherit;
+      resize: vertical;
+      transition: all 0.3s ease;
+      background-color: #f9f9f9;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+      box-sizing: border-box;
+    }
+    
+    .description-textarea:focus {
+      border-color: #007BFF;
+      background-color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
+      outline: none;
+    }
+    
+    .description-textarea::placeholder {
+      color: #999;
+      font-style: italic;
+    }
