@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
-from core.models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, Idea
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from core.models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, Idea, UserEmpresa
 from core.forms import IdeaForm
 
 # Create your views here.
@@ -62,27 +64,61 @@ def eliminar_producto_view2(request, producto_id):
 def listid(request):
     return render(request,'Empresas/listid.html')
 
-def ideas_view2(request):
+def empresa_ideas_view(request):
     """
-    Maneja la creación y visualización de ideas usando ModelForm.
+    Vista para que las empresas gestionen las ideas.
     """
-    if request.method == 'POST':
-        form = IdeaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            # Redirige para evitar el reenvío del formulario
-            return redirect('idea')
+    # Verificar si hay una sesión activa de empresa
+    empresa = None
+    if 'usernameEmpresa' in request.session:
+        try:
+            empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        except UserEmpresa.DoesNotExist:
+            return redirect('loginEmpresa')
     else:
-        form = IdeaForm()
+        messages.error(request, 'Debes iniciar sesión como empresa')
+        return redirect('loginEmpresa')
 
-    # Recupera todas las ideas de la base de datos
-    ideas = Idea.objects.all()
+    # Obtener todas las ideas ordenadas por fecha
+    ideas = Idea.objects.all().order_by('-fecha_creacion')
+    mensaje = None
     
-    # Renderiza la plantilla con el formulario y la lista de ideas
-    return render(request, 'Empresas/listid.html', {
-        'form': form,
-        'ideas': ideas
-        })
+    if request.method == 'POST':
+        idea_id = request.POST.get('idea_id')
+        accion = request.POST.get('accion')
+        
+        if idea_id and accion:
+            try:
+                idea = Idea.objects.get(pk=idea_id)
+                if accion == 'aceptar' and idea.estado == 'pendiente':
+                    idea.estado = 'en_proceso'
+                    idea.empresa_asignada = empresa
+                    idea.save()
+                    mensaje = "Idea aceptada exitosamente"
+                elif accion == 'completar' and idea.estado == 'en_proceso':
+                    if idea.empresa_asignada == empresa:
+                        idea.estado = 'completada'
+                        idea.save()
+                        mensaje = "Idea marcada como completada"
+                    else:
+                        mensaje = "Error: No tienes permiso para completar esta idea"
+            except Idea.DoesNotExist:
+                mensaje = "Error: La idea no existe"
+    
+    # Clasificar las ideas por estado
+    ideas_pendientes = ideas.filter(estado='pendiente')
+    ideas_en_proceso = ideas.filter(estado='en_proceso')
+    ideas_completadas = ideas.filter(estado='completada')
+    
+    context = {
+        'ideas_pendientes': ideas_pendientes,
+        'ideas_en_proceso': ideas_en_proceso,
+        'ideas_completadas': ideas_completadas,
+        'mensaje': mensaje,
+        'empresa': empresa
+    }
+    
+    return render(request, 'Empresas/ideas_empresa.html', context)
     
 def perfilUsuario_view(request):
     return render(request,'Empresas/listid.html')

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class User(models.Model):
     username = models.CharField(max_length=100, unique=True)
@@ -54,21 +55,49 @@ class UserClientes(models.Model):
     usernameCliente = models.CharField(max_length=100, unique=True)
     passwordCliente = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    last_modified = models.DateTimeField(auto_now=True)
+    status_changed_at = models.DateTimeField(null=True, blank=True)
+    
+    def save(self, *args, **kwargs):
+        if self.is_active != getattr(self, '_original_is_active', True):
+            self.status_changed_at = timezone.now()
+        super().save(*args, **kwargs)
+        self._original_is_active = self.is_active
     
     def __str__(self):
         return self.usernameCliente
     
 class UserEmpresa(models.Model):
-    usernameEmpresa= models.CharField(max_length=100, unique=True)
+    usernameEmpresa = models.CharField(max_length=100, unique=True)
     passwordEmpresa = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    last_modified = models.DateTimeField(auto_now=True)
+    status_changed_at = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.is_active != getattr(self, '_original_is_active', True):
+            self.status_changed_at = timezone.now()
+        super().save(*args, **kwargs)
+        self._original_is_active = self.is_active
 
     def __str__(self):
         return self.usernameEmpresa
     
 class Idea(models.Model):
+    STATUS_CHOICES = [
+        ('pendiente', 'Pendiente'),
+        ('en_proceso', 'En Proceso'),
+        ('completada', 'Completada'),
+    ]
+    
     titulo = models.CharField(max_length=100)
-    descripcion = models.CharField(max_length=250, default='', blank=True,null=True)
+    descripcion = models.CharField(max_length=250, default='', blank=True, null=True)
     autor = models.CharField(max_length=100)
+    imagen = models.ImageField(upload_to='uploads/ideas/', blank=True, null=True)
+    estado = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendiente')
+    empresa_asignada = models.ForeignKey(UserEmpresa, on_delete=models.SET_NULL, null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.titulo

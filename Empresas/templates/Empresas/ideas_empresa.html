@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Ideas - Dashboard de Empresa</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Empresas/css/styles3.css' %}">
+    <link rel="stylesheet" href="{% static 'Empresas/css/styles_ideas.css' %}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside>
+            <h2>Dashboard de Empresa</h2>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboardEmpresa' %}">Inicio</a></li>
+                    <li><a href="{% url 'GestiProductos' %}">Gestión de productos</a></li> 
+                    <li><a href="{% url 'empresa_ideas' %}">Gestión de ideas</a></li>
+                </ul>
+            </nav>
+            <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+        </aside>
+
+        <main>
+            <header>
+                <h1>Gestión de Ideas</h1>
+            </header>
+
+            <div class="ideas-container">
+    <h2>Gestión de Ideas</h2>
+    
+    {% if mensaje %}
+    <div class="alert {% if 'Error' in mensaje %}alert-danger{% else %}alert-success{% endif %}">
+        {{ mensaje }}
+    </div>
+    {% endif %}
+
+    <div class="ideas-sections">
+        <!-- Ideas Pendientes -->
+        <section class="ideas-section">
+            <h3>Ideas Pendientes</h3>
+            <div class="ideas-grid">
+                {% for idea in ideas_pendientes %}
+                <div class="idea-card pendiente">
+                    <h4>{{ idea.titulo }}</h4>
+                    <p><strong>Autor:</strong> {{ idea.autor }}</p>
+                    <p><strong>Descripción:</strong> {{ idea.descripcion }}</p>
+                    {% if idea.imagen %}
+                    <div class="idea-imagen">
+                        <img src="{{ idea.imagen.url }}" alt="{{ idea.titulo }}">
+                    </div>
+                    {% endif %}
+                    <p class="fecha">{{ idea.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                    <form method="post" class="idea-actions">
+                        {% csrf_token %}
+                        <input type="hidden" name="idea_id" value="{{ idea.id }}">
+                        <input type="hidden" name="accion" value="aceptar">
+                        <button type="submit" class="btn btn-success">Aceptar Idea</button>
+                    </form>
+                </div>
+                {% empty %}
+                <p class="no-ideas">No hay ideas pendientes</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Ideas En Proceso -->
+        <section class="ideas-section">
+            <h3>Ideas En Proceso</h3>
+            <div class="ideas-grid">
+                {% for idea in ideas_en_proceso %}
+                <div class="idea-card en-proceso">
+                    <h4>{{ idea.titulo }}</h4>
+                    <p><strong>Autor:</strong> {{ idea.autor }}</p>
+                    <p><strong>Descripción:</strong> {{ idea.descripcion }}</p>
+                    {% if idea.imagen %}
+                    <div class="idea-imagen">
+                        <img src="{{ idea.imagen.url }}" alt="{{ idea.titulo }}">
+                    </div>
+                    {% endif %}
+                    <p class="fecha">{{ idea.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                    {% if idea.empresa_asignada == request.user.userempresa %}
+                    <form method="post" class="idea-actions">
+                        {% csrf_token %}
+                        <input type="hidden" name="idea_id" value="{{ idea.id }}">
+                        <input type="hidden" name="accion" value="completar">
+                        <button type="submit" class="btn btn-primary">Marcar como Completada</button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p class="no-ideas">No hay ideas en proceso</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Ideas Completadas -->
+        <section class="ideas-section">
+            <h3>Ideas Completadas</h3>
+            <div class="ideas-grid">
+                {% for idea in ideas_completadas %}
+                <div class="idea-card completada">
+                    <h4>{{ idea.titulo }}</h4>
+                    <p><strong>Autor:</strong> {{ idea.autor }}</p>
+                    <p><strong>Descripción:</strong> {{ idea.descripcion }}</p>
+                    {% if idea.imagen %}
+                    <div class="idea-imagen">
+                        <img src="{{ idea.imagen.url }}" alt="{{ idea.titulo }}">
+                    </div>
+                    {% endif %}
+                    <p class="fecha">{{ idea.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                    <p class="estado">Completada ✓</p>
+                </div>
+                {% empty %}
+                <p class="no-ideas">No hay ideas completadas</p>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</div>
+        </main>
+    </div>
+</body>
+</html>

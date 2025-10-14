@@ -22,7 +22,12 @@ class LoginFormEmpresa(forms.Form):
 class IdeaForm(forms.ModelForm):
     class Meta:
         model = Idea
-        fields = ['titulo', 'descripcion', 'autor']
+        fields = ['titulo', 'descripcion', 'autor', 'imagen']
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows': 5}),
         }
+
+class IdeaUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Idea
+        fields = ['estado']

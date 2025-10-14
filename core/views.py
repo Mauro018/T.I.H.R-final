@@ -73,6 +73,10 @@ def LoginEmpresa_view(request):
             passwordEmpresa = form.cleaned_data['passwordEmpresa']
             try:
                 userEmpresa = UserEmpresa.objects.get(usernameEmpresa=usernameEmpresa, passwordEmpresa=passwordEmpresa)
+                # Guardar información de la empresa en la sesión
+                request.session['usernameEmpresa'] = userEmpresa.usernameEmpresa
+                request.session['empresa_id'] = userEmpresa.id
+                request.session.modified = True
                 return redirect('dashboardEmpresa')
             except UserEmpresa.DoesNotExist:
                 error_message = "Usuario o contraseña incorrectos"
@@ -82,6 +86,10 @@ def LoginEmpresa_view(request):
     return render(request,'core/loginEmpresa.html', {'form': form})
 
 def Logout_view(request):
+    # Limpiar datos específicos de la sesión
+    request.session.pop('usernameEmpresa', None)
+    request.session.pop('empresa_id', None)
+    # Limpiar toda la sesión
     logout(request)
     return redirect('home')
 
@@ -150,22 +158,44 @@ def ideas_view(request):
     Maneja la creación y visualización de ideas usando ModelForm.
     """
     if request.method == 'POST':
-        form = IdeaForm(request.POST)
+        form = IdeaForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            # Redirige para evitar el reenvío del formulario
             return redirect('idea')
     else:
         form = IdeaForm()
 
     # Recupera todas las ideas de la base de datos
-    ideas = Idea.objects.all()
+    ideas = Idea.objects.all().order_by('-fecha_creacion')
     
-    # Renderiza la plantilla con el formulario y la lista de ideas
     return render(request, 'core/idea.html', {
         'form': form,
         'ideas': ideas
-        })
+    })
+
+def empresa_ideas_view(request):
+    """
+    Vista para que las empresas gestionen las ideas.
+    """
+    ideas = Idea.objects.all().order_by('-fecha_creacion')
+    
+    if request.method == 'POST':
+        idea_id = request.POST.get('idea_id')
+        accion = request.POST.get('accion')
+        
+        if idea_id and accion:
+            idea = Idea.objects.get(pk=idea_id)
+            if accion == 'aceptar':
+                idea.estado = 'en_proceso'
+                idea.empresa_asignada = request.user.userempresa
+                idea.save()
+            elif accion == 'completar':
+                idea.estado = 'completada'
+                idea.save()
+    
+    return render(request, 'Empresas/ideas_empresa.html', {
+        'ideas': ideas
+    })
     
 def perfilUsuario_view(request):
     return render(request,'core/perfilUsuario.html')

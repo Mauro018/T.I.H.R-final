@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard del Administrador</title>
+    {% load static %}
+    {% csrf_token %}
+    <link rel="stylesheet" href="{% static 'Administrador/css/styles2.css' %}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside>
+            <h2>Dashboard de Administrador</h2>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboard' %}">Inicio</a></li>
+                    <li><a href="{% url 'usuarios' %}">Gestión de usuarios</a></li>
+                    <li><a href="{% url 'Gproductos' %}">Gestión de productos</a></li>
+                </ul>
+            </nav>
+            <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+        </aside>
+
+        <main>
+            <header>
+                <h1>Gestión de Usuarios</h1>
+            </header>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tipo de Usuario</th>
+                            <th>Nombre de Usuario</th>
+                            <th>Email</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>Cliente</td>
+                            <td>{{ user.usernameCliente }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{% if user.is_active %}Activo{% else %}Inactivo{% endif %}</td>
+                            <td class="action-links">
+                                <a href="#" class="button edit-user" data-id="{{ user.id }}" data-type="cliente">Editar</a>
+                                {% if user.is_active %}
+                                <a href="#" class="button disable-user" data-id="{{ user.id }}" data-type="cliente">Desactivar</a>
+                                {% else %}
+                                <a href="#" class="button enable-user" data-id="{{ user.id }}" data-type="cliente">Activar</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for empresa in empresas %}
+                        <tr>
+                            <td>Empresa</td>
+                            <td>{{ empresa.usernameEmpresa }}</td>
+                            <td>N/A</td>
+                            <td>{% if empresa.is_active %}Activo{% else %}Inactivo{% endif %}</td>
+                            <td class="action-links">
+                                <a href="#" class="button edit-user" data-id="{{ empresa.id }}" data-type="empresa">Editar</a>
+                                {% if empresa.is_active %}
+                                <a href="#" class="button disable-user" data-id="{{ empresa.id }}" data-type="empresa">Desactivar</a>
+                                {% else %}
+                                <a href="#" class="button enable-user" data-id="{{ empresa.id }}" data-type="empresa">Activar</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de edición -->
+    <div id="editModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Usuario</h2>
+            <form id="editUserForm" method="POST">
+                {% csrf_token %}
+                <input type="hidden" id="userId" name="userId">
+                <input type="hidden" id="userType" name="userType">
+                <div class="form-group">
+                    <label for="username">Nombre de Usuario:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group" id="emailGroup">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <button type="submit" class="button">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('editModal');
+            const closeBtn = document.getElementsByClassName('close')[0];
+            const editUserForm = document.getElementById('editUserForm');
+
+            // Manejar clics en botones de editar
+            document.querySelectorAll('.edit-user').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const userId = this.dataset.id;
+                    const userType = this.dataset.type;
+                    const row = this.closest('tr');
+                    
+                    document.getElementById('userId').value = userId;
+                    document.getElementById('userType').value = userType;
+                    document.getElementById('username').value = row.children[1].textContent.trim();
+                    
+                    if (userType === 'cliente') {
+                        document.getElementById('emailGroup').style.display = 'block';
+                        document.getElementById('email').value = row.children[2].textContent.trim();
+                    } else {
+                        document.getElementById('emailGroup').style.display = 'none';
+                    }
+                    
+                    modal.style.display = 'block';
+                });
+            });
+
+            // Manejar clics en botones de activar/desactivar
+            document.querySelectorAll('.disable-user, .enable-user').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('¿Estás seguro de que quieres cambiar el estado de este usuario?')) {
+                        const userId = this.dataset.id;
+                        const userType = this.dataset.type;
+                        const action = this.classList.contains('disable-user') ? 'disable' : 'enable';
+                        
+                        fetch(`/toggle-user-status/${userId}/${userType}/${action}/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Content-Type': 'application/json'
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                location.reload();
+                            } else {
+                                alert(data.error || 'Error al cambiar el estado del usuario');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Error al procesar la solicitud');
+                        });
+                    }
+                });
+            });
+
+            // Cerrar modal
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+
+            // Manejar envío del formulario de edición
+            editUserForm.onsubmit = function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+
+                fetch('/update-user/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert(data.error || 'Error al actualizar el usuario');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al procesar la solicitud');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

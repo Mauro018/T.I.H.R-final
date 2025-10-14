@@ -6,6 +6,7 @@
   <title>Tu Idea Hecha Realidad</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'core/css/idea.css' %}">
 </head>
 <body>
 
@@ -56,31 +57,36 @@
         <h2>Agregar una Nueva Idea a Crear</h2>
         <p>¿Tienes una idea que quieres desarrollar o compartir? Completa el siguiente formulario:</p>
         
-        <form method="post">
+        <form method="post" enctype="multipart/form-data" class="idea-form">
           {% csrf_token %}
           
           <!-- Título -->
-          <div style="margin-bottom: 20px;">
-            <label for="id_titulo" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 1em; text-align: center;">Título:</label>
+          <div class="form-group">
+            <label for="id_titulo">Título de tu idea:</label>
             {{ form.titulo }}
           </div>
           
           <!-- Descripción mejorada -->
-          <div class="description-container">
-            <label for="id_descripcion">Descripción:</label>
+          <div class="form-group">
+            <label for="id_descripcion">Descripción detallada:</label>
             <textarea 
               name="descripcion" 
               id="id_descripcion" 
-              class="description-textarea"
               placeholder="Describe tu idea detalladamente... ¿Qué quieres crear? ¿Qué características debería tener?"
               required
             >{{ form.descripcion.value|default:'' }}</textarea>
           </div>
           
           <!-- Autor -->
-          <div style="margin-bottom: 20px;">
-            <label for="id_autor" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 1em; text-align: center;">Autor:</label>
+          <div class="form-group">
+            <label for="id_autor">Tu nombre:</label>
             {{ form.autor }}
+          </div>
+
+          <!-- Imagen -->
+          <div class="form-group">
+            <label for="id_imagen">Adjuntar imagen (opcional):</label>
+            {{ form.imagen }}
           </div>
           
           <button type="submit" class="articulo-boton">Publicar Idea</button>
@@ -92,11 +98,21 @@
         {% if ideas %}
           <div class="contenedor-articulos">
             {% for idea in ideas %}
-              <div class="articulo">
+              <div class="articulo {% if idea.estado == 'en_proceso' %}en-proceso{% elif idea.estado == 'completada' %}completada{% endif %}">
                 <div class="contenido-articulo">
                   <h3>{{ idea.titulo }}</h3>
+                  {% if idea.imagen %}
+                  <div class="idea-imagen">
+                    <img src="{{ idea.imagen.url }}" alt="{{ idea.titulo }}">
+                  </div>
+                  {% endif %}
                   <p>{{ idea.descripcion }}</p>
                   <p><strong>Autor:</strong> {{ idea.autor }}</p>
+                  <p><strong>Estado:</strong> {{ idea.get_estado_display }}</p>
+                  {% if idea.empresa_asignada %}
+                  <p><strong>Empresa asignada:</strong> {{ idea.empresa_asignada.usernameEmpresa }}</p>
+                  {% endif %}
+                  <p><strong>Fecha:</strong> {{ idea.fecha_creacion|date:"d/m/Y H:i" }}</p>
                 </div>
               </div>
             {% endfor %}
