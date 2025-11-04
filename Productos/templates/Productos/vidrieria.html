@@ -7,6 +7,28 @@
     <title>{% block title %} {% endblock %} | Tu Idea Hecha Realidad</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'Productos/css/styles1.css' %}">
+    <style>
+        .modal {display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6);}
+        .modal-content {background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; border-radius: 10px; width: 90%; max-width: 600px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);}
+        .close {color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;}
+        .close:hover, .close:focus {color: #000;}
+        .modal-header {padding-bottom: 10px; border-bottom: 2px solid #007BFF; margin-bottom: 20px;}
+        .modal-body {padding: 20px 0;}
+        .modal-product-image {width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;}
+        .modal-product-info {margin: 15px 0;}
+        .modal-product-info h3 {color: #007BFF; margin-bottom: 10px;}
+        .modal-product-info p {margin: 8px 0; line-height: 1.6;}
+        .quantity-selector {display: flex; align-items: center; gap: 10px; margin: 20px 0;}
+        .quantity-selector button {background-color: #007BFF; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px; font-size: 18px;}
+        .quantity-selector button:hover {background-color: #0056b3;}
+        .quantity-selector input {width: 60px; text-align: center; font-size: 16px; padding: 8px; border: 2px solid #007BFF; border-radius: 5px;}
+        .modal-footer {text-align: center; margin-top: 20px;}
+        .btn-comprar {background-color: #28a745; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;}
+        .btn-comprar:hover {background-color: #218838;}
+        .btn-ver-detalles {background-color: #007BFF; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; margin-top: 10px; display: block; width: 100%; text-decoration: none;}
+        .btn-ver-detalles:hover {background-color: #0056b3;}
+        .precio-destacado {font-size: 20px; color: #28a745; font-weight: bold; margin: 10px 0;}
+    </style>
 </head>
 <body>
  
@@ -66,27 +88,29 @@
                         </div>
                     </div>
                     <div class="contenedor-articulos" id="contenedorArticulos">
+                        {% for silla in sillas %}
+                        <div class="articulo">
+                            {% if silla.imagen2 %}
+                            <img src="{{ silla.imagen2.url }}" alt="{{ silla.nombre2 }}">
+                            {% else %}
+                            <img src="{% static 'Productos/img/Sillas.jpg' %}" alt="{{ silla.nombre2 }}">
+                            {% endif %}
+                            <div class="contenido-articulo">
+                                <h3>{{ silla.nombre2 }}</h3>
+                                <p>{{ silla.descripcion2 }}</p>
+                                <p class="precio-destacado">Precio: ${{ silla.precio2 }}</p>
+                                <button class="btn-ver-detalles" onclick="mostrarDetalles('silla', {{ silla.id }}, '{{ silla.nombre2|escapejs }}', '{{ silla.descripcion2|escapejs }}', '{{ silla.precio2 }}', '{% if silla.imagen2 %}{{ silla.imagen2.url }}{% else %}{% static 'Productos/img/Sillas.jpg' %}{% endif %}')">Ver Detalles y Comprar</button>
+                            </div>
+                        </div>
+                        {% empty %}
                         <div class="articulo">
                             <img src="{% static 'Productos/img/Sillas.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
-                                <h3>Silla de terraza</h3>
-                                <p>Ahora esta a $120.000</p>
+                                <h3>No hay productos disponibles</h3>
+                                <p>Próximamente nuevos productos</p>
                             </div>
                         </div>
-                        <div class="articulo">
-                            <img src="{% static 'Productos/img/Sillas 2.jpg' %}" alt="Imagen del Producto 1">
-                            <div class="contenido-articulo">
-                                <h3>Silla adirondack</h3>
-                                <p>Ahora esta a $140.000</p>
-                            </div>
-                        </div>
-                        <div class="articulo">
-                            <img src="{% static 'Productos/img/Sillas 3.jpg' %}" alt="Imagen del Producto 1">
-                            <div class="contenido-articulo">
-                                <h3>Silla de comedor</h3>
-                                <p>Ahora esta a $160.000</p>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -98,20 +122,70 @@
         <p>&copy; 2025 Tu Idea Hecha Realidad</p>
     </footer>
 </div>
+
+<!-- Modal de Detalles del Producto -->
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="cerrarModal()">&times;</span>
+        <div class="modal-header"><h2 id="modalTitle">Detalles del Producto</h2></div>
+        <div class="modal-body">
+            <img id="modalImage" class="modal-product-image" src="" alt="Producto">
+            <div class="modal-product-info">
+                <h3 id="modalProductName"></h3>
+                <p id="modalProductDescription"></p>
+                <p class="precio-destacado">Precio: $<span id="modalProductPrice"></span></p>
+                <div class="quantity-selector">
+                    <label for="quantity">Cantidad:</label>
+                    <button onclick="cambiarCantidad(-1)">-</button>
+                    <input type="number" id="quantity" value="1" min="1" max="99" readonly>
+                    <button onclick="cambiarCantidad(1)">+</button>
+                </div>
+                <p><strong>Total: $<span id="totalPrice"></span></strong></p>
+            </div>
+        </div>
+        <div class="modal-footer"><button class="btn-comprar" onclick="agregarAlCarrito()">Agregar al Carrito</button></div>
+    </div>
+</div>
+
 <script>
+    let currentProduct = {};
+    function mostrarDetalles(tipo, id, nombre, descripcion, precio, imagen) {
+        currentProduct = {tipo: tipo, id: id, nombre: nombre, descripcion: descripcion, precio: parseFloat(precio), imagen: imagen};
+        document.getElementById('modalProductName').textContent = nombre;
+        document.getElementById('modalProductDescription').textContent = descripcion;
+        document.getElementById('modalProductPrice').textContent = precio;
+        document.getElementById('modalImage').src = imagen;
+        document.getElementById('quantity').value = 1;
+        actualizarTotal();
+        document.getElementById('productModal').style.display = 'block';
+    }
+    function cerrarModal() { document.getElementById('productModal').style.display = 'none'; }
+    function cambiarCantidad(delta) {
+        let input = document.getElementById('quantity');
+        let newValue = parseInt(input.value) + delta;
+        if (newValue >= 1 && newValue <= 99) { input.value = newValue; actualizarTotal(); }
+    }
+    function actualizarTotal() {
+        let cantidad = parseInt(document.getElementById('quantity').value);
+        let total = currentProduct.precio * cantidad;
+        document.getElementById('totalPrice').textContent = total.toFixed(2);
+    }
+    function agregarAlCarrito() {
+        let cantidad = parseInt(document.getElementById('quantity').value);
+        let carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+        let existente = carrito.find(item => item.tipo === currentProduct.tipo && item.id === currentProduct.id);
+        if (existente) { existente.cantidad += cantidad; } 
+        else { carrito.push({tipo: currentProduct.tipo, id: currentProduct.id, nombre: currentProduct.nombre, precio: currentProduct.precio, cantidad: cantidad, imagen: currentProduct.imagen, descripcion: currentProduct.descripcion}); }
+        sessionStorage.setItem('carrito', JSON.stringify(carrito));
+        alert('¡Producto agregado al carrito!');
+        cerrarModal();
+        if (confirm('¿Desea ir al carrito ahora?')) { window.location.href = '{% url "carrito" %}'; }
+    }
+    window.onclick = function(event) { let modal = document.getElementById('productModal'); if (event.target == modal) { cerrarModal(); } }
     function aplicarFiltros() {
         const categoria = document.getElementById('categoria').value;
-        console.log('Aplicando filtros y redirigiendo...');
-        console.log('Categoría seleccionada:', categoria);
-
-        if (categoria) {
-            const urlRedireccion = '/' + categoria + '/';
-            
-            console.log('Redirigiendo a:', urlRedireccion);
-            window.location.href = urlRedireccion;
-        } else {
-            window.location.href = '/productos/'; 
-        }
+        if (categoria) { window.location.href = '/' + categoria + '/'; } 
+        else { window.location.href = '/productos/'; }
     }
 </script>
     </body>

@@ -52,7 +52,26 @@ def productos(request):
             usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
         except UserClientes.DoesNotExist:
             pass
-    return render(request, 'core/productos.html', {'usuario': usuario})
+    
+    # Obtener todos los productos de la base de datos
+    mesas = Mesas.objects.all()[:3]  # Solo primeros 3 para la vista de ofertas
+    sillas = Sillas.objects.all()[:3]
+    armarios = Armarios.objects.all()[:3]
+    cajoneras = Cajoneras.objects.all()[:3]
+    escritorios = Escritorios.objects.all()[:3]
+    utensilios = Utensilios.objects.all()[:3]
+    
+    context = {
+        'usuario': usuario,
+        'mesas': mesas,
+        'sillas': sillas,
+        'armarios': armarios,
+        'cajoneras': cajoneras,
+        'escritorios': escritorios,
+        'utensilios': utensilios,
+    }
+    
+    return render(request, 'core/productos.html', context)
 
 def contact(request):
     # Obtener el usuario de la sesión

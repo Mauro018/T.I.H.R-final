@@ -15,7 +15,23 @@ def Dasboard_view(request):
     return render(request,'Empresas/dashboardEmpresa.html')
 
 def GestionarProductos_view(request):
-    return render(request,'Empresas/GestiProductos.html')
+    # Obtener todos los productos de todas las categorías
+    mesas = Mesas.objects.all()
+    sillas = Sillas.objects.all()
+    armarios = Armarios.objects.all()
+    cajoneras = Cajoneras.objects.all()
+    escritorios = Escritorios.objects.all()
+    utensilios = Utensilios.objects.all()
+    
+    context = {
+        'mesas': mesas,
+        'sillas': sillas,
+        'armarios': armarios,
+        'cajoneras': cajoneras,
+        'escritorios': escritorios,
+        'utensilios': utensilios,
+    }
+    return render(request, 'Empresas/GestiProductos.html', context)
 
 def Armarios_view2(request):
     armarios = Armarios.objects.all()
@@ -28,42 +44,181 @@ def agregar_producto_view2(request):
         descripcion = request.POST.get('descripcion')
         precio = request.POST.get('precio')
         imagen = request.FILES.get('imagen')
+        categoria = request.POST.get('categoria')
 
-        nuevo_producto = Armarios(
-            nombre3=nombre,
-            descripcion3=descripcion,
-            precio3=precio,
-            imagen3=imagen
-        )
+        # Guardar el producto en el modelo correspondiente según la categoría
+        if categoria == 'mesas':
+            nuevo_producto = Mesas(
+                nombre1=nombre,
+                descripcion1=descripcion,
+                precio1=precio,
+                imagen1=imagen
+            )
+        elif categoria == 'sillas':
+            nuevo_producto = Sillas(
+                nombre2=nombre,
+                descripcion2=descripcion,
+                precio2=precio,
+                imagen2=imagen
+            )
+        elif categoria == 'armarios':
+            nuevo_producto = Armarios(
+                nombre3=nombre,
+                descripcion3=descripcion,
+                precio3=precio,
+                imagen3=imagen
+            )
+        elif categoria == 'cajoneras':
+            nuevo_producto = Cajoneras(
+                nombre4=nombre,
+                descripcion4=descripcion,
+                precio4=precio,
+                imagen4=imagen
+            )
+        elif categoria == 'escritorios':
+            nuevo_producto = Escritorios(
+                nombre5=nombre,
+                descripcion5=descripcion,
+                precio5=precio,
+                imagen5=imagen
+            )
+        elif categoria == 'utensilios':
+            nuevo_producto = Utensilios(
+                nombre6=nombre,
+                descripcion6=descripcion,
+                precio6=precio,
+                imagen6=imagen
+            )
+        else:
+            messages.error(request, 'Categoría no válida')
+            return render(request, 'Empresas/agregar_producto2.html')
+        
         nuevo_producto.save()
+        messages.success(request, 'Producto agregado exitosamente')
         return redirect('GestiProductos')
 
     return render(request, 'Empresas/agregar_producto2.html')
 
-def editar_producto_view2(request, producto_id):
-    try:
-        producto = Armarios.objects.get(id=producto_id)
-    except Armarios.DoesNotExist:
+def editar_producto_view2(request, categoria, producto_id):
+    # Obtener el producto según la categoría
+    producto = None
+    modelo = None
+    
+    if categoria == 'mesas':
+        modelo = Mesas
+        try:
+            producto = Mesas.objects.get(id=producto_id)
+        except Mesas.DoesNotExist:
+            return redirect('GestiProductos')
+    elif categoria == 'sillas':
+        modelo = Sillas
+        try:
+            producto = Sillas.objects.get(id=producto_id)
+        except Sillas.DoesNotExist:
+            return redirect('GestiProductos')
+    elif categoria == 'armarios':
+        modelo = Armarios
+        try:
+            producto = Armarios.objects.get(id=producto_id)
+        except Armarios.DoesNotExist:
+            return redirect('GestiProductos')
+    elif categoria == 'cajoneras':
+        modelo = Cajoneras
+        try:
+            producto = Cajoneras.objects.get(id=producto_id)
+        except Cajoneras.DoesNotExist:
+            return redirect('GestiProductos')
+    elif categoria == 'escritorios':
+        modelo = Escritorios
+        try:
+            producto = Escritorios.objects.get(id=producto_id)
+        except Escritorios.DoesNotExist:
+            return redirect('GestiProductos')
+    elif categoria == 'utensilios':
+        modelo = Utensilios
+        try:
+            producto = Utensilios.objects.get(id=producto_id)
+        except Utensilios.DoesNotExist:
+            return redirect('GestiProductos')
+    else:
         return redirect('GestiProductos')
 
     if request.method == 'POST':
-        producto.nombre3 = request.POST.get('nombre')
-        producto.descripcion3 = request.POST.get('descripcion')
-        producto.precio3 = request.POST.get('precio')
-        if 'imagen' in request.FILES:
-            producto.imagen3 = request.FILES['imagen']
+        nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
+        precio = request.POST.get('precio')
+        
+        # Actualizar según la categoría
+        if categoria == 'mesas':
+            producto.nombre1 = nombre
+            producto.descripcion1 = descripcion
+            producto.precio1 = precio
+            if 'imagen' in request.FILES:
+                producto.imagen1 = request.FILES['imagen']
+        elif categoria == 'sillas':
+            producto.nombre2 = nombre
+            producto.descripcion2 = descripcion
+            producto.precio2 = precio
+            if 'imagen' in request.FILES:
+                producto.imagen2 = request.FILES['imagen']
+        elif categoria == 'armarios':
+            producto.nombre3 = nombre
+            producto.descripcion3 = descripcion
+            producto.precio3 = precio
+            if 'imagen' in request.FILES:
+                producto.imagen3 = request.FILES['imagen']
+        elif categoria == 'cajoneras':
+            producto.nombre4 = nombre
+            producto.descripcion4 = descripcion
+            producto.precio4 = precio
+            if 'imagen' in request.FILES:
+                producto.imagen4 = request.FILES['imagen']
+        elif categoria == 'escritorios':
+            producto.nombre5 = nombre
+            producto.descripcion5 = descripcion
+            producto.precio5 = precio
+            if 'imagen' in request.FILES:
+                producto.imagen5 = request.FILES['imagen']
+        elif categoria == 'utensilios':
+            producto.nombre6 = nombre
+            producto.descripcion6 = descripcion
+            producto.precio6 = precio
+            if 'imagen' in request.FILES:
+                producto.imagen6 = request.FILES['imagen']
+        
         producto.save()
+        messages.success(request, 'Producto actualizado exitosamente')
         return redirect('GestiProductos')
 
-    context = {'producto': producto}
+    context = {
+        'producto': producto,
+        'categoria': categoria
+    }
     return render(request, 'Empresas/editar_producto2.html', context)
 
-def eliminar_producto_view2(request, producto_id):
+def eliminar_producto_view2(request, categoria, producto_id):
+    # Eliminar el producto según la categoría
     try:
-        producto = Armarios.objects.get(id=producto_id)
+        if categoria == 'mesas':
+            producto = Mesas.objects.get(id=producto_id)
+        elif categoria == 'sillas':
+            producto = Sillas.objects.get(id=producto_id)
+        elif categoria == 'armarios':
+            producto = Armarios.objects.get(id=producto_id)
+        elif categoria == 'cajoneras':
+            producto = Cajoneras.objects.get(id=producto_id)
+        elif categoria == 'escritorios':
+            producto = Escritorios.objects.get(id=producto_id)
+        elif categoria == 'utensilios':
+            producto = Utensilios.objects.get(id=producto_id)
+        else:
+            return redirect('GestiProductos')
+        
         producto.delete()
-    except Armarios.DoesNotExist:
-        pass
+        messages.success(request, 'Producto eliminado exitosamente')
+    except:
+        messages.error(request, 'Error al eliminar el producto')
+    
     return redirect('GestiProductos')
 
 def listid(request):

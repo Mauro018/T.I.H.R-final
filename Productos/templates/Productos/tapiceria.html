@@ -7,6 +7,28 @@
     <title>{% block title %} {% endblock %} | Tu Idea Hecha Realidad</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'Productos/css/styles1.css' %}">
+    <style>
+        .modal {display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6);}
+        .modal-content {background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; border-radius: 10px; width: 90%; max-width: 600px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);}
+        .close {color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;}
+        .close:hover, .close:focus {color: #000;}
+        .modal-header {padding-bottom: 10px; border-bottom: 2px solid #007BFF; margin-bottom: 20px;}
+        .modal-body {padding: 20px 0;}
+        .modal-product-image {width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;}
+        .modal-product-info {margin: 15px 0;}
+        .modal-product-info h3 {color: #007BFF; margin-bottom: 10px;}
+        .modal-product-info p {margin: 8px 0; line-height: 1.6;}
+        .quantity-selector {display: flex; align-items: center; gap: 10px; margin: 20px 0;}
+        .quantity-selector button {background-color: #007BFF; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px; font-size: 18px;}
+        .quantity-selector button:hover {background-color: #0056b3;}
+        .quantity-selector input {width: 60px; text-align: center; font-size: 16px; padding: 8px; border: 2px solid #007BFF; border-radius: 5px;}
+        .modal-footer {text-align: center; margin-top: 20px;}
+        .btn-comprar {background-color: #28a745; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;}
+        .btn-comprar:hover {background-color: #218838;}
+        .btn-ver-detalles {background-color: #007BFF; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; margin-top: 10px; display: block; width: 100%; text-decoration: none;}
+        .btn-ver-detalles:hover {background-color: #0056b3;}
+        .precio-destacado {font-size: 20px; color: #28a745; font-weight: bold; margin: 10px 0;}
+    </style>
 </head>
 <body>
  
@@ -66,27 +88,29 @@
                         </div>
                     </div>
                     <div class="contenedor-articulos" id="contenedorArticulos">
+                        {% for utensilio in utensilios %}
+                        <div class="articulo">
+                            {% if utensilio.imagen6 %}
+                            <img src="{{ utensilio.imagen6.url }}" alt="{{ utensilio.nombre6 }}">
+                            {% else %}
+                            <img src="{% static 'Productos/img/Cucharas.jpg' %}" alt="{{ utensilio.nombre6 }}">
+                            {% endif %}
+                            <div class="contenido-articulo">
+                                <h3>{{ utensilio.nombre6 }}</h3>
+                                <p>{{ utensilio.descripcion6 }}</p>
+                                <p><strong>Precio: ${{ utensilio.precio6 }}</strong></p>
+                                <button class="btn-ver-detalles" onclick="mostrarDetalles('utensilio', {{ utensilio.id }}, '{{ utensilio.nombre6 }}', '{{ utensilio.descripcion6 }}', {{ utensilio.precio6 }}, '{% if utensilio.imagen6 %}{{ utensilio.imagen6.url }}{% else %}{% static 'Productos/img/Cucharas.jpg' %}{% endif %}')">Ver Detalles y Comprar</button>
+                            </div>
+                        </div>
+                        {% empty %}
                         <div class="articulo">
                             <img src="{% static 'Productos/img/Cucharas.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
-                                <h3>Cucharas</h3>
-                                <p>Ahora esta a $110.000</p>
+                                <h3>No hay productos disponibles</h3>
+                                <p>Próximamente nuevos productos</p>
                             </div>
                         </div>
-                        <div class="articulo">
-                            <img src="{% static 'Productos/img/Rodillo.jpg' %}" alt="Imagen del Producto 1">
-                            <div class="contenido-articulo">
-                                <h3>Rodillos</h3>
-                                <p>Ahora esta a $130.000</p>
-                            </div>
-                        </div>
-                        <div class="articulo">
-                            <img src="{% static 'Productos/img/TablaPicar.jpg' %}" alt="Imagen del Producto 1">
-                            <div class="contenido-articulo">
-                                <h3>Tablas de picar</h3>
-                                <p>Ahora esta a $140.000</p>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -98,8 +122,124 @@
         <p>&copy; 2025 Tu Idea Hecha Realidad</p>
     </footer>
 </div>
+
+<!-- Modal de Producto -->
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close" onclick="cerrarModal()">&times;</span>
+            <h2 id="modalProductName">Producto</h2>
+        </div>
+        <div class="modal-body">
+            <img id="modalProductImage" src="" alt="Producto" class="modal-product-image">
+            <div class="modal-product-info">
+                <p id="modalProductDescription">Descripción del producto</p>
+                <p class="precio-destacado">Precio: $<span id="modalProductPrice">0</span></p>
+            </div>
+            <div class="quantity-selector">
+                <button onclick="cambiarCantidad(-1)">-</button>
+                <input type="number" id="cantidadProducto" value="1" min="1" readonly>
+                <button onclick="cambiarCantidad(1)">+</button>
+            </div>
+            <p class="precio-destacado">Total: $<span id="totalPrice">0</span></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-comprar" onclick="agregarAlCarrito()">Comprar</button>
+        </div>
+    </div>
+</div>
+
 <script>
-  function aplicarFiltros() {
+    // Variable global para el producto actual
+    let currentProduct = null;
+
+    function mostrarDetalles(tipo, id, nombre, descripcion, precio, imagen) {
+        currentProduct = {
+            tipo: tipo,
+            id: id,
+            nombre: nombre,
+            descripcion: descripcion,
+            precio: precio,
+            imagen: imagen
+        };
+
+        document.getElementById('modalProductName').textContent = nombre;
+        document.getElementById('modalProductImage').src = imagen;
+        document.getElementById('modalProductDescription').textContent = descripcion;
+        document.getElementById('modalProductPrice').textContent = precio;
+        document.getElementById('cantidadProducto').value = 1;
+        actualizarTotal();
+        
+        document.getElementById('productModal').style.display = 'block';
+    }
+
+    function cerrarModal() {
+        document.getElementById('productModal').style.display = 'none';
+        currentProduct = null;
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('productModal');
+        if (event.target == modal) {
+            cerrarModal();
+        }
+    }
+
+    function cambiarCantidad(delta) {
+        const input = document.getElementById('cantidadProducto');
+        let cantidad = parseInt(input.value) + delta;
+        if (cantidad < 1) cantidad = 1;
+        input.value = cantidad;
+        actualizarTotal();
+    }
+
+    function actualizarTotal() {
+        if (currentProduct) {
+            const cantidad = parseInt(document.getElementById('cantidadProducto').value);
+            const total = currentProduct.precio * cantidad;
+            document.getElementById('totalPrice').textContent = total.toFixed(2);
+        }
+    }
+
+    function agregarAlCarrito() {
+        if (!currentProduct) return;
+
+        const cantidad = parseInt(document.getElementById('cantidadProducto').value);
+        
+        // Obtener carrito actual del sessionStorage
+        let carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+        
+        // Verificar si el producto ya existe en el carrito
+        const productoExistente = carrito.find(item => 
+            item.tipo === currentProduct.tipo && item.id === currentProduct.id
+        );
+
+        if (productoExistente) {
+            productoExistente.cantidad += cantidad;
+        } else {
+            carrito.push({
+                tipo: currentProduct.tipo,
+                id: currentProduct.id,
+                nombre: currentProduct.nombre,
+                precio: currentProduct.precio,
+                cantidad: cantidad,
+                imagen: currentProduct.imagen,
+                descripcion: currentProduct.descripcion
+            });
+        }
+
+        // Guardar carrito actualizado
+        sessionStorage.setItem('carrito', JSON.stringify(carrito));
+        
+        // Cerrar modal y redirigir al carrito
+        cerrarModal();
+        
+        if (confirm('Producto agregado al carrito. ¿Desea ir al carrito?')) {
+            window.location.href = '/carrito/';
+        }
+    }
+
+    function aplicarFiltros() {
         const categoria = document.getElementById('categoria').value;
         console.log('Aplicando filtros y redirigiendo...');
         console.log('Categoría seleccionada:', categoria);

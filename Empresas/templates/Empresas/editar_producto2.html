@@ -31,40 +31,49 @@
                     
                     <div class="form-group">
                         <label for="id_nombre">Nombre:</label>
-                        <input type="text" name="nombre" id="id_nombre" value="{{ producto.nombre }}" required>
+                        <input type="text" name="nombre" id="id_nombre" 
+                        value="{% if categoria == 'mesas' %}{{ producto.nombre1 }}{% elif categoria == 'sillas' %}{{ producto.nombre2 }}{% elif categoria == 'armarios' %}{{ producto.nombre3 }}{% elif categoria == 'cajoneras' %}{{ producto.nombre4 }}{% elif categoria == 'escritorios' %}{{ producto.nombre5 }}{% elif categoria == 'utensilios' %}{{ producto.nombre6 }}{% endif %}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="id_descripcion">Descripción:</label>
-                        <textarea name="descripcion" id="id_descripcion" rows="4">{{ producto.descripcion }}</textarea>
+                        <textarea name="descripcion" id="id_descripcion" rows="4">{% if categoria == 'mesas' %}{{ producto.descripcion1 }}{% elif categoria == 'sillas' %}{{ producto.descripcion2 }}{% elif categoria == 'armarios' %}{{ producto.descripcion3 }}{% elif categoria == 'cajoneras' %}{{ producto.descripcion4 }}{% elif categoria == 'escritorios' %}{{ producto.descripcion5 }}{% elif categoria == 'utensilios' %}{{ producto.descripcion6 }}{% endif %}</textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="id_precio">Precio:</label>
-                        <input type="number" name="precio" id="id_precio" value="{{ producto.precio }}" step="0.01" required>
+                        <input type="number" name="precio" id="id_precio" 
+                        value="{% if categoria == 'mesas' %}{{ producto.precio1 }}{% elif categoria == 'sillas' %}{{ producto.precio2 }}{% elif categoria == 'armarios' %}{{ producto.precio3 }}{% elif categoria == 'cajoneras' %}{{ producto.precio4 }}{% elif categoria == 'escritorios' %}{{ producto.precio5 }}{% elif categoria == 'utensilios' %}{{ producto.precio6 }}{% endif %}" step="0.01" required>
                     </div>
 
                     <div class="form-group">
-                        {% if producto.imagen %}
+                        {% if categoria == 'mesas' and producto.imagen1 %}
                         <label>Imagen actual:</label>
-                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" width="200" class="current-image">
+                        <img src="{{ producto.imagen1.url }}" alt="{{ producto.nombre1 }}" width="200" class="current-image">
+                        <br><br>
+                        {% elif categoria == 'sillas' and producto.imagen2 %}
+                        <label>Imagen actual:</label>
+                        <img src="{{ producto.imagen2.url }}" alt="{{ producto.nombre2 }}" width="200" class="current-image">
+                        <br><br>
+                        {% elif categoria == 'armarios' and producto.imagen3 %}
+                        <label>Imagen actual:</label>
+                        <img src="{{ producto.imagen3.url }}" alt="{{ producto.nombre3 }}" width="200" class="current-image">
+                        <br><br>
+                        {% elif categoria == 'cajoneras' and producto.imagen4 %}
+                        <label>Imagen actual:</label>
+                        <img src="{{ producto.imagen4.url }}" alt="{{ producto.nombre4 }}" width="200" class="current-image">
+                        <br><br>
+                        {% elif categoria == 'escritorios' and producto.imagen5 %}
+                        <label>Imagen actual:</label>
+                        <img src="{{ producto.imagen5.url }}" alt="{{ producto.nombre5 }}" width="200" class="current-image">
+                        <br><br>
+                        {% elif categoria == 'utensilios' and producto.imagen6 %}
+                        <label>Imagen actual:</label>
+                        <img src="{{ producto.imagen6.url }}" alt="{{ producto.nombre6 }}" width="200" class="current-image">
                         <br><br>
                         {% endif %}
-                        <label for="id_imagen">Subir nueva imagen:</label>
+                        <label for="id_imagen">Subir nueva imagen (opcional):</label>
                         <input type="file" name="imagen" id="id_imagen" accept="image/*">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="id_categoria">Categoría:</label>
-                        <select name="categoria" id="id_categoria">
-                            <option value="">Selecciona una categoría</option>
-                            <option value="mesas" {% if producto.categoria == 'mesas' %}selected{% endif %}>Mesas</option>
-                            <option value="armarios" {% if producto.categoria == 'armarios' %}selected{% endif %}>Armarios</option>
-                            <option value="cajoneras" {% if producto.categoria == 'cajoneras' %}selected{% endif %}>Cajoneras</option>
-                            <option value="escritorios" {% if producto.categoria == 'escritorios' %}selected{% endif %}>Escritorios</option>
-                            <option value="sillas" {% if producto.categoria == 'sillas' %}selected{% endif %}>Sillas</option>
-                            <option value="utensilios" {% if producto.categoria == 'utensilios' %}selected{% endif %}>Utensilios</option>
-                        </select>
                     </div>
 
                     <div class="form-actions">
