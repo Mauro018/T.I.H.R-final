@@ -45,6 +45,7 @@
           "backdrop-filter"
         ]
       }
-    ]
+    ],
+    "meta-viewport": "off"
   }
 }

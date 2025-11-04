@@ -1,7 +1,7 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
-from .forms import LoginForm, LoginFormAdmin, AgregarForm, LoginFormEmpresa, IdeaForm
-from .models import UserClientes, UserAdmin, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserEmpresa, Idea
+from .forms import LoginForm, AgregarForm, LoginFormEmpresa, IdeaForm
+from .models import UserClientes, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserEmpresa, Idea
 from .logic import obtener_respuesta
 
 html_base = """
@@ -28,10 +28,26 @@ def portafolio(request):
     return render(request,"core/portafolio.html")
 
 def productos(request):
-    return render(request,"core/productos.html")
+    # Obtener el usuario de la sesión
+    usernameCliente = request.session.get('usernameCliente')
+    usuario = None
+    if usernameCliente:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        except UserClientes.DoesNotExist:
+            pass
+    return render(request, 'core/productos.html', {'usuario': usuario})
 
 def contact(request):
-    return render(request,"core/contact.html")
+    # Obtener el usuario de la sesión
+    usernameCliente = request.session.get('usernameCliente')
+    usuario = None
+    if usernameCliente:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        except UserClientes.DoesNotExist:
+            pass
+    return render(request, 'core/contact.html', {'usuario': usuario})
 
 def Login_view(request):
     if request.method == 'POST':
@@ -41,6 +57,9 @@ def Login_view(request):
             passwordCliente = form.cleaned_data['passwordCliente']
             try:
                 user = UserClientes.objects.get(usernameCliente=usernameCliente, passwordCliente=passwordCliente)
+                # Guardar el usuario en la sesión
+                request.session['usernameCliente'] = usernameCliente
+                request.session.modified = True
                 return redirect('home3')
             except UserClientes.DoesNotExist:
                 error_message = "Usuario o contraseña incorrectos"
@@ -48,22 +67,6 @@ def Login_view(request):
     else:
         form = LoginForm()
     return render(request,'core/login.html', {'form': form})
-
-def LoginAdmin_view(request):
-    if request.method == 'POST':
-        form = LoginFormAdmin(request.POST)
-        if form.is_valid():
-            usernameAdmin = form.cleaned_data['usernameAdmin']
-            passwordAdmin = form.cleaned_data['passwordAdmin']
-            try:
-                userAdmin = UserAdmin.objects.get(usernameAdmin=usernameAdmin, passwordAdmin=passwordAdmin)
-                return redirect('dashboard')
-            except UserAdmin.DoesNotExist:
-                error_message = "Usuario o contraseña incorrectos"
-                return render(request, 'core/loginAdmin.html', {'error_message': error_message})
-    else:
-        form = LoginFormAdmin()
-    return render(request,'core/loginAdmin.html', {'form': form})
 
 def LoginEmpresa_view(request):
     if request.method == 'POST':
@@ -97,7 +100,15 @@ def Home2_view(request):
     return render(request,'core/home2.html')
 
 def Home3_view(request):
-    return render(request,'core/home3.html')
+    # Obtener el usuario de la sesión
+    usernameCliente = request.session.get('usernameCliente')
+    usuario = None
+    if usernameCliente:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        except UserClientes.DoesNotExist:
+            pass
+    return render(request, 'core/home3.html', {'usuario': usuario})
 
 def registro(request):
     if request.method =="POST":
@@ -120,10 +131,26 @@ def reglas(request):
     return render(request,"core/reglas.html")
 
 def idea(request):
-    return render(request,"core/idea.html")
+    # Obtener el usuario de la sesión
+    usernameCliente = request.session.get('usernameCliente')
+    usuario = None
+    if usernameCliente:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        except UserClientes.DoesNotExist:
+            pass
+    return render(request, 'core/idea.html', {'usuario': usuario})
 
 def carrito(request):
-    return render(request,"core/carrito.html")
+    # Obtener el usuario de la sesión
+    usernameCliente = request.session.get('usernameCliente')
+    usuario = None
+    if usernameCliente:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        except UserClientes.DoesNotExist:
+            pass
+    return render(request, 'core/carrito.html', {'usuario': usuario})
 
 def MetodosPago(request):
     return render(request,"core/MetodosPago.html")
@@ -157,6 +184,15 @@ def ideas_view(request):
     """
     Maneja la creación y visualización de ideas usando ModelForm.
     """
+    # Obtener el usuario de la sesión
+    usernameCliente = request.session.get('usernameCliente')
+    usuario = None
+    if usernameCliente:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        except UserClientes.DoesNotExist:
+            pass
+    
     if request.method == 'POST':
         form = IdeaForm(request.POST, request.FILES)
         if form.is_valid():
@@ -170,7 +206,8 @@ def ideas_view(request):
     
     return render(request, 'core/idea.html', {
         'form': form,
-        'ideas': ideas
+        'ideas': ideas,
+        'usuario': usuario,
     })
 
 def empresa_ideas_view(request):
@@ -198,4 +235,135 @@ def empresa_ideas_view(request):
     })
     
 def perfilUsuario_view(request):
-    return render(request,'core/perfilUsuario.html')
+    username = request.session.get('usernameCliente')
+    if not username:
+        return redirect('login')
+    
+    try:
+        usuario = UserClientes.objects.get(usernameCliente=username)
+        context = {
+            'usuario': usuario,
+        }
+        return render(request, 'core/perfilUsuario.html', context)
+    except UserClientes.DoesNotExist:
+        return redirect('login')
+
+# Vistas para Comentarios
+from .models import Comentario
+from .forms import ComentarioForm, PerfilUsuarioForm
+from django.contrib import messages
+from django.urls import reverse
+
+def comentarios_view(request):
+    # Obtener el usuario de la sesión
+    usernameCliente = request.session.get('usernameCliente')
+    usuario = None
+    if usernameCliente:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        except UserClientes.DoesNotExist:
+            pass
+    
+    # Obtener todos los comentarios ordenados por fecha
+    comentarios = Comentario.objects.all().order_by('-fecha_creacion')
+    
+    context = {
+        'comentarios': comentarios,
+        'usuario': usuario,
+    }
+    return render(request, 'core/comentarios.html', context)
+
+def crear_comentario_view(request):
+    if request.method == 'POST':
+        form = ComentarioForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            # Asignar el usuario actual al comentario
+            # Aqu� asumimos que tienes el usuario en la sesi�n o autenticaci�n
+            # Deber�s ajustar esto seg�n tu l�gica de autenticaci�n
+            try:
+                # Intenta obtener el usuario de la sesi�n
+                username = request.session.get('usernameCliente')
+                if username:
+                    usuario = UserClientes.objects.get(usernameCliente=username)
+                    comentario.usuario = usuario
+                    comentario.save()
+                    messages.success(request, 'Comentario publicado exitosamente')
+                    return redirect('comentarios')
+                else:
+                    messages.error(request, 'Debes iniciar sesi�n para comentar')
+                    return redirect('login')
+            except UserClientes.DoesNotExist:
+                messages.error(request, 'Usuario no encontrado')
+                return redirect('login')
+    else:
+        form = ComentarioForm()
+    
+    return render(request, 'core/crear_comentario.html', {'form': form})
+
+def eliminar_comentario_view(request, comentario_id):
+    try:
+        comentario = Comentario.objects.get(id=comentario_id)
+        # Verificar que el usuario sea el due�o del comentario
+        username = request.session.get('usernameCliente')
+        if username:
+            usuario = UserClientes.objects.get(usernameCliente=username)
+            if comentario.usuario == usuario:
+                comentario.delete()
+                messages.success(request, 'Comentario eliminado exitosamente')
+            else:
+                messages.error(request, 'No tienes permiso para eliminar este comentario')
+        else:
+            messages.error(request, 'Debes iniciar sesi�n')
+    except Comentario.DoesNotExist:
+        messages.error(request, 'Comentario no encontrado')
+    except UserClientes.DoesNotExist:
+        messages.error(request, 'Usuario no encontrado')
+    
+    return redirect('comentarios')
+
+# Vistas para Perfil de Usuario
+def editar_perfil_view(request):
+    username = request.session.get('usernameCliente')
+    if not username:
+        messages.error(request, 'Debes iniciar sesi�n para editar tu perfil')
+        return redirect('login')
+    
+    try:
+        usuario = UserClientes.objects.get(usernameCliente=username)
+        
+        if request.method == 'POST':
+            form = PerfilUsuarioForm(request.POST, request.FILES, instance=usuario)
+            if form.is_valid():
+                # Verificar si se est�n cambiando las contrase�as
+                password_actual = form.cleaned_data.get('passwordCliente_actual')
+                password_nueva = form.cleaned_data.get('passwordCliente_nueva')
+                
+                if password_actual and password_nueva:
+                    # Verificar que la contrase�a actual sea correcta
+                    if usuario.passwordCliente == password_actual:
+                        usuario.passwordCliente = password_nueva
+                    else:
+                        messages.error(request, 'La contrase�a actual es incorrecta')
+                        return render(request, 'core/editar_perfil.html', {'form': form})
+                
+                # Guardar el formulario
+                form.save()
+                
+                # Actualizar el username en la sesi�n si cambi�
+                request.session['usernameCliente'] = usuario.usernameCliente
+                request.session.modified = True
+                
+                messages.success(request, 'Perfil actualizado exitosamente')
+                return redirect('perfilUsuario')
+        else:
+            form = PerfilUsuarioForm(instance=usuario)
+        
+        context = {
+            'form': form,
+            'usuario': usuario,
+        }
+        return render(request, 'core/editar_perfil.html', context)
+    except UserClientes.DoesNotExist:
+        messages.error(request, 'Usuario no encontrado')
+        return redirect('login')

@@ -8,31 +8,26 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
 </head>
-<body>
+<body class="landing-page">
  
-    <div class="sidebar">
-    <h2 class="h2-side">Menú</h2>
-
-        <ul>
-            <li><a href="{% url 'home' %}">Inicio</a></li>
-            <li><a href="{% url 'reglas' %}">Sobre Gangazos y Reglas</a></li>
-            <li><a href="{% url 'productos2' %}">Productos en Oferta</a></li>
-            <li><a href="{% url 'contactenos' %}">Contactenos</a></li>
-            <br><br><br><br><br><br><br><br><br>   
-            <ul>  
-                <li class="right-aligned-button"><a href="{% url 'registro' %}">Registro</a></li>
+    <!-- Navbar superior para landing page -->
+    <nav class="landing-navbar">
+        <div class="landing-nav-container">
+            <div class="landing-nav-logo">
+                <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="50" height="50">
+                <span>Gangazos</span>
+            </div>
+            <ul class="landing-nav-menu">
+                <li><a href="{% url 'home' %}">Inicio</a></li>
+                <li><a href="{% url 'reglas' %}">Sobre Gangazos y Reglas</a></li>
+                <li><a href="{% url 'productos2' %}">Productos en Oferta</a></li>
+                <li><a href="{% url 'contactenos' %}">Contáctenos</a></li>
+                <li><a href="{% url 'registro' %}" class="btn-registro">Registro</a></li>
             </ul>
-        </ul>
-    </div>
+        </div>
+    </nav>
 
 <div class="main-content-wrapper">
-        <header>
-            <h1 style="text-align: center;" class="div">
-                <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
-                Tu Idea Hecha Realidad y Gangazos
-            </h1>
-            <p class="subtitulo">Descuento especial por tiempo limitado.</p>
-        </header>
 
     <section>
         <h2 style="color: #1e08e7; text-align: center; margin-bottom: 40px; font-size: 2.2em;">Contáctenos</h2>

@@ -1,120 +1,172 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de Cliente</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil - TIHR</title>
+  <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
 </head>
 <body>
 
-    <div class="profile-container">
-        <header>
-            <img src="{% static 'core/img/Perfil.png' %}" alt="Perfil" class="header-logo">
-            <h1>Perfil</h1>
-            <p class="subtitulo">Bienvenido a tu perfil</p>
-            <div class="contenedor-botones">
-                <a href="{% url 'home3' %}" class="btn-perfil-inline"><button>← Volver a inicio</button></a>
-                <a href="{% url 'logout' %}" class="btn-perfil-inline"><button>Cerrar Sesión</button></a>
-            </div>
-        </header>
-        <br>
-        <section class="seccion-at">
-            <h2>Artículos Comprados</h2>
-        <main class="contenedor-articulos">
-            <!-- Artículos de ejemplo -->
-            <div class="articulo">
-                <div>
-                    <div>
-                        <div class="contenido-articulo">
-                                <p><b>Mesa para uno:</b></p>
-                            <p>Piezas únicas hechas a mano para una sola persona, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
-                        </div>
-                    </div>
-                </div>
-                <img src="{% static 'core/img/Mesa.jpeg' %}" alt="Imagen del Producto 1">
-                <div class="contenido-articulo">
-                    <p>$200.000</p>
-                </div>
-            </div>
-            <div class="articulo">
-                <div>
-                    <div>
-                        <div class="contenido-articulo">
-                            <p><b>Silla de terraza:</b></p>
-                            <p>Piezas únicas hechas a mano para la comodidad del cliente, reflejando la creatividad de las ideas de los usuarios.</p>
-                        </div>
-                    </div>
-                </div>
-                <img src="{% static 'core/img/Sillas.jpeg' %}" alt="Imagen del Producto 1">
-                <div class="contenido-articulo">
-                    <p>$110.000</p>
-                </div>
-            </div>
-            <div class="articulo">
-                <div>
-                    <div>
-                        <div class="contenido-articulo">
-                            <p><b>Armario sin puertas:</b></p>
-                            <p>Piezas únicas hechas a mano para la organización del cliente, reflejando la creatividad de las ideas de los usuarios.</p>
-                        </div>
-                    </div>
-                </div>
-                <img src="{% static 'core/img/Armario.jpeg' %}" alt="Imagen del Producto 1">
-                <div class="contenido-articulo">
-                    <p>$320.000</p>
-                </div>
-            </div>
-            <div class="articulo">
-                <div>
-                    <div>
-                        <div class="contenido-articulo">
-                            <p><b>Cajonera armany nuez:</b></p>
-                            <p>Piezas únicas hechas a mano para tener un diseño discreto y con mucho espacio, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
-                        </div>
-                    </div>
-                </div>
-                <img src="{% static 'core/img/Cajonera1.webp' %}" alt="Imagen del Producto 1">
-                <div class="contenido-articulo">
-                    <p>$230.000</p>
-                </div>
-            </div>
-            <div class="articulo">
-                <div>
-                    <div>
-                        <div class="contenido-articulo">
-                            <p><b>Escritorio ejecutivo en l:</b></p>
-                            <p>Piezas únicas hechas a mano para tener un diseño discreto y con mejor disponibilidad de espacio, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
-                        </div>
-                    </div>
-                </div>
-                <img src="{% static 'core/img/Escritorio.jpeg' %}" alt="Imagen del Producto 1">
-                <div class="contenido-articulo">
-                    <p>$380.000</p>
-                </div>
-            </div>
-            <div class="articulo">
-                <div>
-                    <div>
-                        <div class="contenido-articulo">
-                            <p><b>Cucharas:</b></p>
-                            <p>Piezas únicas hechas a mano para mantener un diseño clasico y funcionalidad, reflejando la creatividad del carpintero a base de las ideas de los usuarios.</p>
-                        </div>
-                    </div>
-                </div>
-                <img src="{% static 'core/img/Cucharas.jpeg' %}" alt="Imagen del Producto 1">
-                <div class="contenido-articulo">
-                    <p>$70.000</p>
-                </div>
-            </div>
-        </main>
-        </section>
-
-        <footer>
-            <p>&copy; 2025 Tu Idea Hecha Realidad</p>
-        </footer>
+<!-- BARRA LATERAL (MENÚ + FILTROS) -->
+<div class="sidebar">
+    <div class="sidebar-user-info">
+        <a href="{% url 'perfilUsuario' %}" class="user-avatar-link">
+            {% if usuario.foto_perfil %}
+                <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF; object-fit: cover;">
+            {% else %}
+                <img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF;">
+            {% endif %}
+        </a>
+        <span class="username-display">{{ usuario.usernameCliente }}</span>
     </div>
+  <h2 class="h2-side">Menú</h2>
+  <ul>
+    <li><a href="{% url 'home3' %}">Gangazos</a></li>
+    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
+    <li><a href="{% url 'productos' %}">Ofertas</a></li>
+    <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
+    <li><a href="{% url 'carrito' %}">Carrito</a></li>
+    <li><a href="{% url 'contact' %}">Contáctenos</a></li>
+    <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+  </ul>
 
+  <!-- FILTROS -->
+  <div class="filtros">
+    <h3>Filtrar productos</h3>
+    <h2 for="categoria" class="h2-side">Categoría:</h2>
+    <select id="categoria">
+        <option value="">Elegir Categoria</option> 
+        <option value="carpinteria">Armarios</option>
+        <option value="marroquineria">Escritorios</option>
+        <option value="vidrieria">Sillas</option>
+        <option value="metaleria">Cajoneras</option>
+        <option value="ceramica">Mesas</option>
+        <option value="tapiceria">Utensilios</option>
+    </select>
+    <button onclick="aplicarFiltros()">Aplicar filtros</button>
+  </div>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="main-content-wrapper">
+  <header>
+    <h1 class="div" style="text-align: center;">
+      <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="75" height="75">
+      Tu Idea Hecha Realidad
+    </h1>
+  </header>
+
+  <section>
+    <div class="perfil-container">
+      {% if messages %}
+      <div class="messages">
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+              {{ message }}
+          </div>
+          {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Header del perfil -->
+      <div class="perfil-header-card">
+          <div class="perfil-foto-container">
+              {% if usuario.foto_perfil %}
+                  <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="perfil-foto">
+              {% else %}
+                  <div class="perfil-foto-placeholder">
+                      {{ usuario.usernameCliente|first|upper }}
+                  </div>
+              {% endif %}
+          </div>
+          <h1 class="perfil-nombre">{{ usuario.usernameCliente }}</h1>
+          <p class="perfil-email">{{ usuario.email }}</p>
+          <a href="{% url 'editar_perfil' %}" class="btn-editar-perfil">Editar Perfil</a>
+      </div>
+
+      <!-- Cards de información -->
+      <div class="info-cards">
+          <div class="info-card">
+              <div class="info-card-title">Miembro desde</div>
+              <div class="info-card-value">{{ usuario.fecha_registro|date:"M Y" }}</div>
+          </div>
+          <div class="info-card">
+              <div class="info-card-title">Compras realizadas</div>
+              <div class="info-card-value">6</div>
+          </div>
+          <div class="info-card">
+              <div class="info-card-title">Ideas enviadas</div>
+              <div class="info-card-value">3</div>
+          </div>
+      </div>
+
+      <!-- Sección de compras -->
+      <div class="compras-section">
+          <h2>Artículos Comprados</h2>
+          
+          <div class="articulos-grid">
+              <div class="articulo-card">
+                  <img src="{% static 'core/img/Mesa.jpeg' %}" alt="Mesa para uno" class="articulo-imagen">
+                  <div class="articulo-info">
+                      <div class="articulo-titulo">Mesa para uno</div>
+                      <p class="articulo-descripcion">Piezas únicas hechas a mano para una sola persona, reflejando la creatividad del carpintero.</p>
+                      <div class="articulo-precio">$200.000</div>
+                  </div>
+              </div>
+
+              <div class="articulo-card">
+                  <img src="{% static 'core/img/Sillas.jpeg' %}" alt="Silla de terraza" class="articulo-imagen">
+                  <div class="articulo-info">
+                      <div class="articulo-titulo">Silla de terraza</div>
+                      <p class="articulo-descripcion">Piezas únicas hechas a mano para la comodidad del cliente.</p>
+                      <div class="articulo-precio">$110.000</div>
+                  </div>
+              </div>
+
+              <div class="articulo-card">
+                  <img src="{% static 'core/img/Armario.jpeg' %}" alt="Armario sin puertas" class="articulo-imagen">
+                  <div class="articulo-info">
+                      <div class="articulo-titulo">Armario sin puertas</div>
+                      <p class="articulo-descripcion">Piezas únicas hechas a mano para la organización del cliente.</p>
+                      <div class="articulo-precio">$320.000</div>
+                  </div>
+              </div>
+
+              <div class="articulo-card">
+                  <img src="{% static 'core/img/Cajonera1.webp' %}" alt="Cajonera armany nuez" class="articulo-imagen">
+                  <div class="articulo-info">
+                      <div class="articulo-titulo">Cajonera armany nuez</div>
+                      <p class="articulo-descripcion">Diseño discreto con mucho espacio de almacenamiento.</p>
+                      <div class="articulo-precio">$230.000</div>
+                  </div>
+              </div>
+
+              <div class="articulo-card">
+                  <img src="{% static 'core/img/Escritorio.jpeg' %}" alt="Escritorio ejecutivo en L" class="articulo-imagen">
+                  <div class="articulo-info">
+                      <div class="articulo-titulo">Escritorio ejecutivo en L</div>
+                      <p class="articulo-descripcion">Diseño discreto con mejor disponibilidad de espacio.</p>
+                      <div class="articulo-precio">$380.000</div>
+                  </div>
+              </div>
+
+              <div class="articulo-card">
+                  <img src="{% static 'core/img/Cucharas.jpeg' %}" alt="Cucharas" class="articulo-imagen">
+                  <div class="articulo-info">
+                      <div class="articulo-titulo">Cucharas artesanales</div>
+                      <p class="articulo-descripcion">Diseño clásico con funcionalidad perfecta.</p>
+                      <div class="articulo-precio">$70.000</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+  </footer>
+</div>
 </body>
 </html>

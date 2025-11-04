@@ -3,50 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        {% load static %}
-    <link rel="stylesheet" href="{% static 'Empresas/css/stylesagg2.css' %}">
-    <title>Agregar Producto</title>
+    <title>Agregar Producto - Dashboard de Empresa</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Empresas/css/styles3.css' %}">
+    <link rel="stylesheet" href="{% static 'Empresas/css/forms.css' %}">
 </head>
 <body>
+    <div class="dashboard-container">
+        <aside>
+            <h2>Dashboard de Empresa</h2>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboardEmpresa' %}">Inicio</a></li>
+                    <li><a href="{% url 'usuarios' %}">Gestión de usuarios</a></li>
+                    <li><a href="{% url 'GestiProductos' %}">Gestión de productos</a></li> 
+                    <li><a href="{% url 'empresa_ideas' %}">Gestión de ideas</a></li>
+                </ul>
+            </nav>
+            <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+        </aside>
 
-    <h1>Agregar Nuevo Producto</h1>
-    
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <label for="id_nombre">Nombre:</label>
-        <input type="text" name="nombre" id="id_nombre" required>
-        <br><br>
+        <main>
+            <div class="form-container">
+                <h1>Agregar Nuevo Producto</h1>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="id_nombre">Nombre:</label>
+                        <input type="text" name="nombre" id="id_nombre" required>
+                    </div>
 
-        <label for="id_descripcion">Descripción:</label>
-        <textarea name="descripcion" id="id_descripcion" rows="4"></textarea>
-        <br><br>
+                    <div class="form-group">
+                        <label for="id_descripcion">Descripción:</label>
+                        <textarea name="descripcion" id="id_descripcion" rows="4"></textarea>
+                    </div>
 
-        <label for="id_precio">Precio:</label>
-        <input type="number" name="precio" id="id_precio" step="0.01" required>
-        <br><br>
+                    <div class="form-group">
+                        <label for="id_precio">Precio:</label>
+                        <input type="number" name="precio" id="id_precio" step="0.01" required>
+                    </div>
 
-        <label for="id_imagen">Imagen:</label>
-        <input type="file" name="imagen" id="id_imagen" accept="image/*">
-        <br><br>
+                    <div class="form-group">
+                        <label for="id_imagen">Imagen:</label>
+                        <input type="file" name="imagen" id="id_imagen" accept="image/*">
+                    </div>
 
-        <label for="id_categoria">Categoría:</label>
-        <select name="categoria" id="id_categoria">
-            <option value="">Selecciona una categoría</option>
-            <option value="mesas">Mesas</option>
-            <option value="armarios">Armarios</option>
-            <option value="cajoneras">Cajoneras</option>
-            <option value="escritorios">Escritorios</option>
-            <option value="sillas">Sillas</option>
-            <option value="utensilios">Utensilios</option>
-        </select>
-        <br><br>
+                    <div class="form-group">
+                        <label for="id_categoria">Categoría:</label>
+                        <select name="categoria" id="id_categoria">
+                            <option value="">Selecciona una categoría</option>
+                            <option value="mesas">Mesas</option>
+                            <option value="armarios">Armarios</option>
+                            <option value="cajoneras">Cajoneras</option>
+                            <option value="escritorios">Escritorios</option>
+                            <option value="sillas">Sillas</option>
+                            <option value="utensilios">Utensilios</option>
+                        </select>
+                    </div>
 
-        <button type="submit">Guardar Producto</button>
-    </form>
-    
-    
-    
-
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Guardar Producto</button>
+                        <a href="{% url 'GestiProductos' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
 </body>
 </html>

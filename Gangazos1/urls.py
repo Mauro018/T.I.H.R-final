@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include,re_path
+from django.conf import settings
+from django.conf.urls.static import static
 from core import views
 
 urlpatterns = [
@@ -30,7 +32,6 @@ urlpatterns = [
     path('productos/',views.productos,name='productos'),
     path('registro/',views.registro,name='registro'),
     path('login/',views.Login_view,name='login'),
-    path('loginAdmin/',views.LoginAdmin_view,name='loginAdmin'),
     path('loginEmpresa/',views.LoginEmpresa_view,name='loginEmpresa'),
     path('logout/',views.Logout_view,name='logout'),
     path('home2/',views.Home2_view,name='home2'),
@@ -39,8 +40,16 @@ urlpatterns = [
     path('MetodosPago', views.MetodosPago, name='MetodosPago'),
     path('idea/', views.ideas_view, name='idea'),
     path('perfilUsuario/', views.perfilUsuario_view, name='perfilUsuario'),
+    # Incluir URLs de comentarios y perfil desde core
+    path('comentarios/', views.comentarios_view, name='comentarios'),
+    path('comentarios/crear/', views.crear_comentario_view, name='crear_comentario'),
+    path('comentarios/eliminar/<int:comentario_id>/', views.eliminar_comentario_view, name='eliminar_comentario'),
+    path('perfil/editar/', views.editar_perfil_view, name='editar_perfil'),
     path('',include('Productos.urls')),
-    path('',include('Administrador.urls')),
     path('',include('Empresas.urls')),
     path('admin/', admin.site.urls),
 ]
+
+# Servir archivos media en desarrollo
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

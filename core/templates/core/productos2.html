@@ -8,31 +8,26 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
 </head>
-<body>
+<body class="landing-page">
 
-    <div class="sidebar">
-    <h2 class="h2-side">Menú</h2>
-
-        <ul>
-            <li><a href="{% url 'home' %}">Inicio</a></li>
-            <li><a href="{% url 'reglas' %}">Sobre Gangazos y Reglas</a></li>
-            <li><a href="{% url 'productos2' %}">Productos en Oferta</a></li>
-            <li><a href="{% url 'contactenos' %}">Contactenos</a></li>
-            <br><br><br><br><br><br><br><br><br>   
-            <ul>  
-                <li class="right-aligned-button"><a href="{% url 'registro' %}">Registro</a></li>
+    <!-- Navbar superior para landing page -->
+    <nav class="landing-navbar">
+        <div class="landing-nav-container">
+            <div class="landing-nav-logo">
+                <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="50" height="50">
+                <span>Gangazos</span>
+            </div>
+            <ul class="landing-nav-menu">
+                <li><a href="{% url 'home' %}">Inicio</a></li>
+                <li><a href="{% url 'reglas' %}">Sobre Gangazos y Reglas</a></li>
+                <li><a href="{% url 'productos2' %}">Productos en Oferta</a></li>
+                <li><a href="{% url 'contactenos' %}">Contáctenos</a></li>
+                <li><a href="{% url 'registro' %}" class="btn-registro">Registro</a></li>
             </ul>
-        </ul>
-    </div>
+        </div>
+    </nav>
 
 <div class="main-content-wrapper">
-        <header>
-            <h1 style="text-align: center;" class="div">
-                <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
-                Tu Idea Hecha Realidad y Gangazos
-            </h1>
-            <p class="subtitulo">Descuento especial por tiempo limitado.</p>
-        </header>
 
     <section>
         <div>
@@ -53,7 +48,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/Mesa.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/Mesa.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>La mesa para uno tiene un Gangazo del 12%.</p>
                             </div>
@@ -67,7 +62,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/Mesa 2.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/Mesa 2.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>La mesa familiar rectangular tiene un Gangazo del 15%.</p>
                             </div>
@@ -81,7 +76,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/Mesa 3.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/Mesa 3.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>La mesa familiar redonda tiene un Gangazo del 13%.</p>
                             </div>
@@ -107,7 +102,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/Sillas.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/Sillas.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>La silla de terraza tiene un Gangazo del 10%.</p>
                             </div>
@@ -135,7 +130,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/Sillas 3.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/Sillas 3.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>La silla de comedor tiene un Gangazo del 13%.</p>
                             </div>
@@ -161,7 +156,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/Armario.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/Armario.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>El armario sin puertas tiene un Gangazo del 10%.</p>
                             </div>
@@ -175,7 +170,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/Armario 2.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/Armario 2.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>El armario antiguo tiene un Gangazo del 15%.</p>
                             </div>
@@ -229,7 +224,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/Cajonera2.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/Cajonera2.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>La cajonera de 8 cajones tiene un Gangazo del 15%.</p>
                             </div>
@@ -244,7 +239,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/Cajonera3.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/Cajonera3.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>La cajonera 5 cajones wengue tiene un Gangazo del 13%.</p>
                             </div>
@@ -270,7 +265,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/Escritorio.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/Escritorio.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>El escritorio ejecutivo en l tiene un Gangazo del 13%.</p>
                             </div>
@@ -284,7 +279,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/Escritorio1.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/Escritorio1.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>El escritorio moderno tiene un Gangazo del 15%.</p>
                             </div>
@@ -324,7 +319,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/Cucharas.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/Cucharas.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>Laa cucharas tiene un Gangazo del 10%.</p>
                             </div>
@@ -338,7 +333,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/Rodillo.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/Rodillo.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>Los rodillos tienen un Gangazo del 15%.</p>
                             </div>
@@ -352,7 +347,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{% static 'core/img/TablaPicar.jpeg' %}" alt="Imagen del Producto 1">
+                            <img src="{% static 'core/img/TablaPicar.jpg' %}" alt="Imagen del Producto 1">
                             <div class="contenido-articulo">
                                 <p>Las tablas de picar tienen un Gangazo del 13%.</p>
                             </div>

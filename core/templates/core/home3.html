@@ -11,7 +11,16 @@
  
 <!-- BARRA LATERAL (MENÚ + FILTROS) -->
 <div class="sidebar">
-    <a href="{% url 'perfilUsuario' %}"><img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF;"></a>
+    <div class="sidebar-user-info">
+        <a href="{% url 'perfilUsuario' %}" class="user-avatar-link">
+            {% if usuario.foto_perfil %}
+                <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF; object-fit: cover;">
+            {% else %}
+                <img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF;">
+            {% endif %}
+        </a>
+        <span class="username-display">{{ usuario.usernameCliente }}</span>
+    </div>
   <h2 class="h2-side">Menú</h2>
   <ul>
     <li><a href="{% url 'home3' %}">Gangazos</a></li>
@@ -19,6 +28,7 @@
     <li><a href="{% url 'productos' %}">Ofertas</a></li>
     <li><a href="{% url 'carrito' %}">Carrito</a></li>
     <li><a href="{% url 'contact' %}">Contáctenos</a></li>
+    <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
     <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
   </ul>
 
@@ -66,7 +76,7 @@
         </div>
         <div class="contenedor-articulos" id="contenedorArticulos">
         <div class="articulo">
-            <img src="{% static 'core/img/Cat carpintería.jpeg' %}" alt="Imagen del Producto 1">
+            <img src="{% static 'core/img/Mesa.jpg' %}" alt="Imagen del Producto 1">
             <div class="contenido-articulo">
                 <h3>MESAS</h3>
                 <p>La mayoria de nuestras mesas estan a 20% de descuento hasta mañana.</p>
@@ -74,7 +84,7 @@
         </div>
 
         <div class="articulo">
-            <img src="{% static 'core/img/Sillas.jpeg' %}" alt="Imagen del Producto 2"> 
+            <img src="{% static 'core/img/Sillas.jpg' %}" alt="Imagen del Producto 2"> 
             <div class="contenido-articulo">
                 <h3>SILLAS</h3>
                 <p>La mayoria de nuestras sillas estan a 26% de descuento hasta mañana.</p>
@@ -82,7 +92,7 @@
         </div>
 
         <div class="articulo">
-            <img src="{% static 'core/img/Armario.jpeg' %}" alt="Imagen del Producto 3">
+            <img src="{% static 'core/img/Armario.jpg' %}" alt="Imagen del Producto 3">
             <div class="contenido-articulo">
                 <h3>ARMARIOS</h3>
                 <p>La mayoria de nuestros armarios estan a 17% de descuento hasta mañana.</p>
@@ -90,7 +100,7 @@
         </div>
 
         <div class="articulo">
-            <img src="{% static 'core/img/Cajonera.jpeg' %}" alt="Imagen del Producto 4">
+            <img src="{% static 'core/img/Cajonera2.jpg' %}" alt="Imagen del Producto 4">
             <div class="contenido-articulo">
                 <h3>CAJONERAS</h3>
                 <p>La mayoria de nuestras cajoneras estan a 15% de descuento hasta mañana.</p>
@@ -98,7 +108,7 @@
         </div>
 
         <div class="articulo">
-            <img src="{% static 'core/img/Escritorio.jpeg' %}" alt="Imagen del Producto 5">
+            <img src="{% static 'core/img/Escritorio1.jpg' %}" alt="Imagen del Producto 5">
             <div class="contenido-articulo">
                 <h3>ESCRITORIOS</h3>
                 <p>La mayoria de nuestros escritorios estan a 23% de descuento hasta mañana.</p>
@@ -106,7 +116,7 @@
         </div>
 
         <div class="articulo">
-            <img src="{% static 'core/img/Utensilios.jpeg' %}" alt="Imagen del Producto 4">
+            <img src="{% static 'core/img/Cucharas.jpg' %}" alt="Imagen del Producto 4">
             <div class="contenido-articulo">
                 <h3>UTENSILIOS</h3>
                 <p>La mayoria de nuestros utensilios estan a 15% de descuento hasta mañana.</p>

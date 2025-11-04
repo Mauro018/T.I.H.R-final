@@ -3,53 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Producto - Dashboard de Empresa</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'Empresas/css/stylesagg2.css' %}">
-    <title>Editar Producto: {{ producto.nombre }}</title>
+    <link rel="stylesheet" href="{% static 'Empresas/css/styles3.css' %}">
+    <link rel="stylesheet" href="{% static 'Empresas/css/forms.css' %}">
 </head>
 <body>
+    <div class="dashboard-container">
+        <aside>
+            <h2>Dashboard de Empresa</h2>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboardEmpresa' %}">Inicio</a></li>
+                    <li><a href="{% url 'usuarios' %}">Gestión de usuarios</a></li>
+                    <li><a href="{% url 'GestiProductos' %}">Gestión de productos</a></li> 
+                    <li><a href="{% url 'empresa_ideas' %}">Gestión de ideas</a></li>
+                </ul>
+            </nav>
+            <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+        </aside>
 
-    <h1>Editar Producto</h1>
-    
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <label for="id_nombre">Nombre:</label>
-        <input type="text" name="nombre" id="id_nombre" value="{{ producto.nombre }}" required>
-        <br><br>
+        <main>
+            <div class="form-container">
+                <h1>Editar Producto</h1>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="id_nombre">Nombre:</label>
+                        <input type="text" name="nombre" id="id_nombre" value="{{ producto.nombre }}" required>
+                    </div>
 
-        <label for="id_descripcion">Descripción:</label>
-        <textarea name="descripcion" id="id_descripcion" rows="4">{{ producto.descripcion }}</textarea>
-        <br><br>
+                    <div class="form-group">
+                        <label for="id_descripcion">Descripción:</label>
+                        <textarea name="descripcion" id="id_descripcion" rows="4">{{ producto.descripcion }}</textarea>
+                    </div>
 
-        <label for="id_precio">Precio:</label>
-        <input type="number" name="precio" id="id_precio" value="{{ producto.precio }}" step="0.01" required>
-        <br><br>
+                    <div class="form-group">
+                        <label for="id_precio">Precio:</label>
+                        <input type="number" name="precio" id="id_precio" value="{{ producto.precio }}" step="0.01" required>
+                    </div>
 
-        <label for="id_imagen">Imagen actual:</label>
-        {% if producto.imagen %}
-            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" width="200">
-            <br>
-        {% endif %}
-        <label for="id_imagen">Subir nueva imagen:</label>
-        <input type="file" name="imagen" id="id_imagen" accept="image/*">
-        <br><br>
+                    <div class="form-group">
+                        {% if producto.imagen %}
+                        <label>Imagen actual:</label>
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" width="200" class="current-image">
+                        <br><br>
+                        {% endif %}
+                        <label for="id_imagen">Subir nueva imagen:</label>
+                        <input type="file" name="imagen" id="id_imagen" accept="image/*">
+                    </div>
 
-        <label for="id_categoria">Categoría:</label>
-        <select name="categoria" id="id_categoria">
-            <option value="">Selecciona una categoría</option>
-            <option value="mesas" {% if producto.categoria == 'mesas' %}selected{% endif %}>Mesas</option>
-            <option value="armarios" {% if producto.categoria == 'armarios' %}selected{% endif %}>Armarios</option>
-            <option value="cajoneras" {% if producto.categoria == 'cajoneras' %}selected{% endif %}>Cajoneras</option>
-            <option value="escritorios" {% if producto.categoria == 'escritorios' %}selected{% endif %}>Escritorios</option>
-            <option value="sillas" {% if producto.categoria == 'sillas' %}selected{% endif %}>Sillas</option>
-            <option value="utensilios" {% if producto.categoria == 'utensilios' %}selected{% endif %}>Utensilios</option>
-        </select>
-        <br><br>
+                    <div class="form-group">
+                        <label for="id_categoria">Categoría:</label>
+                        <select name="categoria" id="id_categoria">
+                            <option value="">Selecciona una categoría</option>
+                            <option value="mesas" {% if producto.categoria == 'mesas' %}selected{% endif %}>Mesas</option>
+                            <option value="armarios" {% if producto.categoria == 'armarios' %}selected{% endif %}>Armarios</option>
+                            <option value="cajoneras" {% if producto.categoria == 'cajoneras' %}selected{% endif %}>Cajoneras</option>
+                            <option value="escritorios" {% if producto.categoria == 'escritorios' %}selected{% endif %}>Escritorios</option>
+                            <option value="sillas" {% if producto.categoria == 'sillas' %}selected{% endif %}>Sillas</option>
+                            <option value="utensilios" {% if producto.categoria == 'utensilios' %}selected{% endif %}>Utensilios</option>
+                        </select>
+                    </div>
 
-        <button type="submit">Actualizar Producto</button>
-    </form>
-    
-
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Actualizar Producto</button>
+                        <a href="{% url 'GestiProductos' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
 </body>
 </html>

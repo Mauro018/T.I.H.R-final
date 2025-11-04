@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comentarios - TIHR</title>
+  <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+</head>
+<body>
+
+<!-- BARRA LATERAL (MENÚ + FILTROS) -->
+<div class="sidebar">
+    <div class="sidebar-user-info">
+        <a href="{% url 'perfilUsuario' %}" class="user-avatar-link">
+            {% if usuario.foto_perfil %}
+                <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF; object-fit: cover;">
+            {% else %}
+                <img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF;">
+            {% endif %}
+        </a>
+        <span class="username-display">{{ usuario.usernameCliente }}</span>
+    </div>
+  <h2 class="h2-side">Menú</h2>
+  <ul>
+    <li><a href="{% url 'home3' %}">Gangazos</a></li>
+    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
+    <li><a href="{% url 'productos' %}">Ofertas</a></li>
+    <li><a href="{% url 'carrito' %}">Carrito</a></li>
+    <li><a href="{% url 'contact' %}">Contáctenos</a></li>
+    <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
+    <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+  </ul>
+
+  <!-- FILTROS -->
+  <div class="filtros">
+    <h3>Filtrar productos</h3>
+    <h2 for="categoria" class="h2-side">Categoría:</h2>
+    <select id="categoria">
+        <option value="">Elegir Categoria</option> 
+        <option value="carpinteria">Armarios</option>
+        <option value="marroquineria">Escritorios</option>
+        <option value="vidrieria">Sillas</option>
+        <option value="metaleria">Cajoneras</option>
+        <option value="ceramica">Mesas</option>
+        <option value="tapiceria">Utensilios</option>
+    </select>
+    <button onclick="aplicarFiltros()">Aplicar filtros</button>
+  </div>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="main-content-wrapper">
+  <header>
+    <h1 class="div" style="text-align: center;">
+      <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="75" height="75">
+      Tu Idea Hecha Realidad
+    </h1>
+  </header>
+
+  <section>
+    <div class="comentarios-container">
+            <h1 style="margin-bottom: 30px; color: #333;">Comentarios de la Comunidad</h1>
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Formulario para nuevo comentario -->
+            <div class="nuevo-comentario-section">
+                <h3>Escribe un comentario</h3>
+                <form method="POST" action="{% url 'crear_comentario' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <textarea 
+                            name="contenido" 
+                            class="form-control" 
+                            rows="4" 
+                            placeholder="Escribe tu comentario aquí..." 
+                            required
+                        ></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Publicar Comentario</button>
+                </form>
+            </div>
+
+            <!-- Lista de comentarios -->
+            {% if comentarios %}
+                {% for comentario in comentarios %}
+                <div class="comentario-card">
+                    <div class="comentario-header">
+                        <div class="comentario-usuario">
+                            <div class="usuario-avatar">
+                                {% if comentario.usuario.foto_perfil %}
+                                    <img src="{{ comentario.usuario.foto_perfil.url }}" alt="{{ comentario.usuario.usernameCliente }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                                {% else %}
+                                    {{ comentario.usuario.usernameCliente|first|upper }}
+                                {% endif %}
+                            </div>
+                            <div class="usuario-info">
+                                <h4>{{ comentario.usuario.usernameCliente }}</h4>
+                                <span class="comentario-fecha">
+                                    {{ comentario.fecha_creacion|date:"d/m/Y H:i" }}
+                                    {% if comentario.fecha_modificacion != comentario.fecha_creacion %}
+                                        (editado)
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comentario-contenido">
+                        {{ comentario.contenido }}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-comentarios">
+                    <p>Aún no hay comentarios. ¡Sé el primero en compartir tu opinión!</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+    <footer>
+        <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+    </footer>
+</div>
+</body>
+</html>

@@ -8,32 +8,31 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
 </head>
-<body>
+<body class="landing-page">
 
-    <div class="sidebar">
-    <h2 class="h2-side">Menú</h2>
-
-        <ul>
-            <li><a href="{% url 'home' %}">Inicio</a></li>
-            <li><a href="{% url 'reglas' %}">Sobre Gangazos y Reglas</a></li>
-            <li><a href="{% url 'productos2' %}">Productos en Oferta</a></li>
-            <li><a href="{% url 'contactenos' %}">Contactenos</a></li>
-            <br><br><br><br><br><br><br><br><br>   
-            <ul>  
-                <li class="right-aligned-button"><a href="{% url 'registro' %}">Registro</a></li>
+    <!-- Navbar superior para landing page -->
+    <nav class="landing-navbar">
+        <div class="landing-nav-container">
+            <div class="landing-nav-logo">
+                <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="50" height="50">
+                <span>Gangazos</span>
+            </div>
+            <ul class="landing-nav-menu">
+                <li><a href="{% url 'home' %}">Inicio</a></li>
+                <li><a href="{% url 'reglas' %}">Sobre Gangazos y Reglas</a></li>
+                <li><a href="{% url 'productos2' %}">Productos en Oferta</a></li>
+                <li><a href="{% url 'contactenos' %}">Contáctenos</a></li>
+                <li><a href="{% url 'registro' %}" class="btn-registro">Registro</a></li>
             </ul>
-        </ul>
-    </div>
+        </div>
+    </nav>
 
     <div class="main-content-wrapper">
-        <header>
-            <h1 style="text-align: center;" class="div">
-                <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Company Logo" width="75" height="75">
-                Gangazos
-            </h1>
-            <p class="subtitulo">Descuento especial por tiempo limitado.</p>
-        </header>
     <section>
+        <div>
+            <h2>GANGAZOS TIHR</h2>
+            <br>
+        </div>
         <section class="seccion-at">
         <div>
             <h2>¡Gangazos! DISFRUTA BUENOS PRODUCTOS EN OFERTA Y DE BUENA CALIDAD.</h2>
@@ -55,7 +54,7 @@
         </section>
         <div class="contenedor-articulos" id="contenedorArticulos">
         <div class="articulo">
-            <img src="{% static 'core/img/Cat carpintería.jpeg' %}" alt="Imagen del Producto 1">
+            <img src="{% static 'core/img/Mesa.jpg' %}" alt="Imagen del Producto 1">
             <div class="contenido-articulo">
                 <h3>MESAS</h3>
                 <p>Creacion de mesas a medida para la cultura, con un diseño elegante y moderno, diseñados a partir de sus ideas y gustos, 
@@ -64,7 +63,7 @@
         </div>
 
         <div class="articulo">
-            <img src="{% static 'core/img/Sillas.jpeg' %}" alt="Imagen del Producto 2"> 
+            <img src="{% static 'core/img/Sillas.jpg' %}" alt="Imagen del Producto 2"> 
             <div class="contenido-articulo">
                 <h3>SILLAS</h3>
                 <p>Creacion de sillas a medida para la cultura, con un diseño elegante y moderno, diseñados a partir de sus ideas y gustos, 
@@ -73,7 +72,7 @@
         </div>
 
         <div class="articulo">
-            <img src="{% static 'core/img/Armario.jpeg' %}" alt="Imagen del Producto 3">
+            <img src="{% static 'core/img/Armario.jpg' %}" alt="Imagen del Producto 3">
             <div class="contenido-articulo">
                 <h3>ARMARIOS</h3>
                 <p>Creacion de armarios a medida para la cultura, con un diseño elegante y moderno, diseñados a partir de sus ideas y gustos, 
@@ -140,62 +139,38 @@
     <section class="comments-section">
         <section class="seccion-at">
         <div class="container">
-            <h2 class="text-center mb-4">Comentarios de nuestros clientes</h2>
             <div class="row">
-                <section class="seccion-at">
-                <div class="col-md-12">
-                    <div class="comment-box p-4 mb-3 border rounded">
-                    <h5>Laura G.</h5>
-                    <p>Los productos son de excelente calidad y el servicio al cliente es inmejorable. ¡Definitivamente volveré a comprar!</p>
+                    <h2 style="text-align: center; margin-bottom: 30px;">Lo que dicen nuestros clientes</h2>
+                    <div class="comentarios-landing-grid">
+                        <div class="comentario-landing-card">
+                            <div class="comentario-landing-avatar">C</div>
+                            <h5 class="comentario-landing-nombre">Carlos S.</h5>
+                            <p class="comentario-landing-texto">Me encanta el enfoque sostenible de la empresa. Es genial poder comprar productos de alta calidad sabiendo que también cuidan el medio ambiente.</p>
+                        </div>
+
+                        <div class="comentario-landing-card">
+                            <div class="comentario-landing-avatar">A</div>
+                            <h5 class="comentario-landing-nombre">Ana M.</h5>
+                            <p class="comentario-landing-texto">El envío fue muy rápido y los productos llegaron en perfectas condiciones. ¡Muy satisfecha con mi compra!</p>
+                        </div>
+
+                        <div class="comentario-landing-card">
+                            <div class="comentario-landing-avatar">J</div>
+                            <h5 class="comentario-landing-nombre">Juan P.</h5>
+                            <p class="comentario-landing-texto">La variedad de productos es excelente y los precios son muy competitivos. Recomiendo esta tienda a todos mis amigos y familiares.</p>
+                        </div>
+
+                        <div class="comentario-landing-card">
+                            <div class="comentario-landing-avatar">S</div>
+                            <h5 class="comentario-landing-nombre">Sofía R.</h5>
+                            <p class="comentario-landing-texto">Tenía una duda sobre un producto y el equipo de soporte me ayudó de manera muy eficiente y amable. ¡Gran experiencia de compra!</p>
+                        </div>
                     </div>
-                </div>
-                </section>
-                <br>
-                <section class="seccion-at">
-                <div class="col-md-12">
-                    <div class="comment-box p-4 mb-3 border rounded">
-                    <h5>Carlos S.</h5>
-                    <p>Me encanta el enfoque sostenible de la empresa. Es genial poder comprar productos de alta calidad sabiendo que también cuidan el medio ambiente.</p>
-                    </div>
-                </div>
-                </section>
-                <br>
-                <section class="seccion-at">
-                <div class="col-md-12">
-                    <div class="comment-box p-4 mb-3 border rounded">
-                    <h5>Ana M.</h5>
-                    <p>El envío fue muy rápido y los productos llegaron en perfectas condiciones. ¡Muy satisfecha con mi compra!</p>
-                    </div>
-                </div>
-                </section>
-                <br>
-                <section class="seccion-at">
-                <div class="col-md-12">
-                    <div class="comment-box p-4 mb-3 border rounded">
-                    <h5>Juan P.</h5>
-                    <p>La variedad de productos es excelente y los precios son muy competitivos. Recomiendo esta tienda a todos mis amigos y familiares.</p>
-                    </div>
-                </div>
-                </section>
-                <br>
-                <section class="seccion-at">
-                <div class="col-md-12">
-                    <div class="comment-box p-4 mb-3 border rounded">
-                    <h5>Sofía R.</h5>
-                    <p>Tenía una duda sobre un producto y el equipo de soporte me ayudó de manera muy eficiente y amable. ¡Gran experiencia de compra!</p>
-                    </div>
-                </div>
-                </section>
-            </div>
-        </div>
         </section>
     </section>
-
     <footer>
         <p>&copy; 2025 Tu Idea Hecha Realidad</p>
     </footer>
 </div>
-
-
-    </body>
-</html>-
+</body>
+</html>

@@ -15,6 +15,7 @@
             <nav>
                 <ul>
                     <li><a href="{% url 'dashboardEmpresa' %}">Inicio</a></li>
+                    <li><a href="{% url 'usuarios' %}">Gestión de usuarios</a></li>
                     <li><a href="{% url 'GestiProductos' %}">Gestión de productos</a></li> 
                     <li><a href="{% url 'empresa_ideas' %}">Gestión de ideas</a></li>
                 </ul>
@@ -46,12 +47,8 @@
                     <h4>{{ idea.titulo }}</h4>
                     <p><strong>Autor:</strong> {{ idea.autor }}</p>
                     <p><strong>Descripción:</strong> {{ idea.descripcion }}</p>
-                    {% if idea.imagen %}
-                    <div class="idea-imagen">
-                        <img src="{{ idea.imagen.url }}" alt="{{ idea.titulo }}">
-                    </div>
-                    {% endif %}
                     <p class="fecha">{{ idea.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                    
                     <form method="post" class="idea-actions">
                         {% csrf_token %}
                         <input type="hidden" name="idea_id" value="{{ idea.id }}">
@@ -74,12 +71,18 @@
                     <h4>{{ idea.titulo }}</h4>
                     <p><strong>Autor:</strong> {{ idea.autor }}</p>
                     <p><strong>Descripción:</strong> {{ idea.descripcion }}</p>
-                    {% if idea.imagen %}
-                    <div class="idea-imagen">
-                        <img src="{{ idea.imagen.url }}" alt="{{ idea.titulo }}">
-                    </div>
-                    {% endif %}
                     <p class="fecha">{{ idea.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                    
+                    <!-- Botones para ver imagen y modelo 3D -->
+                    <div class="idea-media-buttons">
+                        {% if idea.imagen %}
+                        <a href="{% url 'ver_imagen_idea' idea.id %}" class="btn btn-info" target="_blank">Ver Imagen</a>
+                        {% endif %}
+                        {% if idea.modelo_3d %}
+                        <a href="{% url 'ver_modelo_3d_idea' idea.id %}" class="btn btn-info" target="_blank">Ver Modelo 3D</a>
+                        {% endif %}
+                    </div>
+                    
                     {% if idea.empresa_asignada == request.user.userempresa %}
                     <form method="post" class="idea-actions">
                         {% csrf_token %}
@@ -104,12 +107,18 @@
                     <h4>{{ idea.titulo }}</h4>
                     <p><strong>Autor:</strong> {{ idea.autor }}</p>
                     <p><strong>Descripción:</strong> {{ idea.descripcion }}</p>
-                    {% if idea.imagen %}
-                    <div class="idea-imagen">
-                        <img src="{{ idea.imagen.url }}" alt="{{ idea.titulo }}">
-                    </div>
-                    {% endif %}
                     <p class="fecha">{{ idea.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                    
+                    <!-- Botones para ver imagen y modelo 3D -->
+                    <div class="idea-media-buttons">
+                        {% if idea.imagen %}
+                        <a href="{% url 'ver_imagen_idea' idea.id %}" class="btn btn-info" target="_blank">Ver Imagen</a>
+                        {% endif %}
+                        {% if idea.modelo_3d %}
+                        <a href="{% url 'ver_modelo_3d_idea' idea.id %}" class="btn btn-info" target="_blank">Ver Modelo 3D</a>
+                        {% endif %}
+                    </div>
+                    
                     <p class="estado">Completada ✓</p>
                 </div>
                 {% empty %}

@@ -12,7 +12,16 @@
 
 <!-- BARRA LATERAL (MENÚ + FILTROS) -->
 <div class="sidebar">
-    <a href="{% url 'perfilUsuario' %}"><img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF;"></a>
+    <div class="sidebar-user-info">
+        <a href="{% url 'perfilUsuario' %}" class="user-avatar-link">
+            {% if usuario.foto_perfil %}
+                <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF; object-fit: cover;">
+            {% else %}
+                <img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF;">
+            {% endif %}
+        </a>
+        <span class="username-display">{{ usuario.usernameCliente }}</span>
+    </div>
   <h2 class="h2-side">Menú</h2>
   <ul>
     <li><a href="{% url 'home3' %}">Gangazos</a></li>
@@ -20,6 +29,7 @@
     <li><a href="{% url 'productos' %}">Ofertas</a></li>
     <li><a href="{% url 'carrito' %}">Carrito</a></li>
     <li><a href="{% url 'contact' %}">Contáctenos</a></li>
+    <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
     <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
   </ul>
 
@@ -88,6 +98,13 @@
             <label for="id_imagen">Adjuntar imagen (opcional):</label>
             {{ form.imagen }}
           </div>
+
+          <!-- Modelo 3D -->
+          <div class="form-group">
+            <label for="id_modelo_3d">Adjuntar Modelo 3D .glb (opcional):</label>
+            {{ form.modelo_3d }}
+            <small class="form-text">Formatos aceptados: .glb</small>
+          </div>
           
           <button type="submit" class="articulo-boton">Publicar Idea</button>
         </form>
@@ -101,11 +118,6 @@
               <div class="articulo {% if idea.estado == 'en_proceso' %}en-proceso{% elif idea.estado == 'completada' %}completada{% endif %}">
                 <div class="contenido-articulo">
                   <h3>{{ idea.titulo }}</h3>
-                  {% if idea.imagen %}
-                  <div class="idea-imagen">
-                    <img src="{{ idea.imagen.url }}" alt="{{ idea.titulo }}">
-                  </div>
-                  {% endif %}
                   <p>{{ idea.descripcion }}</p>
                   <p><strong>Autor:</strong> {{ idea.autor }}</p>
                   <p><strong>Estado:</strong> {{ idea.get_estado_display }}</p>

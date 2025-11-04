@@ -1,0 +1,215 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Perfil - TIHR</title>
+  <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+</head>
+<body>
+
+<!-- BARRA LATERAL (MENÚ + FILTROS) -->
+<div class="sidebar">
+    <a href="{% url 'perfilUsuario' %}"><img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF;"></a>
+  <h2 class="h2-side">Menú</h2>
+  <ul>
+    <li><a href="{% url 'home3' %}">Gangazos</a></li>
+    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
+    <li><a href="{% url 'productos' %}">Ofertas</a></li>
+    <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
+    <li><a href="{% url 'carrito' %}">Carrito</a></li>
+    <li><a href="{% url 'contact' %}">Contáctenos</a></li>
+    <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+  </ul>
+
+  <!-- FILTROS -->
+  <div class="filtros">
+    <h3>Filtrar productos</h3>
+    <h2 for="categoria" class="h2-side">Categoría:</h2>
+    <select id="categoria">
+        <option value="">Elegir Categoria</option> 
+        <option value="carpinteria">Armarios</option>
+        <option value="marroquineria">Escritorios</option>
+        <option value="vidrieria">Sillas</option>
+        <option value="metaleria">Cajoneras</option>
+        <option value="ceramica">Mesas</option>
+        <option value="tapiceria">Utensilios</option>
+    </select>
+    <button onclick="aplicarFiltros()">Aplicar filtros</button>
+  </div>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="main-content-wrapper">
+  <header>
+    <h1 class="div" style="text-align: center;">
+      <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="75" height="75">
+      Tu Idea Hecha Realidad
+    </h1>
+  </header>
+
+  <section>
+    <div class="perfil-container">
+      {% if messages %}
+      <div class="messages">
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+              {{ message }}
+          </div>
+          {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="perfil-card">
+          <div class="perfil-header">
+              <h1>Editar Perfil</h1>
+              <p>Actualiza tu información personal</p>
+          </div>
+
+          <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              
+              <!-- Vista previa de foto de perfil -->
+              <div class="foto-perfil-preview">
+                  {% if usuario.foto_perfil %}
+                      <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="foto-preview-img" id="preview-image">
+                  {% else %}
+                      <div class="foto-placeholder" id="preview-placeholder">
+                          {{ usuario.usernameCliente|first|upper }}
+                      </div>
+                  {% endif %}
+              </div>
+
+              <!-- Información básica -->
+              <div class="form-group">
+                  <label for="id_usernameCliente">Nombre de usuario</label>
+                  <input 
+                      type="text" 
+                      name="usernameCliente" 
+                      class="form-control" 
+                      id="id_usernameCliente"
+                      value="{{ form.usernameCliente.value|default:usuario.usernameCliente }}"
+                      required
+                  >
+                  {{ form.usernameCliente.errors }}
+              </div>
+
+              <div class="form-group">
+                  <label for="id_email">Correo electrónico</label>
+                  <input 
+                      type="email" 
+                      name="email" 
+                      class="form-control" 
+                      id="id_email"
+                      value="{{ form.email.value|default:usuario.email }}"
+                      required
+                  >
+                  {{ form.email.errors }}
+              </div>
+
+              <div class="form-group">
+                  <label for="id_foto_perfil">Foto de perfil</label>
+                  <div class="file-input-wrapper">
+                      <input 
+                          type="file" 
+                          name="foto_perfil" 
+                          id="id_foto_perfil" 
+                          accept="image/*"
+                          onchange="previewFoto(event)"
+                      >
+                      <label for="id_foto_perfil" class="file-input-label">
+                          Seleccionar foto de perfil
+                      </label>
+                  </div>
+                  {{ form.foto_perfil.errors }}
+              </div>
+
+              <!-- Sección de cambio de contraseña -->
+              <div class="password-section">
+                  <h3>Cambiar Contraseña (opcional)</h3>
+                  
+                  <div class="form-group">
+                      <label for="id_passwordCliente_actual">Contraseña actual</label>
+                      <input 
+                          type="password" 
+                          name="passwordCliente_actual" 
+                          class="form-control" 
+                          id="id_passwordCliente_actual"
+                          placeholder="Contraseña actual"
+                      >
+                      {{ form.passwordCliente_actual.errors }}
+                  </div>
+
+                  <div class="form-group">
+                      <label for="id_passwordCliente_nueva">Nueva contraseña</label>
+                      <input 
+                          type="password" 
+                          name="passwordCliente_nueva" 
+                          class="form-control" 
+                          id="id_passwordCliente_nueva"
+                          placeholder="Nueva contraseña (mínimo 6 caracteres)"
+                      >
+                      {{ form.passwordCliente_nueva.errors }}
+                  </div>
+
+                  <div class="form-group">
+                      <label for="id_passwordCliente_confirmar">Confirmar nueva contraseña</label>
+                      <input 
+                          type="password" 
+                          name="passwordCliente_confirmar" 
+                          class="form-control" 
+                          id="id_passwordCliente_confirmar"
+                          placeholder="Confirmar nueva contraseña"
+                      >
+                      {{ form.passwordCliente_confirmar.errors }}
+                  </div>
+              </div>
+
+              {% if form.non_field_errors %}
+                  <div class="alert alert-error">
+                      {{ form.non_field_errors }}
+                  </div>
+              {% endif %}
+
+              <div class="form-actions">
+                  <a href="{% url 'perfilUsuario' %}" class="btn btn-secondary">Cancelar</a>
+                  <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+              </div>
+          </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+    <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+</footer>
+
+<script>
+    function previewFoto(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('preview-image');
+                const placeholder = document.getElementById('preview-placeholder');
+                
+                if (preview) {
+                    preview.src = e.target.result;
+                } else if (placeholder) {
+                    // Crear nuevo elemento de imagen
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'foto-preview-img';
+                    img.id = 'preview-image';
+                    placeholder.parentNode.replaceChild(img, placeholder);
+                }
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+</body>
+</html>

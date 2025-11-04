@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imagen - {{ idea.titulo }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Empresas/css/styles3.css' %}">
+    <link rel="stylesheet" href="{% static 'Empresas/css/ver_media.css' %}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside>
+            <h2>Dashboard de Empresa</h2>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboardEmpresa' %}">Inicio</a></li>
+                    <li><a href="{% url 'usuarios' %}">Gestión de usuarios</a></li>
+                    <li><a href="{% url 'GestiProductos' %}">Gestión de productos</a></li> 
+                    <li><a href="{% url 'empresa_ideas' %}">Gestión de ideas</a></li>
+                </ul>
+            </nav>
+            <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+        </aside>
+
+        <main>
+            <header>
+                <h1>Imagen - {{ idea.titulo }}</h1>
+            </header>
+
+            <div class="media-content-card">
+                <div class="idea-info-box">
+                    <h2>{{ idea.titulo }}</h2>
+                    <div class="info-grid">
+                        <p><strong>Autor:</strong> {{ idea.autor }}</p>
+                        <p><strong>Estado:</strong> {{ idea.get_estado_display }}</p>
+                        <p><strong>Fecha:</strong> {{ idea.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    <p class="descripcion-completa"><strong>Descripción:</strong> {{ idea.descripcion }}</p>
+                </div>
+
+                {% if idea.imagen %}
+                <div class="image-viewer-box">
+                    <img src="{{ idea.imagen.url }}" alt="{{ idea.titulo }}">
+                </div>
+                {% else %}
+                <div class="no-media-box">
+                    <p>Esta idea no tiene una imagen asociada.</p>
+                </div>
+                {% endif %}
+
+                <div class="media-actions-box">
+                    {% if idea.modelo_3d %}
+                    <a href="{% url 'ver_modelo_3d_idea' idea.id %}" class="btn btn-info">Ver Modelo 3D</a>
+                    {% endif %}
+                    <a href="{% url 'empresa_ideas' %}" class="btn btn-secondary">Volver a Ideas</a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

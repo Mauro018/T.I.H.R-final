@@ -66,16 +66,11 @@
     cursor: pointer;
 }
 
-.idea-imagen {
-    margin: 15px 0;
-    text-align: center;
-}
-
-.idea-imagen img {
-    max-width: 100%;
-    max-height: 300px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.form-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #6c757d;
 }
 
 .contenedor-articulos {

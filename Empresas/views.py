@@ -1,7 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from core.models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, Idea, UserEmpresa
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.middleware.csrf import get_token
+from django.utils import timezone
+from core.models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, Idea, UserEmpresa, UserClientes
 from core.forms import IdeaForm
 
 # Create your views here.
@@ -122,3 +127,146 @@ def empresa_ideas_view(request):
     
 def perfilUsuario_view(request):
     return render(request,'Empresas/listid.html')
+
+def ver_imagen_idea(request, idea_id):
+    """
+    Vista para que las empresas vean la imagen de una idea.
+    """
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        messages.error(request, 'Debes iniciar sesión como empresa')
+        return redirect('loginEmpresa')
+    
+    idea = get_object_or_404(Idea, pk=idea_id)
+    
+    context = {
+        'idea': idea
+    }
+    
+    return render(request, 'Empresas/ver_imagen_idea.html', context)
+
+def ver_modelo_3d_idea(request, idea_id):
+    """
+    Vista para que las empresas vean el modelo 3D de una idea.
+    """
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        messages.error(request, 'Debes iniciar sesión como empresa')
+        return redirect('loginEmpresa')
+    
+    idea = get_object_or_404(Idea, pk=idea_id)
+    
+    context = {
+        'idea': idea
+    }
+    
+    return render(request, 'Empresas/ver_modelo_3d_idea.html', context)
+
+@ensure_csrf_cookie
+def usuarios_view(request):
+    """
+    Vista para gestión de usuarios (clientes y empresas)
+    """
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        messages.error(request, 'Debes iniciar sesión como empresa')
+        return redirect('loginEmpresa')
+    
+    users = UserClientes.objects.all()
+    empresas = UserEmpresa.objects.all()
+    context = {
+        'users': users,
+        'empresas': empresas,
+        'csrf_token': get_token(request)
+    }
+    return render(request,'Empresas/usuarios2.html', context)
+
+def get_csrf_token(request):
+    return JsonResponse({'csrfToken': get_token(request)})
+
+@require_POST
+def toggle_user_status(request, user_id, user_type, action):
+    if not request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
+    
+    if action not in ['enable', 'disable']:
+        return JsonResponse({'success': False, 'error': 'Acción inválida'}, status=400)
+        
+    try:
+        if user_type == 'cliente':
+            user = UserClientes.objects.get(id=user_id)
+        elif user_type == 'empresa':
+            user = UserEmpresa.objects.get(id=user_id)
+        else:
+            return JsonResponse({'success': False, 'error': 'Tipo de usuario inválido'}, status=400)
+            
+        # Actualizar el estado
+        new_status = action == 'enable'
+        if user.is_active == new_status:
+            return JsonResponse({'success': False, 'error': 'El usuario ya está en ese estado'}, status=400)
+            
+        user.is_active = new_status
+        user.status_changed_at = timezone.now()
+        user.save()
+        
+        return JsonResponse({
+            'success': True,
+            'status': 'Activo' if user.is_active else 'Inactivo',
+            'action': 'disable' if user.is_active else 'enable'
+        })
+    except (UserClientes.DoesNotExist, UserEmpresa.DoesNotExist):
+        return JsonResponse({'success': False, 'error': 'Usuario no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@require_POST
+def update_user(request):
+    if not request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
+        
+    try:
+        user_id = request.POST.get('userId')
+        user_type = request.POST.get('userType')
+        username = request.POST.get('username')
+        
+        if not user_id or not user_type or not username:
+            return JsonResponse({'success': False, 'error': 'Faltan datos requeridos'}, status=400)
+        
+        if user_type == 'cliente':
+            user = UserClientes.objects.get(id=user_id)
+            # Verificar si el nombre de usuario ya existe
+            if UserClientes.objects.filter(usernameCliente=username).exclude(id=user_id).exists():
+                return JsonResponse({'success': False, 'error': 'El nombre de usuario ya está en uso'}, status=400)
+            
+            # Validar email
+            email = request.POST.get('email')
+            if not email:
+                return JsonResponse({'success': False, 'error': 'El email es requerido'}, status=400)
+                
+            user.usernameCliente = username
+            user.email = email
+        elif user_type == 'empresa':
+            user = UserEmpresa.objects.get(id=user_id)
+            # Verificar si el nombre de usuario ya existe
+            if UserEmpresa.objects.filter(usernameEmpresa=username).exclude(id=user_id).exists():
+                return JsonResponse({'success': False, 'error': 'El nombre de usuario ya está en uso'}, status=400)
+            user.usernameEmpresa = username
+        else:
+            return JsonResponse({'success': False, 'error': 'Tipo de usuario inválido'}, status=400)
+            
+        user.save()
+        return JsonResponse({
+            'success': True,
+            'message': 'Usuario actualizado correctamente',
+            'data': {
+                'id': user.id,
+                'username': username,
+                'email': getattr(user, 'email', None),
+                'type': user_type,
+                'is_active': user.is_active
+            }
+        })
+    except (UserClientes.DoesNotExist, UserEmpresa.DoesNotExist):
+        return JsonResponse({'success': False, 'error': 'Usuario no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
