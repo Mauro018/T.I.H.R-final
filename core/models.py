@@ -98,10 +98,18 @@ class Idea(models.Model):
         return self.titulo
 
 class Comentario(models.Model):
+    ESTADO_CHOICES = [
+        ('pendiente', 'Pendiente'),
+        ('aprobado', 'Aprobado'),
+        ('rechazado', 'Rechazado'),
+    ]
+    
     usuario = models.ForeignKey(UserClientes, on_delete=models.CASCADE, related_name='comentarios')
     contenido = models.TextField(max_length=500)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_modificacion = models.DateTimeField(auto_now=True)
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
+    fecha_aprobacion = models.DateTimeField(null=True, blank=True)
     
     class Meta:
         ordering = ['-fecha_creacion']

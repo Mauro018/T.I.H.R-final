@@ -45,6 +45,10 @@ urlpatterns = [
     path('comentarios/crear/', views.crear_comentario_view, name='crear_comentario'),
     path('comentarios/eliminar/<int:comentario_id>/', views.eliminar_comentario_view, name='eliminar_comentario'),
     path('perfil/editar/', views.editar_perfil_view, name='editar_perfil'),
+    # URLs para gestión de comentarios por empresa
+    path('empresa/comentarios/', views.empresa_comentarios_view, name='empresa_comentarios'),
+    path('empresa/comentarios/aprobar/<int:comentario_id>/', views.aprobar_comentario_view, name='aprobar_comentario'),
+    path('empresa/comentarios/rechazar/<int:comentario_id>/', views.rechazar_comentario_view, name='rechazar_comentario'),
     path('',include('Productos.urls')),
     path('',include('Empresas.urls')),
     path('admin/', admin.site.urls),

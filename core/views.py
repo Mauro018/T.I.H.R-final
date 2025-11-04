@@ -1,5 +1,6 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from .forms import LoginForm, AgregarForm, LoginFormEmpresa, IdeaForm
 from .models import UserClientes, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserEmpresa, Idea
 from .logic import obtener_respuesta
@@ -19,7 +20,22 @@ html_base = """
 
 # Create your views here.
 def home(request):
-    return render(request,"core/home.html")
+    from django.db.models import Case, When, IntegerField
+    
+    # Obtener comentarios ordenados: aprobados primero, luego rechazados, luego pendientes
+    comentarios = Comentario.objects.annotate(
+        orden_estado=Case(
+            When(estado='aprobado', then=1),
+            When(estado='rechazado', then=3),
+            When(estado='pendiente', then=2),
+            output_field=IntegerField(),
+        )
+    ).order_by('orden_estado', '-fecha_aprobacion', '-fecha_creacion')[:6]
+    
+    context = {
+        'comentarios': comentarios,
+    }
+    return render(request, "core/home.html", context)
 
 def about(request):
     return render(request,"core/about.html")
@@ -367,3 +383,58 @@ def editar_perfil_view(request):
     except UserClientes.DoesNotExist:
         messages.error(request, 'Usuario no encontrado')
         return redirect('login')
+
+# Vistas para gestión de comentarios por Empresa
+def empresa_comentarios_view(request):
+    """Vista para que las empresas vean y gestionen comentarios"""
+    # Verificar que sea una empresa autenticada
+    empresa_username = request.session.get('usernameEmpresa')
+    if not empresa_username:
+        messages.error(request, 'Debes iniciar sesión como empresa')
+        return redirect('loginEmpresa')
+    
+    # Obtener todos los comentarios ordenados: pendientes primero, luego por fecha
+    comentarios = Comentario.objects.all().order_by('estado', '-fecha_creacion')
+    
+    context = {
+        'comentarios': comentarios,
+    }
+    return render(request, 'Empresas/gestion_comentarios.html', context)
+
+def aprobar_comentario_view(request, comentario_id):
+    """Vista para aprobar un comentario"""
+    # Verificar que sea una empresa autenticada
+    empresa_username = request.session.get('usernameEmpresa')
+    if not empresa_username:
+        messages.error(request, 'Debes iniciar sesión como empresa')
+        return redirect('loginEmpresa')
+    
+    try:
+        comentario = Comentario.objects.get(id=comentario_id)
+        comentario.estado = 'aprobado'
+        comentario.fecha_aprobacion = timezone.now()
+        comentario.save()
+        messages.success(request, 'Comentario aprobado exitosamente')
+    except Comentario.DoesNotExist:
+        messages.error(request, 'Comentario no encontrado')
+    
+    return redirect('empresa_comentarios')
+
+def rechazar_comentario_view(request, comentario_id):
+    """Vista para rechazar un comentario"""
+    # Verificar que sea una empresa autenticada
+    empresa_username = request.session.get('usernameEmpresa')
+    if not empresa_username:
+        messages.error(request, 'Debes iniciar sesión como empresa')
+        return redirect('loginEmpresa')
+    
+    try:
+        comentario = Comentario.objects.get(id=comentario_id)
+        comentario.estado = 'rechazado'
+        comentario.fecha_aprobacion = None
+        comentario.save()
+        messages.success(request, 'Comentario rechazado')
+    except Comentario.DoesNotExist:
+        messages.error(request, 'Comentario no encontrado')
+    
+    return redirect('empresa_comentarios')

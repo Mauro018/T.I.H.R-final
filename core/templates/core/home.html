@@ -142,6 +142,19 @@
             <div class="row">
                     <h2 style="text-align: center; margin-bottom: 30px;">Lo que dicen nuestros clientes</h2>
                     <div class="comentarios-landing-grid">
+                        {% for comentario in comentarios %}
+                        <div class="comentario-landing-card">
+                            <div class="comentario-landing-avatar">
+                                {% if comentario.usuario.foto_perfil %}
+                                    <img src="{{ comentario.usuario.foto_perfil.url }}" alt="{{ comentario.usuario.usernameCliente }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                {% else %}
+                                    {{ comentario.usuario.usernameCliente|first|upper }}
+                                {% endif %}
+                            </div>
+                            <h5 class="comentario-landing-nombre">{{ comentario.usuario.usernameCliente }}</h5>
+                            <p class="comentario-landing-texto">{{ comentario.contenido }}</p>
+                        </div>
+                        {% empty %}
                         <div class="comentario-landing-card">
                             <div class="comentario-landing-avatar">C</div>
                             <h5 class="comentario-landing-nombre">Carlos S.</h5>
@@ -165,6 +178,7 @@
                             <h5 class="comentario-landing-nombre">Sofía R.</h5>
                             <p class="comentario-landing-texto">Tenía una duda sobre un producto y el equipo de soporte me ayudó de manera muy eficiente y amable. ¡Gran experiencia de compra!</p>
                         </div>
+                        {% endfor %}
                     </div>
         </section>
     </section>
