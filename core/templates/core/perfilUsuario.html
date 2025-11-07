@@ -23,12 +23,11 @@
     </div>
   <h2 class="h2-side">Menú</h2>
   <ul>
-    <li><a href="{% url 'home3' %}">Gangazos</a></li>
-    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
     <li><a href="{% url 'productos' %}">Ofertas</a></li>
-    <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
+    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
     <li><a href="{% url 'carrito' %}">Carrito</a></li>
     <li><a href="{% url 'contact' %}">Contáctenos</a></li>
+    <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
     <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
   </ul>
 
@@ -101,72 +100,27 @@
               <div class="info-card-value">3</div>
           </div>
       </div>
-
-      <!-- Sección de compras -->
-      <div class="compras-section">
-          <h2>Artículos Comprados</h2>
-          
-          <div class="articulos-grid">
-              <div class="articulo-card">
-                  <img src="{% static 'core/img/Mesa.jpeg' %}" alt="Mesa para uno" class="articulo-imagen">
-                  <div class="articulo-info">
-                      <div class="articulo-titulo">Mesa para uno</div>
-                      <p class="articulo-descripcion">Piezas únicas hechas a mano para una sola persona, reflejando la creatividad del carpintero.</p>
-                      <div class="articulo-precio">$200.000</div>
-                  </div>
-              </div>
-
-              <div class="articulo-card">
-                  <img src="{% static 'core/img/Sillas.jpeg' %}" alt="Silla de terraza" class="articulo-imagen">
-                  <div class="articulo-info">
-                      <div class="articulo-titulo">Silla de terraza</div>
-                      <p class="articulo-descripcion">Piezas únicas hechas a mano para la comodidad del cliente.</p>
-                      <div class="articulo-precio">$110.000</div>
-                  </div>
-              </div>
-
-              <div class="articulo-card">
-                  <img src="{% static 'core/img/Armario.jpeg' %}" alt="Armario sin puertas" class="articulo-imagen">
-                  <div class="articulo-info">
-                      <div class="articulo-titulo">Armario sin puertas</div>
-                      <p class="articulo-descripcion">Piezas únicas hechas a mano para la organización del cliente.</p>
-                      <div class="articulo-precio">$320.000</div>
-                  </div>
-              </div>
-
-              <div class="articulo-card">
-                  <img src="{% static 'core/img/Cajonera1.webp' %}" alt="Cajonera armany nuez" class="articulo-imagen">
-                  <div class="articulo-info">
-                      <div class="articulo-titulo">Cajonera armany nuez</div>
-                      <p class="articulo-descripcion">Diseño discreto con mucho espacio de almacenamiento.</p>
-                      <div class="articulo-precio">$230.000</div>
-                  </div>
-              </div>
-
-              <div class="articulo-card">
-                  <img src="{% static 'core/img/Escritorio.jpeg' %}" alt="Escritorio ejecutivo en L" class="articulo-imagen">
-                  <div class="articulo-info">
-                      <div class="articulo-titulo">Escritorio ejecutivo en L</div>
-                      <p class="articulo-descripcion">Diseño discreto con mejor disponibilidad de espacio.</p>
-                      <div class="articulo-precio">$380.000</div>
-                  </div>
-              </div>
-
-              <div class="articulo-card">
-                  <img src="{% static 'core/img/Cucharas.jpeg' %}" alt="Cucharas" class="articulo-imagen">
-                  <div class="articulo-info">
-                      <div class="articulo-titulo">Cucharas artesanales</div>
-                      <p class="articulo-descripcion">Diseño clásico con funcionalidad perfecta.</p>
-                      <div class="articulo-precio">$70.000</div>
-                  </div>
-              </div>
-          </div>
-      </div>
     </div>
   </section>
   <footer>
     <p>&copy; 2025 Tu Idea Hecha Realidad</p>
   </footer>
 </div>
+<script>
+  function aplicarFiltros() {
+        const categoria = document.getElementById('categoria').value;
+        console.log('Aplicando filtros y redirigiendo...');
+        console.log('Categoría seleccionada:', categoria);
+
+        if (categoria) {
+            const urlRedireccion = '/' + categoria + '/';
+            
+            console.log('Redirigiendo a:', urlRedireccion);
+            window.location.href = urlRedireccion;
+        } else {
+            window.location.href = '/productos/'; 
+        }
+    }
+</script>
 </body>
 </html>

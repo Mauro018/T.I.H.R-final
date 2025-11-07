@@ -22,7 +22,7 @@ html_base = """
 def home(request):
     from django.db.models import Case, When, IntegerField
     
-    # Obtener comentarios ordenados: aprobados primero, luego rechazados, luego pendientes
+    # Obtener comentarios aprobados primero, luego otros estados, limitado a 10
     comentarios = Comentario.objects.annotate(
         orden_estado=Case(
             When(estado='aprobado', then=1),
@@ -30,7 +30,7 @@ def home(request):
             When(estado='pendiente', then=2),
             output_field=IntegerField(),
         )
-    ).order_by('orden_estado', '-fecha_aprobacion', '-fecha_creacion')[:6]
+    ).order_by('orden_estado', '-fecha_aprobacion', '-fecha_creacion')[:10]
     
     context = {
         'comentarios': comentarios,
@@ -53,13 +53,13 @@ def productos(request):
         except UserClientes.DoesNotExist:
             pass
     
-    # Obtener todos los productos de la base de datos
-    mesas = Mesas.objects.all()[:3]  # Solo primeros 3 para la vista de ofertas
-    sillas = Sillas.objects.all()[:3]
-    armarios = Armarios.objects.all()[:3]
-    cajoneras = Cajoneras.objects.all()[:3]
-    escritorios = Escritorios.objects.all()[:3]
-    utensilios = Utensilios.objects.all()[:3]
+    # Obtener todos los productos de la base de datos (límite de 10 para el carrusel)
+    mesas = Mesas.objects.all()[:10]
+    sillas = Sillas.objects.all()[:10]
+    armarios = Armarios.objects.all()[:10]
+    cajoneras = Cajoneras.objects.all()[:10]
+    escritorios = Escritorios.objects.all()[:10]
+    utensilios = Utensilios.objects.all()[:10]
     
     context = {
         'usuario': usuario,
@@ -95,7 +95,7 @@ def Login_view(request):
                 # Guardar el usuario en la sesión
                 request.session['usernameCliente'] = usernameCliente
                 request.session.modified = True
-                return redirect('home3')
+                return redirect('productos')
             except UserClientes.DoesNotExist:
                 error_message = "Usuario o contraseña incorrectos"
                 return render(request, 'core/login.html', {'error_message': error_message})
@@ -231,13 +231,25 @@ def ideas_view(request):
     if request.method == 'POST':
         form = IdeaForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            # Guardar sin commit para agregar el autor
+            idea = form.save(commit=False)
+            # Asignar automáticamente el nombre del usuario de la sesión
+            if usuario:
+                idea.autor = usuario.usernameCliente
+            idea.save()
             return redirect('idea')
     else:
         form = IdeaForm()
 
     # Recupera todas las ideas de la base de datos
     ideas = Idea.objects.all().order_by('-fecha_creacion')
+    
+    # Agregar información del usuario a cada idea
+    for idea in ideas:
+        try:
+            idea.usuario = UserClientes.objects.get(usernameCliente=idea.autor)
+        except UserClientes.DoesNotExist:
+            idea.usuario = None
     
     return render(request, 'core/idea.html', {
         'form': form,

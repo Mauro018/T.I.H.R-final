@@ -635,6 +635,15 @@ input, textarea {
     background-color: #149abf  ;
 }
 
+.logout-button {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+.logout-button:hover {
+    background-color: #c82333 !important;
+}
+
 .filtros label {
     display: block;
     margin-top: 10px;
@@ -1614,6 +1623,104 @@ h1 {
     padding: 0 20px;
 }
 
+/* Estilos para Carrusel de Comentarios */
+.carousel-comentarios-container {
+    position: relative;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 60px;
+}
+
+.carousel-comentarios-wrapper {
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.carousel-comentarios-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    gap: 25px;
+}
+
+.carousel-comentarios-track .carousel-item {
+    flex: 0 0 calc(33.333% - 17px);
+    min-width: 0;
+}
+
+@media (max-width: 1024px) {
+    .carousel-comentarios-track .carousel-item {
+        flex: 0 0 calc(50% - 12.5px);
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel-comentarios-track .carousel-item {
+        flex: 0 0 100%;
+    }
+    
+    .carousel-comentarios-container {
+        padding: 0 50px;
+    }
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(30, 90, 142, 0.8);
+    color: white;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-btn:hover {
+    background: rgba(30, 90, 142, 1);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn.prev-btn {
+    left: 0;
+}
+
+.carousel-btn.next-btn {
+    right: 0;
+}
+
+.carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.carousel-indicators .indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.carousel-indicators .indicator.active {
+    background: #1e5a8e;
+    width: 30px;
+    border-radius: 6px;
+}
+
+.carousel-indicators .indicator:hover {
+    background: #2874b5;
+}
+
 .comentario-landing-card {
     background: white;
     border-radius: 15px;
@@ -1683,4 +1790,219 @@ body:has(.sidebar ul li a[href*="registro"]) .sidebar ul li a:hover {
     padding-left: 25px;
 }
 
+/* ============================================
+   ESTILOS PARA CARRUSEL DE PRODUCTOS
+   ============================================ */
 
+.carousel-productos-container {
+    position: relative;
+    max-width: 100%;
+    margin: 20px 0;
+    padding: 0 60px;
+}
+
+.carousel-productos-wrapper {
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.carousel-productos-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    gap: 20px;
+}
+
+.carousel-productos-track .carousel-item {
+    flex: 0 0 calc(33.333% - 14px);
+    min-width: 0;
+}
+
+@media (max-width: 1024px) {
+    .carousel-productos-track .carousel-item {
+        flex: 0 0 calc(50% - 10px);
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel-productos-track .carousel-item {
+        flex: 0 0 100%;
+    }
+    
+    .carousel-productos-container {
+        padding: 0 50px;
+    }
+}
+
+.carousel-productos-container .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(40, 116, 181, 0.9);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-productos-container .carousel-btn:hover {
+    background: rgba(40, 116, 181, 1);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-productos-container .carousel-btn.prev-btn {
+    left: 10px;
+}
+
+.carousel-productos-container .carousel-btn.next-btn {
+    right: 10px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+}
+        
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+        
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+        
+.close:hover,
+.close:focus {
+    color: #000;
+}
+        
+.modal-header {
+    padding-bottom: 10px;
+    border-bottom: 2px solid #007BFF;
+    margin-bottom: 20px;
+}
+        
+.modal-body {
+    padding: 20px 0;
+}
+        
+.modal-product-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+        
+.modal-product-info {
+    margin: 15px 0;
+}
+        
+.modal-product-info h3 {
+    color: #007BFF;
+    margin-bottom: 10px;
+}
+        
+.modal-product-info p {
+    margin: 8px 0;
+    line-height: 1.6;
+}
+        
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+        
+.quantity-selector button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 18px;
+}
+        
+.quantity-selector button:hover {
+    background-color: #0056b3;
+}
+        
+.quantity-selector input {
+    width: 60px;
+    text-align: center;
+    font-size: 16px;
+    padding: 8px;
+    border: 2px solid #007BFF;
+    border-radius: 5px;
+}
+        
+.modal-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+        
+.btn-comprar {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+        
+.btn-comprar:hover {
+    background-color: #218838;
+}
+        
+.btn-ver-detalles {
+    background-color: #007BFF;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    display: inline-block;
+    text-decoration: none;
+}
+        
+.btn-ver-detalles:hover {
+    background-color: #0056b3;
+}
+        
+.precio-destacado {
+    font-size: 24px;
+    color: #28a745;
+    font-weight: bold;
+    margin: 10px 0;
+}

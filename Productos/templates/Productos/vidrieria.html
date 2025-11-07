@@ -7,41 +7,28 @@
     <title>{% block title %} {% endblock %} | Tu Idea Hecha Realidad</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'Productos/css/styles1.css' %}">
-    <style>
-        .modal {display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6);}
-        .modal-content {background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; border-radius: 10px; width: 90%; max-width: 600px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);}
-        .close {color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;}
-        .close:hover, .close:focus {color: #000;}
-        .modal-header {padding-bottom: 10px; border-bottom: 2px solid #007BFF; margin-bottom: 20px;}
-        .modal-body {padding: 20px 0;}
-        .modal-product-image {width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;}
-        .modal-product-info {margin: 15px 0;}
-        .modal-product-info h3 {color: #007BFF; margin-bottom: 10px;}
-        .modal-product-info p {margin: 8px 0; line-height: 1.6;}
-        .quantity-selector {display: flex; align-items: center; gap: 10px; margin: 20px 0;}
-        .quantity-selector button {background-color: #007BFF; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px; font-size: 18px;}
-        .quantity-selector button:hover {background-color: #0056b3;}
-        .quantity-selector input {width: 60px; text-align: center; font-size: 16px; padding: 8px; border: 2px solid #007BFF; border-radius: 5px;}
-        .modal-footer {text-align: center; margin-top: 20px;}
-        .btn-comprar {background-color: #28a745; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;}
-        .btn-comprar:hover {background-color: #218838;}
-        .btn-ver-detalles {background-color: #007BFF; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; margin-top: 10px; display: block; width: 100%; text-decoration: none;}
-        .btn-ver-detalles:hover {background-color: #0056b3;}
-        .precio-destacado {font-size: 20px; color: #28a745; font-weight: bold; margin: 10px 0;}
-    </style>
 </head>
 <body>
  
 <!-- BARRA LATERAL (MENÚ + FILTROS) -->
 <div class="sidebar">
-    <a href="{% url 'perfilUsuario' %}"><img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF;"></a>
+    <div class="sidebar-user-info">
+        <a href="{% url 'perfilUsuario' %}" class="user-avatar-link">
+            {% if usuario.foto_perfil %}
+                <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF; object-fit: cover;">
+            {% else %}
+                <img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF;">
+            {% endif %}
+        </a>
+        <span class="username-display">{{ usuario.usernameCliente }}</span>
+    </div>
   <h2 class="h2-side">Menú</h2>
   <ul>
-    <li><a href="{% url 'home3' %}">Gangazos</a></li>
-    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
     <li><a href="{% url 'productos' %}">Ofertas</a></li>
+    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
     <li><a href="{% url 'carrito' %}">Carrito</a></li>
     <li><a href="{% url 'contact' %}">Contáctenos</a></li>
+    <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
     <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
   </ul>
 
@@ -99,7 +86,7 @@
                                 <h3>{{ silla.nombre2 }}</h3>
                                 <p>{{ silla.descripcion2 }}</p>
                                 <p class="precio-destacado">Precio: ${{ silla.precio2 }}</p>
-                                <button class="btn-ver-detalles" onclick="mostrarDetalles('silla', {{ silla.id }}, '{{ silla.nombre2|escapejs }}', '{{ silla.descripcion2|escapejs }}', '{{ silla.precio2 }}', '{% if silla.imagen2 %}{{ silla.imagen2.url }}{% else %}{% static 'Productos/img/Sillas.jpg' %}{% endif %}')">Ver Detalles y Comprar</button>
+                                <button class="btn-ver-detalles" onclick="mostrarDetalles('silla', {{ silla.id }}, '{{ silla.nombre2|escapejs }}', '{{ silla.descripcion2|escapejs }}', '{{ silla.precio2 }}', '{% if silla.imagen2 %}{{ silla.imagen2.url }}{% else %}{% static 'Productos/img/Sillas.jpg' %}{% endif %}')">Ver Detalles</button>
                             </div>
                         </div>
                         {% empty %}

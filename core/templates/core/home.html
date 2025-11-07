@@ -20,8 +20,6 @@
             <ul class="landing-nav-menu">
                 <li><a href="{% url 'home' %}">Inicio</a></li>
                 <li><a href="{% url 'reglas' %}">Sobre Gangazos y Reglas</a></li>
-                <li><a href="{% url 'productos2' %}">Productos en Oferta</a></li>
-                <li><a href="{% url 'contactenos' %}">Contáctenos</a></li>
                 <li><a href="{% url 'registro' %}" class="btn-registro">Registro</a></li>
             </ul>
         </div>
@@ -141,50 +139,184 @@
         <div class="container">
             <div class="row">
                     <h2 style="text-align: center; margin-bottom: 30px;">Lo que dicen nuestros clientes</h2>
-                    <div class="comentarios-landing-grid">
-                        {% for comentario in comentarios %}
-                        <div class="comentario-landing-card">
-                            <div class="comentario-landing-avatar">
-                                {% if comentario.usuario.foto_perfil %}
-                                    <img src="{{ comentario.usuario.foto_perfil.url }}" alt="{{ comentario.usuario.usernameCliente }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                                {% else %}
-                                    {{ comentario.usuario.usernameCliente|first|upper }}
-                                {% endif %}
+                    
+                    <!-- Carrusel de Comentarios -->
+                    <div class="carousel-comentarios-container">
+                        <button class="carousel-btn prev-btn" onclick="moveComentariosCarousel(-1)">❮</button>
+                        
+                        <div class="carousel-comentarios-wrapper">
+                            <div class="carousel-comentarios-track" id="comentariosTrack">
+                                {% for comentario in comentarios %}
+                                <div class="comentario-landing-card carousel-item">
+                                    <div class="comentario-landing-avatar">
+                                        {% if comentario.usuario.foto_perfil %}
+                                            <img src="{{ comentario.usuario.foto_perfil.url }}" alt="{{ comentario.usuario.usernameCliente }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                        {% else %}
+                                            {{ comentario.usuario.usernameCliente|first|upper }}
+                                        {% endif %}
+                                    </div>
+                                    <h5 class="comentario-landing-nombre">{{ comentario.usuario.usernameCliente }}</h5>
+                                    <p class="comentario-landing-texto">{{ comentario.contenido }}</p>
+                                </div>
+                                {% empty %}
+                                <div class="comentario-landing-card carousel-item">
+                                    <div class="comentario-landing-avatar">C</div>
+                                    <h5 class="comentario-landing-nombre">Carlos S.</h5>
+                                    <p class="comentario-landing-texto">Me encanta el enfoque sostenible de la empresa. Es genial poder comprar productos de alta calidad sabiendo que también cuidan el medio ambiente.</p>
+                                </div>
+
+                                <div class="comentario-landing-card carousel-item">
+                                    <div class="comentario-landing-avatar">A</div>
+                                    <h5 class="comentario-landing-nombre">Ana M.</h5>
+                                    <p class="comentario-landing-texto">El envío fue muy rápido y los productos llegaron en perfectas condiciones. ¡Muy satisfecha con mi compra!</p>
+                                </div>
+
+                                <div class="comentario-landing-card carousel-item">
+                                    <div class="comentario-landing-avatar">J</div>
+                                    <h5 class="comentario-landing-nombre">Juan P.</h5>
+                                    <p class="comentario-landing-texto">La variedad de productos es excelente y los precios son muy competitivos. Recomiendo esta tienda a todos mis amigos y familiares.</p>
+                                </div>
+
+                                <div class="comentario-landing-card carousel-item">
+                                    <div class="comentario-landing-avatar">S</div>
+                                    <h5 class="comentario-landing-nombre">Sofía R.</h5>
+                                    <p class="comentario-landing-texto">Tenía una duda sobre un producto y el equipo de soporte me ayudó de manera muy eficiente y amable. ¡Gran experiencia de compra!</p>
+                                </div>
+                                {% endfor %}
                             </div>
-                            <h5 class="comentario-landing-nombre">{{ comentario.usuario.usernameCliente }}</h5>
-                            <p class="comentario-landing-texto">{{ comentario.contenido }}</p>
                         </div>
-                        {% empty %}
-                        <div class="comentario-landing-card">
-                            <div class="comentario-landing-avatar">C</div>
-                            <h5 class="comentario-landing-nombre">Carlos S.</h5>
-                            <p class="comentario-landing-texto">Me encanta el enfoque sostenible de la empresa. Es genial poder comprar productos de alta calidad sabiendo que también cuidan el medio ambiente.</p>
-                        </div>
-
-                        <div class="comentario-landing-card">
-                            <div class="comentario-landing-avatar">A</div>
-                            <h5 class="comentario-landing-nombre">Ana M.</h5>
-                            <p class="comentario-landing-texto">El envío fue muy rápido y los productos llegaron en perfectas condiciones. ¡Muy satisfecha con mi compra!</p>
-                        </div>
-
-                        <div class="comentario-landing-card">
-                            <div class="comentario-landing-avatar">J</div>
-                            <h5 class="comentario-landing-nombre">Juan P.</h5>
-                            <p class="comentario-landing-texto">La variedad de productos es excelente y los precios son muy competitivos. Recomiendo esta tienda a todos mis amigos y familiares.</p>
-                        </div>
-
-                        <div class="comentario-landing-card">
-                            <div class="comentario-landing-avatar">S</div>
-                            <h5 class="comentario-landing-nombre">Sofía R.</h5>
-                            <p class="comentario-landing-texto">Tenía una duda sobre un producto y el equipo de soporte me ayudó de manera muy eficiente y amable. ¡Gran experiencia de compra!</p>
-                        </div>
-                        {% endfor %}
+                        
+                        <button class="carousel-btn next-btn" onclick="moveComentariosCarousel(1)">❯</button>
                     </div>
+                    
+                    <!-- Indicadores del carrusel -->
+                    <div class="carousel-indicators" id="comentariosIndicators"></div>
         </section>
     </section>
     <footer>
         <p>&copy; 2025 Tu Idea Hecha Realidad</p>
     </footer>
 </div>
+
+<script>
+    // Carrusel de Comentarios
+    let currentComentarioIndex = 0;
+    let comentariosAutoplayInterval;
+    let comentariosLastInteraction = Date.now();
+    let comentariosIsAutoplay = true;
+    const COMENTARIOS_AUTOPLAY_DELAY = 1500; // 1.5 segundos entre cambios
+    const COMENTARIOS_RESUME_DELAY = 3000; // 3 segundos para reanudar
+
+    function initComentariosCarousel() {
+        const track = document.getElementById('comentariosTrack');
+        const items = track.querySelectorAll('.carousel-item');
+        const indicatorsContainer = document.getElementById('comentariosIndicators');
+        
+        // Crear indicadores
+        items.forEach((_, index) => {
+            const indicator = document.createElement('span');
+            indicator.className = 'indicator';
+            indicator.onclick = () => goToComentario(index);
+            indicatorsContainer.appendChild(indicator);
+        });
+        
+        updateComentariosCarousel();
+        startComentariosAutoplay();
+        
+        // Event listeners para pausar en hover
+        const container = document.querySelector('.carousel-comentarios-container');
+        container.addEventListener('mouseenter', pauseComentariosAutoplay);
+        container.addEventListener('mouseleave', scheduleComentariosResume);
+        container.addEventListener('click', handleComentariosInteraction);
+    }
+
+    function updateComentariosCarousel() {
+        const track = document.getElementById('comentariosTrack');
+        const items = track.querySelectorAll('.carousel-item');
+        const indicators = document.querySelectorAll('#comentariosIndicators .indicator');
+        
+        if (items.length === 0) return;
+        
+        // Ajustar según el ancho de la ventana
+        const itemsPerView = window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+        const maxIndex = Math.max(0, items.length - itemsPerView);
+        
+        if (currentComentarioIndex > maxIndex) {
+            currentComentarioIndex = maxIndex;
+        }
+        
+        const offset = -(currentComentarioIndex * (100 / itemsPerView));
+        track.style.transform = `translateX(${offset}%)`;
+        
+        // Actualizar indicadores
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentComentarioIndex);
+        });
+    }
+
+    function moveComentariosCarousel(direction) {
+        const track = document.getElementById('comentariosTrack');
+        const items = track.querySelectorAll('.carousel-item');
+        const itemsPerView = window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+        const maxIndex = Math.max(0, items.length - itemsPerView);
+        
+        currentComentarioIndex += direction;
+        
+        if (currentComentarioIndex < 0) {
+            currentComentarioIndex = maxIndex;
+        } else if (currentComentarioIndex > maxIndex) {
+            currentComentarioIndex = 0;
+        }
+        
+        updateComentariosCarousel();
+        handleComentariosInteraction();
+    }
+
+    function goToComentario(index) {
+        currentComentarioIndex = index;
+        updateComentariosCarousel();
+        handleComentariosInteraction();
+    }
+
+    function startComentariosAutoplay() {
+        if (comentariosAutoplayInterval) {
+            clearInterval(comentariosAutoplayInterval);
+        }
+        comentariosIsAutoplay = true;
+        comentariosAutoplayInterval = setInterval(() => {
+            moveComentariosCarousel(1);
+        }, COMENTARIOS_AUTOPLAY_DELAY);
+    }
+
+    function pauseComentariosAutoplay() {
+        if (comentariosAutoplayInterval) {
+            clearInterval(comentariosAutoplayInterval);
+            comentariosAutoplayInterval = null;
+        }
+        comentariosIsAutoplay = false;
+    }
+
+    function handleComentariosInteraction() {
+        comentariosLastInteraction = Date.now();
+        pauseComentariosAutoplay();
+        scheduleComentariosResume();
+    }
+
+    function scheduleComentariosResume() {
+        setTimeout(() => {
+            const timeSinceLastInteraction = Date.now() - comentariosLastInteraction;
+            if (timeSinceLastInteraction >= COMENTARIOS_RESUME_DELAY && !comentariosIsAutoplay) {
+                startComentariosAutoplay();
+            }
+        }, COMENTARIOS_RESUME_DELAY);
+    }
+
+    // Inicializar carrusel cuando carga la página
+    document.addEventListener('DOMContentLoaded', initComentariosCarousel);
+    
+    // Actualizar en resize
+    window.addEventListener('resize', updateComentariosCarousel);
+</script>
+
 </body>
 </html>

@@ -17,7 +17,7 @@ class LoginFormEmpresa(forms.Form):
 class IdeaForm(forms.ModelForm):
     class Meta:
         model = Idea
-        fields = ['titulo', 'descripcion', 'autor', 'imagen', 'modelo_3d']
+        fields = ['titulo', 'descripcion', 'imagen', 'modelo_3d']
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows': 5}),
         }

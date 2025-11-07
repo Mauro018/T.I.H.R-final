@@ -1,34 +1,106 @@
 from django.shortcuts import render
-from core.models import Armarios, Escritorios, Sillas, Cajoneras, Mesas, Utensilios
+from core.models import Armarios, Escritorios, Sillas, Cajoneras, Mesas, Utensilios, UserClientes
 
 def carpinteria(request):
+    # Obtener el usuario de la sesión
+    usernameCliente = request.session.get('usernameCliente')
+    usuario = None
+    if usernameCliente:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        except UserClientes.DoesNotExist:
+            pass
+    
     armarios = Armarios.objects.all()
-    context = {'armarios': armarios}
+    context = {
+        'armarios': armarios,
+        'usuario': usuario
+    }
     return render(request, "Productos/carpinteria.html", context)
 
 def marroquineria(request):
+    # Obtener el usuario de la sesión
+    usernameCliente = request.session.get('usernameCliente')
+    usuario = None
+    if usernameCliente:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        except UserClientes.DoesNotExist:
+            pass
+    
     escritorios = Escritorios.objects.all()
-    context = {'escritorios': escritorios}
+    context = {
+        'escritorios': escritorios,
+        'usuario': usuario
+    }
     return render(request, "Productos/marroquineria.html", context)
 
 def tapiceria(request):
+    # Obtener el usuario de la sesión
+    usernameCliente = request.session.get('usernameCliente')
+    usuario = None
+    if usernameCliente:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        except UserClientes.DoesNotExist:
+            pass
+    
     utensilios = Utensilios.objects.all()
-    context = {'utensilios': utensilios}
+    context = {
+        'utensilios': utensilios,
+        'usuario': usuario
+    }
     return render(request, "Productos/tapiceria.html", context)
 
 def vidrieria(request):
+    # Obtener el usuario de la sesión
+    usernameCliente = request.session.get('usernameCliente')
+    usuario = None
+    if usernameCliente:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        except UserClientes.DoesNotExist:
+            pass
+    
     sillas = Sillas.objects.all()
-    context = {'sillas': sillas}
+    context = {
+        'sillas': sillas,
+        'usuario': usuario
+    }
     return render(request, "Productos/vidrieria.html", context)
 
 def metaleria(request):
+    # Obtener el usuario de la sesión
+    usernameCliente = request.session.get('usernameCliente')
+    usuario = None
+    if usernameCliente:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        except UserClientes.DoesNotExist:
+            pass
+    
     cajoneras = Cajoneras.objects.all()
-    context = {'cajoneras': cajoneras}
+    context = {
+        'cajoneras': cajoneras,
+        'usuario': usuario
+    }
     return render(request, "Productos/metaleria.html", context)
 
 def ceramica(request):
+    # Obtener el usuario de la sesión
+    usernameCliente = request.session.get('usernameCliente')
+    usuario = None
+    if usernameCliente:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        except UserClientes.DoesNotExist:
+            pass
+    
     mesas = Mesas.objects.all()
-    context = {'mesas': mesas}
+    context = {
+        'mesas': mesas,
+        'usuario': usuario
+    }
     return render(request, "Productos/ceramica.html", context)
 
 # Create your views here.

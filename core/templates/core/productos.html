@@ -7,150 +7,6 @@
     <title>{% block title %} {% endblock %} | ¡Oferta Exclusiva!</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
-    <style>
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.6);
-        }
-        
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .close:hover,
-        .close:focus {
-            color: #000;
-        }
-        
-        .modal-header {
-            padding-bottom: 10px;
-            border-bottom: 2px solid #007BFF;
-            margin-bottom: 20px;
-        }
-        
-        .modal-body {
-            padding: 20px 0;
-        }
-        
-        .modal-product-image {
-            width: 100%;
-            max-height: 300px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .modal-product-info {
-            margin: 15px 0;
-        }
-        
-        .modal-product-info h3 {
-            color: #007BFF;
-            margin-bottom: 10px;
-        }
-        
-        .modal-product-info p {
-            margin: 8px 0;
-            line-height: 1.6;
-        }
-        
-        .quantity-selector {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 20px 0;
-        }
-        
-        .quantity-selector button {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 18px;
-        }
-        
-        .quantity-selector button:hover {
-            background-color: #0056b3;
-        }
-        
-        .quantity-selector input {
-            width: 60px;
-            text-align: center;
-            font-size: 16px;
-            padding: 8px;
-            border: 2px solid #007BFF;
-            border-radius: 5px;
-        }
-        
-        .modal-footer {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .btn-comprar {
-            background-color: #28a745;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        
-        .btn-comprar:hover {
-            background-color: #218838;
-        }
-        
-        .btn-ver-detalles {
-            background-color: #007BFF;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-top: 10px;
-            display: inline-block;
-            text-decoration: none;
-        }
-        
-        .btn-ver-detalles:hover {
-            background-color: #0056b3;
-        }
-        
-        .precio-destacado {
-            font-size: 24px;
-            color: #28a745;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-    </style>
 </head>
 <body>
 <!-- BARRA LATERAL (MENÚ + FILTROS) -->
@@ -167,9 +23,8 @@
     </div>
   <h2 class="h2-side">Menú</h2>
   <ul>
-    <li><a href="{% url 'home3' %}">Gangazos</a></li>
-    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
     <li><a href="{% url 'productos' %}">Ofertas</a></li>
+    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
     <li><a href="{% url 'carrito' %}">Carrito</a></li>
     <li><a href="{% url 'contact' %}">Contáctenos</a></li>
     <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
@@ -214,38 +69,46 @@
         <section class="seccion-at">
             <div>
                 <h3>Mesas</h3>
-                <div>
-                    <div class="contenedor-articulos" id="contenedorArticulos">
-                        {% for mesa in mesas %}
-                        <div class="articulo">
-                            <div>
+                <div class="carousel-productos-container" data-categoria="mesas">
+                    <button class="carousel-btn prev-btn" onclick="moveProductosCarousel('mesas', -1)">❮</button>
+                    
+                    <div class="carousel-productos-wrapper">
+                        <div class="carousel-productos-track" id="mesasTrack">
+                            {% for mesa in mesas %}
+                            <div class="articulo carousel-item">
                                 <div>
-                                    <div class="contenido-articulo">
-                                        <p><b>{{ mesa.nombre1 }}</b></p>
-                                        <p>{{ mesa.descripcion1|truncatewords:15 }}</p>
+                                    <div>
+                                        <div class="contenido-articulo">
+                                            <p><b>{{ mesa.nombre1 }}</b></p>
+                                            <p>{{ mesa.descripcion1|truncatewords:15 }}</p>
+                                        </div>
                                     </div>
                                 </div>
+                                {% if mesa.imagen1 %}
+                                <img src="{{ mesa.imagen1.url }}" alt="{{ mesa.nombre1 }}">
+                                {% else %}
+                                <img src="{% static 'core/img/Mesa.jpg' %}" alt="{{ mesa.nombre1 }}">
+                                {% endif %}
+                                <div class="contenido-articulo">
+                                    <p class="precio-destacado">${{ mesa.precio1 }}</p>
+                                    <button class="btn-ver-detalles" onclick="mostrarDetalles('mesa', {{ mesa.id }}, '{{ mesa.nombre1|escapejs }}', '{{ mesa.descripcion1|escapejs }}', '{{ mesa.precio1 }}', '{% if mesa.imagen1 %}{{ mesa.imagen1.url }}{% else %}{% static 'core/img/Mesa.jpg' %}{% endif %}')">Ver Detalles</button>
+                                </div>
                             </div>
-                            {% if mesa.imagen1 %}
-                            <img src="{{ mesa.imagen1.url }}" alt="{{ mesa.nombre1 }}">
-                            {% else %}
-                            <img src="{% static 'core/img/Mesa.jpg' %}" alt="{{ mesa.nombre1 }}">
-                            {% endif %}
-                            <div class="contenido-articulo">
-                                <p class="precio-destacado">${{ mesa.precio1 }}</p>
-                                <button class="btn-ver-detalles" onclick="mostrarDetalles('mesa', {{ mesa.id }}, '{{ mesa.nombre1|escapejs }}', '{{ mesa.descripcion1|escapejs }}', '{{ mesa.precio1 }}', '{% if mesa.imagen1 %}{{ mesa.imagen1.url }}{% else %}{% static 'core/img/Mesa.jpg' %}{% endif %}')">Ver Detalles y Comprar</button>
+                            {% empty %}
+                            <div class="articulo carousel-item">
+                                <div class="contenido-articulo">
+                                    <p>No hay productos disponibles</p>
+                                </div>
                             </div>
+                            {% endfor %}
                         </div>
-                        {% empty %}
-                        <div class="articulo">
-                            <div class="contenido-articulo">
-                                <p>No hay productos disponibles</p>
-                            </div>
-                        </div>
-                        {% endfor %}
                     </div>
-                    <button><a href="{% url 'ceramica' %}">Conocer más</a></button>
+                    
+                    <button class="carousel-btn next-btn" onclick="moveProductosCarousel('mesas', 1)">❯</button>
                 </div>
+                <div class="carousel-indicators" id="mesasIndicators"></div>
+                <br>
+                <button><a href="{% url 'ceramica' %}">Conocer más</a></button>
             </div>
         </section>
         <br>
@@ -255,38 +118,46 @@
         <section class="seccion-at">
             <div>
                 <h3>Sillas</h3>
-                <div>
-                    <div class="contenedor-articulos" id="contenedorArticulos">
-                        {% for silla in sillas %}
-                        <div class="articulo">
-                            <div>
+                <div class="carousel-productos-container" data-categoria="sillas">
+                    <button class="carousel-btn prev-btn" onclick="moveProductosCarousel('sillas', -1)">❮</button>
+                    
+                    <div class="carousel-productos-wrapper">
+                        <div class="carousel-productos-track" id="sillasTrack">
+                            {% for silla in sillas %}
+                            <div class="articulo carousel-item">
                                 <div>
-                                    <div class="contenido-articulo">
-                                        <p><b>{{ silla.nombre2 }}</b></p>
-                                        <p>{{ silla.descripcion2|truncatewords:15 }}</p>
+                                    <div>
+                                        <div class="contenido-articulo">
+                                            <p><b>{{ silla.nombre2 }}</b></p>
+                                            <p>{{ silla.descripcion2|truncatewords:15 }}</p>
+                                        </div>
                                     </div>
                                 </div>
+                                {% if silla.imagen2 %}
+                                <img src="{{ silla.imagen2.url }}" alt="{{ silla.nombre2 }}">
+                                {% else %}
+                                <img src="{% static 'core/img/Sillas.jpg' %}" alt="{{ silla.nombre2 }}">
+                                {% endif %}
+                                <div class="contenido-articulo">
+                                    <p class="precio-destacado">${{ silla.precio2 }}</p>
+                                    <button class="btn-ver-detalles" onclick="mostrarDetalles('silla', {{ silla.id }}, '{{ silla.nombre2|escapejs }}', '{{ silla.descripcion2|escapejs }}', '{{ silla.precio2 }}', '{% if silla.imagen2 %}{{ silla.imagen2.url }}{% else %}{% static 'core/img/Sillas.jpg' %}{% endif %}')">Ver Detalles</button>
+                                </div>
                             </div>
-                            {% if silla.imagen2 %}
-                            <img src="{{ silla.imagen2.url }}" alt="{{ silla.nombre2 }}">
-                            {% else %}
-                            <img src="{% static 'core/img/Sillas.jpg' %}" alt="{{ silla.nombre2 }}">
-                            {% endif %}
-                            <div class="contenido-articulo">
-                                <p class="precio-destacado">${{ silla.precio2 }}</p>
-                                <button class="btn-ver-detalles" onclick="mostrarDetalles('silla', {{ silla.id }}, '{{ silla.nombre2|escapejs }}', '{{ silla.descripcion2|escapejs }}', '{{ silla.precio2 }}', '{% if silla.imagen2 %}{{ silla.imagen2.url }}{% else %}{% static 'core/img/Sillas.jpg' %}{% endif %}')">Ver Detalles y Comprar</button>
+                            {% empty %}
+                            <div class="articulo carousel-item">
+                                <div class="contenido-articulo">
+                                    <p>No hay productos disponibles</p>
+                                </div>
                             </div>
+                            {% endfor %}
                         </div>
-                        {% empty %}
-                        <div class="articulo">
-                            <div class="contenido-articulo">
-                                <p>No hay productos disponibles</p>
-                            </div>
-                        </div>
-                        {% endfor %}
                     </div>
-                    <button><a href="{% url 'vidrieria' %}">Conocer más</a></button>
+                    
+                    <button class="carousel-btn next-btn" onclick="moveProductosCarousel('sillas', 1)">❯</button>
                 </div>
+                <div class="carousel-indicators" id="sillasIndicators"></div>
+                <br>
+                <button><a href="{% url 'vidrieria' %}">Conocer más</a></button>
             </div>
         </section>
         <br>
@@ -296,38 +167,46 @@
         <section class="seccion-at">
             <div>
                 <h3>Armarios</h3>
-                <div>
-                    <div class="contenedor-articulos" id="contenedorArticulos">
-                        {% for armario in armarios %}
-                        <div class="articulo">
-                            <div>
+                <div class="carousel-productos-container" data-categoria="armarios">
+                    <button class="carousel-btn prev-btn" onclick="moveProductosCarousel('armarios', -1)">❮</button>
+                    
+                    <div class="carousel-productos-wrapper">
+                        <div class="carousel-productos-track" id="armariosTrack">
+                            {% for armario in armarios %}
+                            <div class="articulo carousel-item">
                                 <div>
-                                    <div class="contenido-articulo">
-                                        <p><b>{{ armario.nombre3 }}</b></p>
-                                        <p>{{ armario.descripcion3|truncatewords:15 }}</p>
+                                    <div>
+                                        <div class="contenido-articulo">
+                                            <p><b>{{ armario.nombre3 }}</b></p>
+                                            <p>{{ armario.descripcion3|truncatewords:15 }}</p>
+                                        </div>
                                     </div>
                                 </div>
+                                {% if armario.imagen3 %}
+                                <img src="{{ armario.imagen3.url }}" alt="{{ armario.nombre3 }}">
+                                {% else %}
+                                <img src="{% static 'core/img/Armario.jpg' %}" alt="{{ armario.nombre3 }}">
+                                {% endif %}
+                                <div class="contenido-articulo">
+                                    <p class="precio-destacado">${{ armario.precio3 }}</p>
+                                    <button class="btn-ver-detalles" onclick="mostrarDetalles('armario', {{ armario.id }}, '{{ armario.nombre3|escapejs }}', '{{ armario.descripcion3|escapejs }}', '{{ armario.precio3 }}', '{% if armario.imagen3 %}{{ armario.imagen3.url }}{% else %}{% static 'core/img/Armario.jpg' %}{% endif %}')">Ver Detalles</button>
+                                </div>
                             </div>
-                            {% if armario.imagen3 %}
-                            <img src="{{ armario.imagen3.url }}" alt="{{ armario.nombre3 }}">
-                            {% else %}
-                            <img src="{% static 'core/img/Armario.jpg' %}" alt="{{ armario.nombre3 }}">
-                            {% endif %}
-                            <div class="contenido-articulo">
-                                <p class="precio-destacado">${{ armario.precio3 }}</p>
-                                <button class="btn-ver-detalles" onclick="mostrarDetalles('armario', {{ armario.id }}, '{{ armario.nombre3|escapejs }}', '{{ armario.descripcion3|escapejs }}', '{{ armario.precio3 }}', '{% if armario.imagen3 %}{{ armario.imagen3.url }}{% else %}{% static 'core/img/Armario.jpg' %}{% endif %}')">Ver Detalles y Comprar</button>
+                            {% empty %}
+                            <div class="articulo carousel-item">
+                                <div class="contenido-articulo">
+                                    <p>No hay productos disponibles</p>
+                                </div>
                             </div>
+                            {% endfor %}
                         </div>
-                        {% empty %}
-                        <div class="articulo">
-                            <div class="contenido-articulo">
-                                <p>No hay productos disponibles</p>
-                            </div>
-                        </div>
-                        {% endfor %}
                     </div>
-                    <button><a href="{% url 'carpinteria' %}">Conocer más</a></button>
+                    
+                    <button class="carousel-btn next-btn" onclick="moveProductosCarousel('armarios', 1)">❯</button>
                 </div>
+                <div class="carousel-indicators" id="armariosIndicators"></div>
+                <br>
+                <button><a href="{% url 'carpinteria' %}">Conocer más</a></button>
             </div>
         </section>
         <br>
@@ -337,38 +216,46 @@
         <section class="seccion-at">
             <div>
                 <h3>Cajoneras</h3>
-                <div>
-                    <div class="contenedor-articulos" id="contenedorArticulos">
-                        {% for cajonera in cajoneras %}
-                        <div class="articulo">
-                            <div>
+                <div class="carousel-productos-container" data-categoria="cajoneras">
+                    <button class="carousel-btn prev-btn" onclick="moveProductosCarousel('cajoneras', -1)">❮</button>
+                    
+                    <div class="carousel-productos-wrapper">
+                        <div class="carousel-productos-track" id="cajonerasTrack">
+                            {% for cajonera in cajoneras %}
+                            <div class="articulo carousel-item">
                                 <div>
-                                    <div class="contenido-articulo">
-                                        <p><b>{{ cajonera.nombre4 }}</b></p>
-                                        <p>{{ cajonera.descripcion4|truncatewords:15 }}</p>
+                                    <div>
+                                        <div class="contenido-articulo">
+                                            <p><b>{{ cajonera.nombre4 }}</b></p>
+                                            <p>{{ cajonera.descripcion4|truncatewords:15 }}</p>
+                                        </div>
                                     </div>
                                 </div>
+                                {% if cajonera.imagen4 %}
+                                <img src="{{ cajonera.imagen4.url }}" alt="{{ cajonera.nombre4 }}">
+                                {% else %}
+                                <img src="{% static 'core/img/Cajonera1.webp' %}" alt="{{ cajonera.nombre4 }}">
+                                {% endif %}
+                                <div class="contenido-articulo">
+                                    <p class="precio-destacado">${{ cajonera.precio4 }}</p>
+                                    <button class="btn-ver-detalles" onclick="mostrarDetalles('cajonera', {{ cajonera.id }}, '{{ cajonera.nombre4|escapejs }}', '{{ cajonera.descripcion4|escapejs }}', '{{ cajonera.precio4 }}', '{% if cajonera.imagen4 %}{{ cajonera.imagen4.url }}{% else %}{% static 'core/img/Cajonera1.webp' %}{% endif %}')">Ver Detalles</button>
+                                </div>
                             </div>
-                            {% if cajonera.imagen4 %}
-                            <img src="{{ cajonera.imagen4.url }}" alt="{{ cajonera.nombre4 }}">
-                            {% else %}
-                            <img src="{% static 'core/img/Cajonera1.webp' %}" alt="{{ cajonera.nombre4 }}">
-                            {% endif %}
-                            <div class="contenido-articulo">
-                                <p class="precio-destacado">${{ cajonera.precio4 }}</p>
-                                <button class="btn-ver-detalles" onclick="mostrarDetalles('cajonera', {{ cajonera.id }}, '{{ cajonera.nombre4|escapejs }}', '{{ cajonera.descripcion4|escapejs }}', '{{ cajonera.precio4 }}', '{% if cajonera.imagen4 %}{{ cajonera.imagen4.url }}{% else %}{% static 'core/img/Cajonera1.webp' %}{% endif %}')">Ver Detalles y Comprar</button>
+                            {% empty %}
+                            <div class="articulo carousel-item">
+                                <div class="contenido-articulo">
+                                    <p>No hay productos disponibles</p>
+                                </div>
                             </div>
+                            {% endfor %}
                         </div>
-                        {% empty %}
-                        <div class="articulo">
-                            <div class="contenido-articulo">
-                                <p>No hay productos disponibles</p>
-                            </div>
-                        </div>
-                        {% endfor %}
                     </div>
-                    <button><a href="{% url 'metaleria' %}">Conocer más</a></button>
+                    
+                    <button class="carousel-btn next-btn" onclick="moveProductosCarousel('cajoneras', 1)">❯</button>
                 </div>
+                <div class="carousel-indicators" id="cajonerasIndicators"></div>
+                <br>
+                <button><a href="{% url 'metaleria' %}">Conocer más</a></button>
             </div>
         </section>
         <br>
@@ -378,38 +265,46 @@
         <section class="seccion-at">
             <div>
                 <h3>Escritorios</h3>
-                <div>
-                    <div class="contenedor-articulos" id="contenedorArticulos">
-                        {% for escritorio in escritorios %}
-                        <div class="articulo">
-                            <div>
+                <div class="carousel-productos-container" data-categoria="escritorios">
+                    <button class="carousel-btn prev-btn" onclick="moveProductosCarousel('escritorios', -1)">❮</button>
+                    
+                    <div class="carousel-productos-wrapper">
+                        <div class="carousel-productos-track" id="escritoriosTrack">
+                            {% for escritorio in escritorios %}
+                            <div class="articulo carousel-item">
                                 <div>
-                                    <div class="contenido-articulo">
-                                        <p><b>{{ escritorio.nombre5 }}</b></p>
-                                        <p>{{ escritorio.descripcion5|truncatewords:15 }}</p>
+                                    <div>
+                                        <div class="contenido-articulo">
+                                            <p><b>{{ escritorio.nombre5 }}</b></p>
+                                            <p>{{ escritorio.descripcion5|truncatewords:15 }}</p>
+                                        </div>
                                     </div>
                                 </div>
+                                {% if escritorio.imagen5 %}
+                                <img src="{{ escritorio.imagen5.url }}" alt="{{ escritorio.nombre5 }}">
+                                {% else %}
+                                <img src="{% static 'core/img/Escritorio.jpg' %}" alt="{{ escritorio.nombre5 }}">
+                                {% endif %}
+                                <div class="contenido-articulo">
+                                    <p class="precio-destacado">${{ escritorio.precio5 }}</p>
+                                    <button class="btn-ver-detalles" onclick="mostrarDetalles('escritorio', {{ escritorio.id }}, '{{ escritorio.nombre5|escapejs }}', '{{ escritorio.descripcion5|escapejs }}', '{{ escritorio.precio5 }}', '{% if escritorio.imagen5 %}{{ escritorio.imagen5.url }}{% else %}{% static 'core/img/Escritorio.jpg' %}{% endif %}')">Ver Detalles</button>
+                                </div>
                             </div>
-                            {% if escritorio.imagen5 %}
-                            <img src="{{ escritorio.imagen5.url }}" alt="{{ escritorio.nombre5 }}">
-                            {% else %}
-                            <img src="{% static 'core/img/Escritorio.jpg' %}" alt="{{ escritorio.nombre5 }}">
-                            {% endif %}
-                            <div class="contenido-articulo">
-                                <p class="precio-destacado">${{ escritorio.precio5 }}</p>
-                                <button class="btn-ver-detalles" onclick="mostrarDetalles('escritorio', {{ escritorio.id }}, '{{ escritorio.nombre5|escapejs }}', '{{ escritorio.descripcion5|escapejs }}', '{{ escritorio.precio5 }}', '{% if escritorio.imagen5 %}{{ escritorio.imagen5.url }}{% else %}{% static 'core/img/Escritorio.jpg' %}{% endif %}')">Ver Detalles y Comprar</button>
+                            {% empty %}
+                            <div class="articulo carousel-item">
+                                <div class="contenido-articulo">
+                                    <p>No hay productos disponibles</p>
+                                </div>
                             </div>
+                            {% endfor %}
                         </div>
-                        {% empty %}
-                        <div class="articulo">
-                            <div class="contenido-articulo">
-                                <p>No hay productos disponibles</p>
-                            </div>
-                        </div>
-                        {% endfor %}
                     </div>
-                    <button><a href="{% url 'marroquineria' %}">Conocer más</a></button>
+                    
+                    <button class="carousel-btn next-btn" onclick="moveProductosCarousel('escritorios', 1)">❯</button>
                 </div>
+                <div class="carousel-indicators" id="escritoriosIndicators"></div>
+                <br>
+                <button><a href="{% url 'marroquineria' %}">Conocer más</a></button>
             </div>
         </section>
         <br>
@@ -419,38 +314,46 @@
         <section class="seccion-at">
             <div>
                 <h3>Utensilios</h3>
-                <div>
-                    <div class="contenedor-articulos" id="contenedorArticulos">
-                        {% for utensilio in utensilios %}
-                        <div class="articulo">
-                            <div>
+                <div class="carousel-productos-container" data-categoria="utensilios">
+                    <button class="carousel-btn prev-btn" onclick="moveProductosCarousel('utensilios', -1)">❮</button>
+                    
+                    <div class="carousel-productos-wrapper">
+                        <div class="carousel-productos-track" id="utensiliosTrack">
+                            {% for utensilio in utensilios %}
+                            <div class="articulo carousel-item">
                                 <div>
-                                    <div class="contenido-articulo">
-                                        <p><b>{{ utensilio.nombre6 }}</b></p>
-                                        <p>{{ utensilio.descripcion6|truncatewords:15 }}</p>
+                                    <div>
+                                        <div class="contenido-articulo">
+                                            <p><b>{{ utensilio.nombre6 }}</b></p>
+                                            <p>{{ utensilio.descripcion6|truncatewords:15 }}</p>
+                                        </div>
                                     </div>
                                 </div>
+                                {% if utensilio.imagen6 %}
+                                <img src="{{ utensilio.imagen6.url }}" alt="{{ utensilio.nombre6 }}">
+                                {% else %}
+                                <img src="{% static 'core/img/Cucharas.jpg' %}" alt="{{ utensilio.nombre6 }}">
+                                {% endif %}
+                                <div class="contenido-articulo">
+                                    <p class="precio-destacado">${{ utensilio.precio6 }}</p>
+                                    <button class="btn-ver-detalles" onclick="mostrarDetalles('utensilio', {{ utensilio.id }}, '{{ utensilio.nombre6|escapejs }}', '{{ utensilio.descripcion6|escapejs }}', '{{ utensilio.precio6 }}', '{% if utensilio.imagen6 %}{{ utensilio.imagen6.url }}{% else %}{% static 'core/img/Cucharas.jpg' %}{% endif %}')">Ver Detalles</button>
+                                </div>
                             </div>
-                            {% if utensilio.imagen6 %}
-                            <img src="{{ utensilio.imagen6.url }}" alt="{{ utensilio.nombre6 }}">
-                            {% else %}
-                            <img src="{% static 'core/img/Cucharas.jpg' %}" alt="{{ utensilio.nombre6 }}">
-                            {% endif %}
-                            <div class="contenido-articulo">
-                                <p class="precio-destacado">${{ utensilio.precio6 }}</p>
-                                <button class="btn-ver-detalles" onclick="mostrarDetalles('utensilio', {{ utensilio.id }}, '{{ utensilio.nombre6|escapejs }}', '{{ utensilio.descripcion6|escapejs }}', '{{ utensilio.precio6 }}', '{% if utensilio.imagen6 %}{{ utensilio.imagen6.url }}{% else %}{% static 'core/img/Cucharas.jpg' %}{% endif %}')">Ver Detalles y Comprar</button>
+                            {% empty %}
+                            <div class="articulo carousel-item">
+                                <div class="contenido-articulo">
+                                    <p>No hay productos disponibles</p>
+                                </div>
                             </div>
+                            {% endfor %}
                         </div>
-                        {% empty %}
-                        <div class="articulo">
-                            <div class="contenido-articulo">
-                                <p>No hay productos disponibles</p>
-                            </div>
-                        </div>
-                        {% endfor %}
                     </div>
-                    <button><a href="{% url 'tapiceria' %}">Conocer más</a></button>
+                    
+                    <button class="carousel-btn next-btn" onclick="moveProductosCarousel('utensilios', 1)">❯</button>
                 </div>
+                <div class="carousel-indicators" id="utensiliosIndicators"></div>
+                <br>
+                <button><a href="{% url 'tapiceria' %}">Conocer más</a></button>
             </div>
         </section>
     </section>
@@ -595,6 +498,156 @@
             window.location.href = '/productos/'; 
         }
     }
+
+    // Carruseles de Productos
+    const productosCarousels = {};
+    const PRODUCTOS_AUTOPLAY_DELAY = 1500;
+    const PRODUCTOS_RESUME_DELAY = 3000;
+
+    function initProductosCarousel(categoria) {
+        if (!productosCarousels[categoria]) {
+            productosCarousels[categoria] = {
+                currentIndex: 0,
+                autoplayInterval: null,
+                lastInteraction: Date.now(),
+                isAutoplay: false
+            };
+        }
+
+        const track = document.getElementById(categoria + 'Track');
+        if (!track) return;
+
+        const items = track.querySelectorAll('.carousel-item');
+        const indicatorsContainer = document.getElementById(categoria + 'Indicators');
+        
+        if (indicatorsContainer && indicatorsContainer.children.length === 0) {
+            // Crear indicadores
+            items.forEach((_, index) => {
+                const indicator = document.createElement('span');
+                indicator.className = 'indicator';
+                indicator.onclick = () => goToProducto(categoria, index);
+                indicatorsContainer.appendChild(indicator);
+            });
+        }
+        
+        updateProductosCarousel(categoria);
+        startProductosAutoplay(categoria);
+        
+        // Event listeners para pausar en hover
+        const container = document.querySelector(`.carousel-productos-container[data-categoria="${categoria}"]`);
+        if (container) {
+            container.addEventListener('mouseenter', () => pauseProductosAutoplay(categoria));
+            container.addEventListener('mouseleave', () => scheduleProductosResume(categoria));
+            container.addEventListener('click', () => handleProductosInteraction(categoria));
+        }
+    }
+
+    function updateProductosCarousel(categoria) {
+        const track = document.getElementById(categoria + 'Track');
+        if (!track) return;
+
+        const items = track.querySelectorAll('.carousel-item');
+        const indicators = document.querySelectorAll(`#${categoria}Indicators .indicator`);
+        
+        if (items.length === 0) return;
+        
+        const carousel = productosCarousels[categoria];
+        const itemsPerView = window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+        const maxIndex = Math.max(0, items.length - itemsPerView);
+        
+        if (carousel.currentIndex > maxIndex) {
+            carousel.currentIndex = maxIndex;
+        }
+        
+        const offset = -(carousel.currentIndex * (100 / itemsPerView));
+        track.style.transform = `translateX(${offset}%)`;
+        
+        // Actualizar indicadores
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === carousel.currentIndex);
+        });
+    }
+
+    function moveProductosCarousel(categoria, direction) {
+        const track = document.getElementById(categoria + 'Track');
+        if (!track) return;
+
+        const items = track.querySelectorAll('.carousel-item');
+        const carousel = productosCarousels[categoria];
+        const itemsPerView = window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+        const maxIndex = Math.max(0, items.length - itemsPerView);
+        
+        carousel.currentIndex += direction;
+        
+        if (carousel.currentIndex < 0) {
+            carousel.currentIndex = maxIndex;
+        } else if (carousel.currentIndex > maxIndex) {
+            carousel.currentIndex = 0;
+        }
+        
+        updateProductosCarousel(categoria);
+        handleProductosInteraction(categoria);
+    }
+
+    function goToProducto(categoria, index) {
+        const carousel = productosCarousels[categoria];
+        carousel.currentIndex = index;
+        updateProductosCarousel(categoria);
+        handleProductosInteraction(categoria);
+    }
+
+    function startProductosAutoplay(categoria) {
+        const carousel = productosCarousels[categoria];
+        if (carousel.autoplayInterval) {
+            clearInterval(carousel.autoplayInterval);
+        }
+        carousel.isAutoplay = true;
+        carousel.autoplayInterval = setInterval(() => {
+            moveProductosCarousel(categoria, 1);
+        }, PRODUCTOS_AUTOPLAY_DELAY);
+    }
+
+    function pauseProductosAutoplay(categoria) {
+        const carousel = productosCarousels[categoria];
+        if (carousel.autoplayInterval) {
+            clearInterval(carousel.autoplayInterval);
+            carousel.autoplayInterval = null;
+        }
+        carousel.isAutoplay = false;
+    }
+
+    function handleProductosInteraction(categoria) {
+        const carousel = productosCarousels[categoria];
+        carousel.lastInteraction = Date.now();
+        pauseProductosAutoplay(categoria);
+        scheduleProductosResume(categoria);
+    }
+
+    function scheduleProductosResume(categoria) {
+        const carousel = productosCarousels[categoria];
+        setTimeout(() => {
+            const timeSinceLastInteraction = Date.now() - carousel.lastInteraction;
+            if (timeSinceLastInteraction >= PRODUCTOS_RESUME_DELAY && !carousel.isAutoplay) {
+                startProductosAutoplay(categoria);
+            }
+        }, PRODUCTOS_RESUME_DELAY);
+    }
+
+    // Inicializar todos los carruseles cuando carga la página
+    document.addEventListener('DOMContentLoaded', function() {
+        const categorias = ['mesas', 'sillas', 'armarios', 'cajoneras', 'escritorios', 'utensilios'];
+        categorias.forEach(categoria => {
+            initProductosCarousel(categoria);
+        });
+    });
+    
+    // Actualizar en resize
+    window.addEventListener('resize', function() {
+        const categorias = ['mesas', 'sillas', 'armarios', 'cajoneras', 'escritorios', 'utensilios'];
+        categorias.forEach(categoria => {
+            updateProductosCarousel(categoria);
+        });
+    });
 </script>
 </body>
 </html>

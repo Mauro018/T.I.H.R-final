@@ -24,9 +24,8 @@
     </div>
   <h2 class="h2-side">Menú</h2>
   <ul>
-    <li><a href="{% url 'home3' %}">Gangazos</a></li>
-    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
     <li><a href="{% url 'productos' %}">Ofertas</a></li>
+    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
     <li><a href="{% url 'carrito' %}">Carrito</a></li>
     <li><a href="{% url 'contact' %}">Contáctenos</a></li>
     <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
@@ -86,12 +85,6 @@
               required
             >{{ form.descripcion.value|default:'' }}</textarea>
           </div>
-          
-          <!-- Autor -->
-          <div class="form-group">
-            <label for="id_autor">Tu nombre:</label>
-            {{ form.autor }}
-          </div>
 
           <!-- Imagen -->
           <div class="form-group">
@@ -117,14 +110,30 @@
             {% for idea in ideas %}
               <div class="articulo {% if idea.estado == 'en_proceso' %}en-proceso{% elif idea.estado == 'completada' %}completada{% endif %}">
                 <div class="contenido-articulo">
+                  <!-- Header con avatar y nombre del autor -->
+                  <div class="idea-header">
+                    <div class="idea-usuario">
+                      <div class="usuario-avatar">
+                        {% if idea.usuario.foto_perfil %}
+                          <img src="{{ idea.usuario.foto_perfil.url }}" alt="{{ idea.autor }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                        {% else %}
+                          <img src="{% static 'core/img/Perfil.png' %}" alt="{{ idea.autor }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                        {% endif %}
+                      </div>
+                      <div class="usuario-info">
+                        <h4>{{ idea.autor }}</h4>
+                        <span class="idea-fecha">{{ idea.fecha_creacion|date:"d/m/Y H:i" }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Contenido de la idea -->
                   <h3>{{ idea.titulo }}</h3>
                   <p>{{ idea.descripcion }}</p>
-                  <p><strong>Autor:</strong> {{ idea.autor }}</p>
                   <p><strong>Estado:</strong> {{ idea.get_estado_display }}</p>
                   {% if idea.empresa_asignada %}
                   <p><strong>Empresa asignada:</strong> {{ idea.empresa_asignada.usernameEmpresa }}</p>
                   {% endif %}
-                  <p><strong>Fecha:</strong> {{ idea.fecha_creacion|date:"d/m/Y H:i" }}</p>
                 </div>
               </div>
             {% endfor %}

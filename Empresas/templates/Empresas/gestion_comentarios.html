@@ -71,21 +71,23 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if comentario.estado != 'aprobado' %}
-                                <a href="{% url 'aprobar_comentario' comentario.id %}" 
-                                   class="btn-aprobar"
-                                   onclick="return confirm('¿Estás seguro de aprobar este comentario?');">
-                                    ✓ Aprobar
-                                </a>
-                                {% endif %}
-                                
-                                {% if comentario.estado != 'rechazado' %}
-                                <a href="{% url 'rechazar_comentario' comentario.id %}" 
-                                   class="btn-rechazar"
-                                   onclick="return confirm('¿Estás seguro de rechazar este comentario?');">
-                                    ✗ Rechazar
-                                </a>
-                                {% endif %}
+                                <div class="action-buttons">
+                                    {% if comentario.estado != 'aprobado' %}
+                                    <a href="{% url 'aprobar_comentario' comentario.id %}" 
+                                       class="btn-aprobar"
+                                       onclick="return confirm('¿Estás seguro de aprobar este comentario?');">
+                                        Aprobar
+                                    </a>
+                                    {% endif %}
+                                    
+                                    {% if comentario.estado != 'rechazado' %}
+                                    <a href="{% url 'rechazar_comentario' comentario.id %}" 
+                                       class="btn-rechazar"
+                                       onclick="return confirm('¿Estás seguro de rechazar este comentario?');">
+                                        Rechazar
+                                    </a>
+                                    {% endif %}
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
