@@ -26,7 +26,10 @@
   <ul>
     <li><a href="{% url 'productos' %}">Ofertas</a></li>
     <li><a href="{% url 'idea' %}">Crear Idea</a></li>
-    <li><a href="{% url 'carrito' %}">Carrito</a></li>
+    <li><a href="{% url 'carrito' %}" style="position: relative;">
+        Carrito
+        <span id="cart-count-badge" class="cart-badge" style="display: none;">0</span>
+    </a></li>
     <li><a href="{% url 'contact' %}">Contáctenos</a></li>
     <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
     <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
@@ -137,6 +140,7 @@
     <p>&copy; 2025 Tu Idea Hecha Realidad</p>
 </footer>
 </div>
+<script src="{% static 'core/javascript/Carrito.js' %}"></script>
 <script>
   function aplicarFiltros() {
         const categoria = document.getElementById('categoria').value;
