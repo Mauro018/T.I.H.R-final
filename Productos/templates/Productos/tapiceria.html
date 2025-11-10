@@ -128,7 +128,7 @@
             </div>
             <div class="quantity-selector">
                 <button onclick="cambiarCantidad(-1)">-</button>
-                <input type="number" id="cantidadProducto" value="1" min="1" readonly>
+                <input type="number" id="quantity" value="1" min="1" readonly>
                 <button onclick="cambiarCantidad(1)">+</button>
             </div>
             <p class="precio-destacado">Total: $<span id="totalPrice">0</span></p>
@@ -141,26 +141,75 @@
 
 <script>
     // Variable global para el producto actual
-    let currentProduct = null;
-
-    function mostrarDetalles(tipo, id, nombre, descripcion, precio, imagen) {
+    let currentProduct = null;    async function mostrarDetalles(tipo, id, nombre, descripcion, precio, imagen) {
+        console.log('Mostrando detalles:', tipo, id, nombre);
         currentProduct = {
             tipo: tipo,
             id: id,
             nombre: nombre,
             descripcion: descripcion,
-            precio: precio,
-            imagen: imagen
+            precio: parseFloat(precio),
+            imagen: imagen,
+            cantidad_disponible: 0,
+            cantidad_restante: 0
         };
-
-        document.getElementById('modalProductName').textContent = nombre;
-        document.getElementById('modalProductImage').src = imagen;
-        document.getElementById('modalProductDescription').textContent = descripcion;
-        document.getElementById('modalProductPrice').textContent = precio;
-        document.getElementById('cantidadProducto').value = 1;
-        actualizarTotal();
         
-        document.getElementById('productModal').style.display = 'block';
+        try {
+            const url = `/api/producto/cantidad-disponible/?tipo=${tipo}&id=${id}`;
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                let errorMsg = `Error HTTP ${response.status}`;
+                try {
+                    const errorData = await response.json();
+                    errorMsg = errorData.error || errorMsg;
+                } catch (e) {
+                    console.error('Error parsing:', e);
+                }
+                alert('Error al obtener disponibilidad: ' + errorMsg);
+                return;
+            }
+            
+            const data = await response.json();
+            currentProduct.cantidad_disponible = data.cantidad_disponible || 0;
+            
+            let carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+            let existente = carrito.find(item => item.tipo === tipo && item.id === id);
+            let cantidadEnCarrito = existente ? existente.cantidad : 0;
+            currentProduct.cantidad_restante = currentProduct.cantidad_disponible - cantidadEnCarrito;
+            
+            if (currentProduct.cantidad_disponible === 0) {
+                alert('Este producto no está disponible en inventario.');
+                return;
+            }
+            
+            if (currentProduct.cantidad_restante <= 0) {
+                alert(`Ya tienes todas las unidades disponibles (${currentProduct.cantidad_disponible}) en tu carrito.`);
+                return;
+            }
+            
+            document.getElementById('modalProductName').textContent = nombre;
+            document.getElementById('modalProductDescription').textContent = descripcion;
+            document.getElementById('modalProductPrice').textContent = precio;
+            document.getElementById('modalImage').src = imagen;
+            document.getElementById('quantity').value = 1;
+            document.getElementById('quantity').max = currentProduct.cantidad_restante;
+            
+            const dispText = document.getElementById('disponibilidadText');
+            if (cantidadEnCarrito > 0) {
+                dispText.textContent = `Disponibles: ${currentProduct.cantidad_restante} unidades (${cantidadEnCarrito} ya en tu carrito)`;
+                dispText.style.color = currentProduct.cantidad_restante < 5 ? '#ff9800' : '#28a745';
+            } else {
+                dispText.textContent = `Disponibles: ${currentProduct.cantidad_disponible} unidades`;
+                dispText.style.color = currentProduct.cantidad_disponible < 5 ? '#ff9800' : '#28a745';
+            }
+            
+            actualizarTotal();
+            document.getElementById('productModal').style.display = 'block';
+        } catch (error) {
+            console.error('Error completo:', error);
+            alert('Error al cargar la información del producto: ' + error.message);
+        }
     }
 
     function cerrarModal() {
@@ -174,58 +223,94 @@
             cerrarModal();
         }
     }
-
+    
     function cambiarCantidad(delta) {
-        const input = document.getElementById('cantidadProducto');
-        let cantidad = parseInt(input.value) + delta;
-        if (cantidad < 1) cantidad = 1;
-        input.value = cantidad;
+        let input = document.getElementById('quantity');
+        let newValue = parseInt(input.value) + delta;
+        let maxCantidad = currentProduct.cantidad_restante || 1;
+        
+        if (newValue < 1) return;
+        if (newValue > maxCantidad) {
+            alert(`Solo puedes agregar ${maxCantidad} unidades más de este producto.`);
+            return;
+        }
+        
+        input.value = newValue;
         actualizarTotal();
     }
 
     function actualizarTotal() {
         if (currentProduct) {
-            const cantidad = parseInt(document.getElementById('cantidadProducto').value);
+            const cantidad = parseInt(document.getElementById('quantity').value);
             const total = currentProduct.precio * cantidad;
             document.getElementById('totalPrice').textContent = total.toFixed(2);
         }
     }
 
-    function agregarAlCarrito() {
+    async function agregarAlCarrito() {
         if (!currentProduct) return;
 
-        const cantidad = parseInt(document.getElementById('cantidadProducto').value);
+        const cantidad = parseInt(document.getElementById('quantity').value);
         
-        // Obtener carrito actual del sessionStorage
-        let carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
-        
-        // Verificar si el producto ya existe en el carrito
-        const productoExistente = carrito.find(item => 
-            item.tipo === currentProduct.tipo && item.id === currentProduct.id
-        );
+        try {
+            // Verificar cantidad disponible en el inventario
+            const response = await fetch(`/api/producto/cantidad-disponible/?tipo=${currentProduct.tipo}&id=${currentProduct.id}`);
+            const data = await response.json();
+            
+            if (!response.ok) {
+                alert('Error al verificar disponibilidad del producto');
+                return;
+            }
+            
+            // Obtener carrito actual del sessionStorage
+            let carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+            
+            // Verificar si el producto ya existe en el carrito
+            const productoExistente = carrito.find(item => 
+                item.tipo === currentProduct.tipo && item.id === currentProduct.id
+            );
+            
+            let cantidadEnCarrito = productoExistente ? productoExistente.cantidad : 0;
+            let cantidadTotal = cantidadEnCarrito + cantidad;
+            
+            // Validar que no exceda el inventario
+            if (cantidadTotal > data.cantidad_disponible) {
+                alert(`Solo hay ${data.cantidad_disponible} unidades disponibles. Ya tienes ${cantidadEnCarrito} en tu carrito.`);
+                return;
+            }
+            
+            if (data.cantidad_disponible === 0) {
+                alert('Este producto no está disponible en este momento.');
+                return;
+            }
 
-        if (productoExistente) {
-            productoExistente.cantidad += cantidad;
-        } else {
-            carrito.push({
-                tipo: currentProduct.tipo,
-                id: currentProduct.id,
-                nombre: currentProduct.nombre,
-                precio: currentProduct.precio,
-                cantidad: cantidad,
-                imagen: currentProduct.imagen,
-                descripcion: currentProduct.descripcion
-            });
-        }
+            if (productoExistente) {
+                productoExistente.cantidad += cantidad;
+            } else {
+                carrito.push({
+                    tipo: currentProduct.tipo,
+                    id: currentProduct.id,
+                    nombre: currentProduct.nombre,
+                    precio: currentProduct.precio,
+                    cantidad: cantidad,
+                    imagen: currentProduct.imagen,
+                    descripcion: currentProduct.descripcion
+                });
+            }
 
-        // Guardar carrito actualizado
-        sessionStorage.setItem('carrito', JSON.stringify(carrito));
-        
-        // Cerrar modal y redirigir al carrito
-        cerrarModal();
-        
-        if (confirm('Producto agregado al carrito. ¿Desea ir al carrito?')) {
-            window.location.href = '/carrito/';
+            // Guardar carrito actualizado
+            sessionStorage.setItem('carrito', JSON.stringify(carrito));
+            updateCartBadge();
+            
+            // Cerrar modal y redirigir al carrito
+            cerrarModal();
+            
+            if (confirm('Producto agregado al carrito. ¿Desea ir al carrito?')) {
+                window.location.href = '/carrito/';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al agregar el producto al carrito');
         }
     }
 
@@ -243,6 +328,25 @@
             window.location.href = '/productos/'; 
         }
     }
+    
+    // Función para actualizar el badge del carrito
+    function updateCartBadge() {
+        const carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+        const badge = document.getElementById('cart-count-badge');
+        const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+        
+        if (totalItems > 0) {
+            badge.textContent = totalItems;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+    
+    // Actualizar badge al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCartBadge();
+    });
 </script>
 
 <script src="{% static 'core/javascript/Carrito.js' %}"></script>

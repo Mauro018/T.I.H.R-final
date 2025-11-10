@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .forms import LoginForm, AgregarForm, LoginFormEmpresa, IdeaForm
-from .models import UserClientes, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserEmpresa, Idea, Pago, Pedido
+from .models import UserClientes, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserEmpresa, Idea, Pago, Pedido, Comentario
 from .logic import obtener_respuesta
 import json
 
@@ -540,6 +540,42 @@ def crear_pedido_view(request, pago_id):
             from datetime import timedelta
             from django.utils import timezone
             
+            # Parsear productos antes de crear el pedido
+            try:
+                productos_lista = json.loads(pago.productos)
+            except:
+                productos_lista = []
+            
+            # Verificar y descontar inventario
+            modelos_map = {
+                'mesa': Mesas,
+                'silla': Sillas,
+                'armario': Armarios,
+                'cajonera': Cajoneras,
+                'escritorio': Escritorios,
+                'utensilio': Utensilios,
+            }
+            
+            # Verificar que haya suficiente inventario antes de descontar
+            for item in productos_lista:
+                tipo = item.get('tipo')
+                producto_id = item.get('id')
+                cantidad_pedida = item.get('cantidad', 0)
+                
+                modelo = modelos_map.get(tipo)
+                if modelo:
+                    try:
+                        producto = modelo.objects.get(id=producto_id)
+                        if producto.cantidad_disponible < cantidad_pedida:
+                            return render(request, 'core/crear_pedido.html', {
+                                'error': f'No hay suficiente inventario de {item.get("nombre")}. Disponible: {producto.cantidad_disponible}',
+                                'pago': pago,
+                                'productos': productos_lista,
+                                'cliente': cliente
+                            })
+                    except modelo.DoesNotExist:
+                        pass
+            
             # Crear el pedido
             pedido = Pedido.objects.create(
                 pago=pago,
@@ -556,6 +592,21 @@ def crear_pedido_view(request, pago_id):
                 estado='procesando',
                 fecha_entrega_estimada=timezone.now().date() + timedelta(days=7)
             )
+            
+            # Descontar del inventario
+            for item in productos_lista:
+                tipo = item.get('tipo')
+                producto_id = item.get('id')
+                cantidad_pedida = item.get('cantidad', 0)
+                
+                modelo = modelos_map.get(tipo)
+                if modelo and cantidad_pedida > 0:
+                    try:
+                        producto = modelo.objects.get(id=producto_id)
+                        producto.cantidad_disponible = max(0, producto.cantidad_disponible - cantidad_pedida)
+                        producto.save()
+                    except modelo.DoesNotExist:
+                        pass
             
             return redirect('mis_pedidos')
         
@@ -657,3 +708,48 @@ def completar_datos_envio_view(request, pedido_id):
             return redirect('mis_pedidos')
     
     return redirect('mis_pedidos')
+
+def get_cantidad_disponible_view(request):
+    """Vista API para obtener la cantidad disponible de un producto"""
+    tipo = request.GET.get('tipo')
+    producto_id = request.GET.get('id')
+    
+    if not tipo or not producto_id:
+        return JsonResponse({'error': 'Parámetros incompletos'}, status=400)
+    
+    try:
+        modelos = {
+            'mesa': Mesas,
+            'silla': Sillas,
+            'armario': Armarios,
+            'cajonera': Cajoneras,
+            'escritorio': Escritorios,
+            'utensilio': Utensilios,
+        }
+        
+        modelo = modelos.get(tipo)
+        if not modelo:
+            return JsonResponse({'error': 'Tipo de producto no válido'}, status=400)
+        
+        producto = modelo.objects.get(id=producto_id)
+        
+        # Obtener el nombre del producto según el tipo
+        campo_nombre_map = {
+            'mesa': 'nombre1',
+            'silla': 'nombre2',
+            'armario': 'nombre3',
+            'cajonera': 'nombre4',
+            'escritorio': 'nombre5',
+            'utensilio': 'nombre6',
+        }
+        
+        campo_nombre = campo_nombre_map.get(tipo)
+        nombre_producto = getattr(producto, campo_nombre, 'Producto')
+        
+        return JsonResponse({
+            'cantidad_disponible': producto.cantidad_disponible,
+            'nombre': nombre_producto
+        })
+        
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

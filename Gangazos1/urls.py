@@ -55,6 +55,8 @@ urlpatterns = [
     path('mis-pedidos/', views.mis_pedidos_view, name='mis_pedidos'),
     path('pedido/<int:pedido_id>/', views.detalle_pedido_view, name='detalle_pedido'),
     path('pedido/<int:pedido_id>/completar-datos/', views.completar_datos_envio_view, name='completar_datos_envio'),
+    # API para obtener cantidad disponible de productos
+    path('api/producto/cantidad-disponible/', views.get_cantidad_disponible_view, name='api_cantidad_disponible'),
     path('',include('Productos.urls')),
     path('',include('Empresas.urls')),
     path('admin/', admin.site.urls),

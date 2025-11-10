@@ -1,143 +1,7 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} {% endblock %} | Tu Idea Hecha Realidad</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'Productos/css/styles1.css' %}">
-</head>
-<body>
- 
-<!-- BARRA LATERAL (MENÚ + FILTROS) -->
-<div class="sidebar">
-    <div class="sidebar-user-info">
-        <a href="{% url 'perfilUsuario' %}" class="user-avatar-link">
-            {% if usuario.foto_perfil %}
-                <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF; object-fit: cover;">
-            {% else %}
-                <img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF;">
-            {% endif %}
-        </a>
-        <span class="username-display">{{ usuario.usernameCliente }}</span>
-    </div>
-  <h2 class="h2-side">Menú</h2>
-  <ul>
-    <li><a href="{% url 'productos' %}">Ofertas</a></li>
-    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
-    <li><a href="{% url 'carrito' %}" style="position: relative;">
-        Carrito
-        <span id="cart-count-badge" class="cart-badge" style="display: none;">0</span>
-    </a></li>
-    <li><a href="{% url 'contact' %}">Contáctenos</a></li>
-    <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
-    <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
-  </ul>
+import re
 
-  <!-- FILTROS -->
-  <div class="filtros">
-    <h3>Filtrar productos</h3>
-
-    <h2 for="categoria" class="h2-side">Categoría:</h2>
-    <select id="categoria">
-        <option value="">Elegir Categoria</option> 
-        <option value="carpinteria">Armarios</option>
-        <option value="marroquineria">Escritorios</option>
-        <option value="vidrieria">Sillas</option>
-        <option value="metaleria">Cajoneras</option>
-        <option value="ceramica">Mesas</option>
-        <option value="tapiceria">Utensilios</option>
-    </select>
-
-    <button onclick="aplicarFiltros()">Aplicar filtros</button>
-  </div>
-</div>
-
-<!-- CONTENIDO PRINCIPAL -->
-<div class="main-content-wrapper">
-  <header>
-    <h1 class="div" style="text-align: center;">
-      <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="75" height="75">
-      ¡Gangazos!
-    </h1>
-    <p class="subtitulo">Descuento especial por tiempo limitado.</p>
-  </header>
-
-<section>
-    <div>
-        <h2>CARPINTERIA</h2>
-        <section class="seccion-at">
-            <div>
-                <div>
-                    <div>
-                        <div>
-                            <div>
-                                <h3>Sillas:</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="contenedor-articulos" id="contenedorArticulos">
-                        {% for silla in sillas %}
-                        <div class="articulo">
-                            {% if silla.imagen2 %}
-                            <img src="{{ silla.imagen2.url }}" alt="{{ silla.nombre2 }}">
-                            {% else %}
-                            <img src="{% static 'Productos/img/Sillas.jpg' %}" alt="{{ silla.nombre2 }}">
-                            {% endif %}
-                            <div class="contenido-articulo">
-                                <h3>{{ silla.nombre2 }}</h3>
-                                <p>{{ silla.descripcion2 }}</p>
-                                <p class="precio-destacado">Precio: ${{ silla.precio2 }}</p>
-                                <button class="btn-ver-detalles" onclick="mostrarDetalles('silla', {{ silla.id }}, '{{ silla.nombre2|escapejs }}', '{{ silla.descripcion2|escapejs }}', '{{ silla.precio2 }}', '{% if silla.imagen2 %}{{ silla.imagen2.url }}{% else %}{% static 'Productos/img/Sillas.jpg' %}{% endif %}')">Ver Detalles</button>
-                            </div>
-                        </div>
-                        {% empty %}
-                        <div class="articulo">
-                            <img src="{% static 'Productos/img/Sillas.jpg' %}" alt="Imagen del Producto 1">
-                            <div class="contenido-articulo">
-                                <h3>No hay productos disponibles</h3>
-                                <p>Próximamente nuevos productos</p>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-</section>
-
-    <footer>
-        <p>&copy; 2025 Tu Idea Hecha Realidad</p>
-    </footer>
-</div>
-
-<!-- Modal de Detalles del Producto -->
-<div id="productModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="cerrarModal()">&times;</span>
-        <div class="modal-header"><h2 id="modalTitle">Detalles del Producto</h2></div>
-        <div class="modal-body">
-            <img id="modalImage" class="modal-product-image" src="" alt="Producto">
-            <div class="modal-product-info">
-                <h3 id="modalProductName"></h3>
-                <p id="modalProductDescription"></p>
-                <p class="precio-destacado">Precio: $<span id="modalProductPrice"></span></p>
-                <p id="disponibilidadText" style="color: #28a745; font-weight: bold; margin: 10px 0;"></p>
-                <div class="quantity-selector">
-                    <label for="quantity">Cantidad:</label>
-                    <button onclick="cambiarCantidad(-1)">-</button>
-                    <input type="number" id="quantity" value="1" min="1" max="99" readonly>
-                    <button onclick="cambiarCantidad(1)">+</button>
-                </div>
-                <p><strong>Total: $<span id="totalPrice"></span></strong></p>
-            </div>
-        </div>
-        <div class="modal-footer"><button class="btn-comprar" onclick="agregarAlCarrito()">Agregar al Carrito</button></div>
-    </div>
-</div>
-
+# Código JavaScript que funciona (de ceramica.html)
+js_correcto = '''
 <script>
     let currentProduct = {};
     async function mostrarDetalles(tipo, id, nombre, descripcion, precio, imagen) {
@@ -243,9 +107,50 @@
     document.addEventListener('DOMContentLoaded', function() {
         updateCartBadge();
     });
-</script>
+</script>'''
 
-<script src="{% static 'core/javascript/Carrito.js' %}"></script>
+archivos = [
+    'Productos/templates/Productos/carpinteria.html',
+    'Productos/templates/Productos/marroquineria.html',
+    'Productos/templates/Productos/metaleria.html',
+    'Productos/templates/Productos/tapiceria.html'
+]
 
-</body>
-</html>
+for archivo in archivos:
+    try:
+        with open(archivo, 'r', encoding='utf-8') as f:
+            contenido = f.read()
+        
+        # Buscar el inicio del script y el final (antes del script de Carrito.js)
+        patron_inicio = r'<script>\s*let currentProduct'
+        patron_fin = r'</script>\s*<script src="{%\s*static\s*[\'"]core/javascript/Carrito\.js[\'"]\s*%}"></script>'
+        
+        # Buscar el inicio
+        inicio = re.search(patron_inicio, contenido)
+        if not inicio:
+            print(f"⚠ No se encontró el inicio del script en {archivo}")
+            continue
+            
+        # Buscar el fin
+        fin = re.search(patron_fin, contenido)
+        if not fin:
+            print(f"⚠ No se encontró el fin del script en {archivo}")
+            continue
+        
+        # Extraer la parte antes y después del script
+        antes_script = contenido[:inicio.start()]
+        despues_script = contenido[fin.start():]
+        
+        # Construir el nuevo contenido
+        nuevo_contenido = antes_script + js_correcto + '\n\n' + despues_script
+        
+        # Guardar
+        with open(archivo, 'w', encoding='utf-8') as f:
+            f.write(nuevo_contenido)
+        
+        print(f"✅ {archivo} actualizado correctamente")
+        
+    except Exception as e:
+        print(f"❌ Error en {archivo}: {e}")
+
+print("\n¡Proceso completado!")

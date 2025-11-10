@@ -13,20 +13,35 @@ def estadisticas_view(request):
     total_usuarios = UserClientes.objects.count()
     usuarios_activos = UserClientes.objects.filter(is_active=True).count()
     
-    # Estadísticas de productos
+    # Estadísticas de productos con cantidades en inventario
     total_mesas = Mesas.objects.count()
+    inventario_mesas = Mesas.objects.aggregate(total=Sum('cantidad_disponible'))['total'] or 0
+    
     total_sillas = Sillas.objects.count()
+    inventario_sillas = Sillas.objects.aggregate(total=Sum('cantidad_disponible'))['total'] or 0
+    
     total_armarios = Armarios.objects.count()
+    inventario_armarios = Armarios.objects.aggregate(total=Sum('cantidad_disponible'))['total'] or 0
+    
     total_cajoneras = Cajoneras.objects.count()
+    inventario_cajoneras = Cajoneras.objects.aggregate(total=Sum('cantidad_disponible'))['total'] or 0
+    
     total_escritorios = Escritorios.objects.count()
+    inventario_escritorios = Escritorios.objects.aggregate(total=Sum('cantidad_disponible'))['total'] or 0
+    
     total_utensilios = Utensilios.objects.count()
+    inventario_utensilios = Utensilios.objects.aggregate(total=Sum('cantidad_disponible'))['total'] or 0
+    
+    # Total de productos publicados y en inventario
     total_productos = total_mesas + total_sillas + total_armarios + total_cajoneras + total_escritorios + total_utensilios
+    total_inventario = inventario_mesas + inventario_sillas + inventario_armarios + inventario_cajoneras + inventario_escritorios + inventario_utensilios
     
     # Estadísticas de pedidos
     total_pedidos = Pedido.objects.count()
     pedidos_procesando = Pedido.objects.filter(estado='procesando').count()
-    pedidos_enviados = Pedido.objects.filter(Q(estado='enviado') | Q(estado='en_transito')).count()
-    pedidos_entregados = Pedido.objects.filter(estado='entregado').count()
+    pedidos_enviado = Pedido.objects.filter(estado='enviado').count()
+    pedidos_en_transito = Pedido.objects.filter(estado='en_transito').count()
+    pedidos_entregado = Pedido.objects.filter(estado='entregado').count()
     
     # Estadísticas de pagos
     total_pagos = Pago.objects.count()
@@ -41,16 +56,24 @@ def estadisticas_view(request):
         'total_usuarios': total_usuarios,
         'usuarios_activos': usuarios_activos,
         'total_productos': total_productos,
+        'total_inventario': total_inventario,
         'total_mesas': total_mesas,
+        'inventario_mesas': inventario_mesas,
         'total_sillas': total_sillas,
+        'inventario_sillas': inventario_sillas,
         'total_armarios': total_armarios,
+        'inventario_armarios': inventario_armarios,
         'total_cajoneras': total_cajoneras,
+        'inventario_cajoneras': inventario_cajoneras,
         'total_escritorios': total_escritorios,
+        'inventario_escritorios': inventario_escritorios,
         'total_utensilios': total_utensilios,
+        'inventario_utensilios': inventario_utensilios,
         'total_pedidos': total_pedidos,
         'pedidos_procesando': pedidos_procesando,
-        'pedidos_enviados': pedidos_enviados,
-        'pedidos_entregados': pedidos_entregados,
+        'pedidos_enviado': pedidos_enviado,
+        'pedidos_en_transito': pedidos_en_transito,
+        'pedidos_entregado': pedidos_entregado,
         'total_pagos': total_pagos,
         'pagos_pendientes': pagos_pendientes,
         'pagos_confirmados': pagos_confirmados,

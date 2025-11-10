@@ -55,7 +55,7 @@
                     <div class="stat-content">
                         <h3>Productos</h3>
                         <p class="stat-number">{{ total_productos }}</p>
-                        <p class="stat-label">Todas las categorías</p>
+                        <p class="stat-label">{{ total_inventario }} unidades en total</p>
                     </div>
                 </div>
 
@@ -89,32 +89,38 @@
                     <div class="categoria-item">
                         <div class="categoria-icon"><i class="fas fa-table"></i></div>
                         <p class="categoria-nombre">Mesas</p>
-                        <p class="categoria-cantidad">{{ total_mesas }}</p>
+                        <p class="categoria-cantidad">{{ total_mesas }} productos</p>
+                        <p class="stat-label">{{ inventario_mesas }} unidades</p>
                     </div>
                     <div class="categoria-item">
                         <div class="categoria-icon"><i class="fas fa-chair"></i></div>
                         <p class="categoria-nombre">Sillas</p>
-                        <p class="categoria-cantidad">{{ total_sillas }}</p>
+                        <p class="categoria-cantidad">{{ total_sillas }} productos</p>
+                        <p class="stat-label">{{ inventario_sillas }} unidades</p>
                     </div>
                     <div class="categoria-item">
                         <div class="categoria-icon"><i class="fas fa-door-closed"></i></div>
                         <p class="categoria-nombre">Armarios</p>
-                        <p class="categoria-cantidad">{{ total_armarios }}</p>
+                        <p class="categoria-cantidad">{{ total_armarios }} productos</p>
+                        <p class="stat-label">{{ inventario_armarios }} unidades</p>
                     </div>
                     <div class="categoria-item">
                         <div class="categoria-icon"><i class="fas fa-archive"></i></div>
                         <p class="categoria-nombre">Cajoneras</p>
-                        <p class="categoria-cantidad">{{ total_cajoneras }}</p>
+                        <p class="categoria-cantidad">{{ total_cajoneras }} productos</p>
+                        <p class="stat-label">{{ inventario_cajoneras }} unidades</p>
                     </div>
                     <div class="categoria-item">
                         <div class="categoria-icon"><i class="fas fa-desk"></i></div>
                         <p class="categoria-nombre">Escritorios</p>
-                        <p class="categoria-cantidad">{{ total_escritorios }}</p>
+                        <p class="categoria-cantidad">{{ total_escritorios }} productos</p>
+                        <p class="stat-label">{{ inventario_escritorios }} unidades</p>
                     </div>
                     <div class="categoria-item">
                         <div class="categoria-icon"><i class="fas fa-utensils"></i></div>
                         <p class="categoria-nombre">Utensilios</p>
-                        <p class="categoria-cantidad">{{ total_utensilios }}</p>
+                        <p class="categoria-cantidad">{{ total_utensilios }} productos</p>
+                        <p class="stat-label">{{ inventario_utensilios }} unidades</p>
                     </div>
                 </div>
             </div>
@@ -132,7 +138,7 @@
                         <p class="estado-label">Enviado</p>
                     </div>
                     <div class="estado-item entregado">
-                        <p class="estado-numero">{{ pedidos_entregados }}</p>
+                        <p class="estado-numero">{{ pedidos_entregado }}</p>
                         <p class="estado-label">Entregado</p>
                     </div>
                 </div>
