@@ -1,0 +1,352 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario | Panel Empresa</title>
+    <link rel="stylesheet" href="{% static 'Empresas/css/styles3.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside>
+            <h2>Dashboard de Empresa</h2>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboardEmpresa' %}">Inicio</a></li>
+                    <li><a href="{% url 'usuarios' %}">Gestión de usuarios</a></li>
+                    <li><a href="{% url 'GestiProductos' %}">Gestión de productos</a></li>
+                    <li><a href="{% url 'inventario' %}" style="background-color: #149abf;">Inventario</a></li>
+                    <li><a href="{% url 'empresa_ideas' %}">Gestión de ideas</a></li>
+                    <li><a href="{% url 'empresa_comentarios' %}">Gestión de comentarios</a></li>
+                    <li><a href="{% url 'gestion_pagos' %}">Gestión de pagos</a></li>
+                    <li><a href="{% url 'gestion_pedidos' %}">Gestión de pedidos</a></li>
+                    <li><a href="{% url 'estadisticas' %}">Estadísticas</a></li>
+                </ul>
+            </nav>
+            <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <header>
+                <h1><i class="fas fa-warehouse"></i> Gestión de Inventario</h1>
+            </header>
+
+            <!-- Mesas -->
+            <div class="inventario-seccion">
+                <h2><i class="fas fa-table"></i> Mesas</h2>
+                <div class="productos-tabla">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad Disponible</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mesa in mesas %}
+                            <tr>
+                                <td>{{ mesa.id }}</td>
+                                <td>{{ mesa.nombre1 }}</td>
+                                <td>${{ mesa.precio1 }}</td>
+                                <td>
+                                    <span class="stock-badge {% if mesa.cantidad_disponible == 0 %}sin-stock{% elif mesa.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
+                                        {{ mesa.cantidad_disponible }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn-editar" onclick="editarInventario('mesa', {{ mesa.id }}, {{ mesa.cantidad_disponible }}, '{{ mesa.nombre1 }}')">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="no-datos">No hay mesas registradas</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sillas -->
+            <div class="inventario-seccion">
+                <h2><i class="fas fa-chair"></i> Sillas</h2>
+                <div class="productos-tabla">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad Disponible</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for silla in sillas %}
+                            <tr>
+                                <td>{{ silla.id }}</td>
+                                <td>{{ silla.nombre2 }}</td>
+                                <td>${{ silla.precio2 }}</td>
+                                <td>
+                                    <span class="stock-badge {% if silla.cantidad_disponible == 0 %}sin-stock{% elif silla.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
+                                        {{ silla.cantidad_disponible }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn-editar" onclick="editarInventario('silla', {{ silla.id }}, {{ silla.cantidad_disponible }}, '{{ silla.nombre2 }}')">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="no-datos">No hay sillas registradas</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Armarios -->
+            <div class="inventario-seccion">
+                <h2><i class="fas fa-door-closed"></i> Armarios</h2>
+                <div class="productos-tabla">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad Disponible</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for armario in armarios %}
+                            <tr>
+                                <td>{{ armario.id }}</td>
+                                <td>{{ armario.nombre3 }}</td>
+                                <td>${{ armario.precio3 }}</td>
+                                <td>
+                                    <span class="stock-badge {% if armario.cantidad_disponible == 0 %}sin-stock{% elif armario.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
+                                        {{ armario.cantidad_disponible }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn-editar" onclick="editarInventario('armario', {{ armario.id }}, {{ armario.cantidad_disponible }}, '{{ armario.nombre3 }}')">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="no-datos">No hay armarios registrados</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Cajoneras -->
+            <div class="inventario-seccion">
+                <h2><i class="fas fa-archive"></i> Cajoneras</h2>
+                <div class="productos-tabla">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad Disponible</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cajonera in cajoneras %}
+                            <tr>
+                                <td>{{ cajonera.id }}</td>
+                                <td>{{ cajonera.nombre4 }}</td>
+                                <td>${{ cajonera.precio4 }}</td>
+                                <td>
+                                    <span class="stock-badge {% if cajonera.cantidad_disponible == 0 %}sin-stock{% elif cajonera.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
+                                        {{ cajonera.cantidad_disponible }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn-editar" onclick="editarInventario('cajonera', {{ cajonera.id }}, {{ cajonera.cantidad_disponible }}, '{{ cajonera.nombre4 }}')">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="no-datos">No hay cajoneras registradas</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Escritorios -->
+            <div class="inventario-seccion">
+                <h2><i class="fas fa-desk"></i> Escritorios</h2>
+                <div class="productos-tabla">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad Disponible</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for escritorio in escritorios %}
+                            <tr>
+                                <td>{{ escritorio.id }}</td>
+                                <td>{{ escritorio.nombre5 }}</td>
+                                <td>${{ escritorio.precio5 }}</td>
+                                <td>
+                                    <span class="stock-badge {% if escritorio.cantidad_disponible == 0 %}sin-stock{% elif escritorio.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
+                                        {{ escritorio.cantidad_disponible }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn-editar" onclick="editarInventario('escritorio', {{ escritorio.id }}, {{ escritorio.cantidad_disponible }}, '{{ escritorio.nombre5 }}')">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="no-datos">No hay escritorios registrados</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Utensilios -->
+            <div class="inventario-seccion">
+                <h2><i class="fas fa-utensils"></i> Utensilios</h2>
+                <div class="productos-tabla">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad Disponible</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for utensilio in utensilios %}
+                            <tr>
+                                <td>{{ utensilio.id }}</td>
+                                <td>{{ utensilio.nombre6 }}</td>
+                                <td>${{ utensilio.precio6 }}</td>
+                                <td>
+                                    <span class="stock-badge {% if utensilio.cantidad_disponible == 0 %}sin-stock{% elif utensilio.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
+                                        {{ utensilio.cantidad_disponible }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn-editar" onclick="editarInventario('utensilio', {{ utensilio.id }}, {{ utensilio.cantidad_disponible }}, '{{ utensilio.nombre6 }}')">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="no-datos">No hay utensilios registrados</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Edición -->
+    <div id="modalInventario" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal()">&times;</span>
+            <h2>Actualizar Inventario</h2>
+            <form id="formInventario">
+                {% csrf_token %}
+                <input type="hidden" id="producto_tipo" name="tipo">
+                <input type="hidden" id="producto_id" name="id">
+                
+                <div class="form-group">
+                    <label>Producto:</label>
+                    <input type="text" id="producto_nombre" readonly class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="cantidad">Nueva Cantidad Disponible:</label>
+                    <input type="number" id="cantidad" name="cantidad" min="0" required class="form-control">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function editarInventario(tipo, id, cantidadActual, nombre) {
+            document.getElementById('producto_tipo').value = tipo;
+            document.getElementById('producto_id').value = id;
+            document.getElementById('producto_nombre').value = nombre;
+            document.getElementById('cantidad').value = cantidadActual;
+            document.getElementById('modalInventario').style.display = 'block';
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalInventario').style.display = 'none';
+        }
+
+        document.getElementById('formInventario').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            fetch('{% url "actualizar_inventario" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.mensaje);
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ocurrió un error al actualizar el inventario');
+            });
+        });
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('modalInventario');
+            if (event.target == modal) {
+                cerrarModal();
+            }
+        }
+    </script>
+</body>
+</html>

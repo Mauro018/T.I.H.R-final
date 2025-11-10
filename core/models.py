@@ -13,36 +13,42 @@ class Mesas(models.Model):
     descripcion1 = models.CharField(max_length=250, default='', blank=True,null=True)
     precio1 = models.DecimalField(max_digits=10, decimal_places=2)
     imagen1 = models.ImageField(upload_to='uploads/productos/')
+    cantidad_disponible = models.IntegerField(default=0)
     
 class Sillas(models.Model):
     nombre2 = models.CharField(max_length=100)
     descripcion2 = models.CharField(max_length=250, default='', blank=True,null=True)
     precio2 = models.DecimalField(max_digits=10, decimal_places=2)
     imagen2 = models.ImageField(upload_to='uploads/productos/')
+    cantidad_disponible = models.IntegerField(default=0)
     
 class Armarios(models.Model):
     nombre3 = models.CharField(max_length=100)
     descripcion3 = models.CharField(max_length=250, default='', blank=True,null=True)
     precio3 = models.DecimalField(max_digits=10, decimal_places=2)
     imagen3 = models.ImageField(upload_to='uploads/productos/')
+    cantidad_disponible = models.IntegerField(default=0)
     
 class Cajoneras(models.Model):
     nombre4 = models.CharField(max_length=100)
     descripcion4 = models.CharField(max_length=250, default='', blank=True,null=True)
     precio4 = models.DecimalField(max_digits=10, decimal_places=2)
     imagen4 = models.ImageField(upload_to='uploads/productos/')
+    cantidad_disponible = models.IntegerField(default=0)
     
 class Escritorios(models.Model):
     nombre5 = models.CharField(max_length=100)
     descripcion5 = models.CharField(max_length=250, default='', blank=True,null=True)
     precio5 = models.DecimalField(max_digits=10, decimal_places=2)
     imagen5 = models.ImageField(upload_to='uploads/productos/')
+    cantidad_disponible = models.IntegerField(default=0)
     
 class Utensilios(models.Model):
     nombre6 = models.CharField(max_length=100)
     descripcion6 = models.CharField(max_length=250, default='', blank=True,null=True)
     precio6 = models.DecimalField(max_digits=10, decimal_places=2)
     imagen6 = models.ImageField(upload_to='uploads/productos/')
+    cantidad_disponible = models.IntegerField(default=0)
 
 class UserClientes(models.Model):
     usernameCliente = models.CharField(max_length=100, unique=True)
@@ -116,3 +122,75 @@ class Comentario(models.Model):
     
     def __str__(self):
         return f"Comentario de {self.usuario.usernameCliente} - {self.fecha_creacion.strftime('%d/%m/%Y %H:%M')}"
+
+class Pago(models.Model):
+    ESTADO_CHOICES = [
+        ('pendiente', 'Pendiente'),
+        ('confirmado', 'Confirmado'),
+        ('rechazado', 'Rechazado'),
+    ]
+    
+    METODO_PAGO_CHOICES = [
+        ('nequi', 'Nequi'),
+        ('bancolombia', 'Bancolombia'),
+        ('davivienda', 'Davivienda'),
+    ]
+    
+    cliente = models.ForeignKey(UserClientes, on_delete=models.CASCADE, related_name='pagos')
+    metodo_pago = models.CharField(max_length=20, choices=METODO_PAGO_CHOICES)
+    monto_total = models.DecimalField(max_digits=10, decimal_places=2)
+    comprobante = models.ImageField(upload_to='uploads/comprobantes/')
+    productos = models.TextField()  # JSON string con los productos del carrito
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_confirmacion = models.DateTimeField(null=True, blank=True)
+    notas_empresa = models.TextField(max_length=500, blank=True, null=True)
+    
+    class Meta:
+        ordering = ['-fecha_creacion']
+    
+    def __str__(self):
+        return f"Pago de {self.cliente.usernameCliente} - ${self.monto_total} - {self.get_estado_display()}"
+
+class Pedido(models.Model):
+    ESTADO_PEDIDO_CHOICES = [
+        ('procesando', 'Procesando'),
+        ('empacado', 'Empacado'),
+        ('enviado', 'Enviado'),
+        ('en_transito', 'En Tránsito'),
+        ('entregado', 'Entregado'),
+        ('cancelado', 'Cancelado'),
+    ]
+    
+    pago = models.OneToOneField(Pago, on_delete=models.CASCADE, related_name='pedido')
+    cliente = models.ForeignKey(UserClientes, on_delete=models.CASCADE, related_name='pedidos')
+    
+    # Datos de envío (opcionales hasta que el cliente los complete)
+    nombre_completo = models.CharField(max_length=200, blank=True, null=True)
+    telefono = models.CharField(max_length=20, blank=True, null=True)
+    direccion = models.CharField(max_length=300, blank=True, null=True)
+    ciudad = models.CharField(max_length=100, blank=True, null=True)
+    departamento = models.CharField(max_length=100, blank=True, null=True)
+    codigo_postal = models.CharField(max_length=10, blank=True, null=True)
+    notas_adicionales = models.TextField(max_length=500, blank=True, null=True)
+    
+    # Estado y seguimiento
+    estado = models.CharField(max_length=20, choices=ESTADO_PEDIDO_CHOICES, default='procesando')
+    numero_seguimiento = models.CharField(max_length=100, blank=True, null=True)
+    empresa_envio = models.CharField(max_length=100, blank=True, null=True)
+    
+    # Productos y monto
+    productos = models.TextField()  # JSON string con los productos
+    monto_total = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    # Fechas
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    fecha_entrega_estimada = models.DateField(null=True, blank=True)
+    fecha_entrega_real = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-fecha_creacion']
+    
+    def __str__(self):
+        return f"Pedido #{self.id} - {self.cliente.usernameCliente} - {self.get_estado_display()}"

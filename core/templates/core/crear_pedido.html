@@ -1,0 +1,231 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Completar Datos de Envío | Gangazos</title>
+    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/carrito.css' %}">
+    <style>
+        .pedido-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .pedido-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .pedido-header h1 {
+            color: #003366;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .pedido-header p {
+            color: #627d98;
+            font-size: 1.1rem;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            color: #003366;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e6ec;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e6ec;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007BFF;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .resumen-pedido {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .resumen-pedido h2 {
+            color: #003366;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .producto-resumen {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .producto-resumen:last-child {
+            border-bottom: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #003366;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 18px 30px;
+            background: linear-gradient(135deg, #28a745, #218838);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .pedido-container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pedido-container">
+        <div class="pedido-header">
+            <h1>¡Pago Confirmado!</h1>
+            <p>Por favor, completa los datos de envío para procesar tu pedido</p>
+        </div>
+
+        <div class="resumen-pedido">
+            <h2>Resumen de tu Compra</h2>
+            {% for producto in productos %}
+                <div class="producto-resumen">
+                    <span>{{ producto.nombre }} x{{ producto.cantidad }}</span>
+                    <span>${{ producto.subtotal }}</span>
+                </div>
+            {% endfor %}
+            <div class="producto-resumen">
+                <span>Total a Pagar:</span>
+                <span>${{ pago.monto_total }}</span>
+            </div>
+        </div>
+
+        <form method="POST" action="{% url 'crear_pedido' pago.id %}">
+            {% csrf_token %}
+            
+            <div class="form-section">
+                <h2>Información de Contacto</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre_completo">Nombre Completo <span class="required">*</span></label>
+                        <input type="text" id="nombre_completo" name="nombre_completo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono <span class="required">*</span></label>
+                        <input type="tel" id="telefono" name="telefono" required placeholder="Ej: 3001234567">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Dirección de Envío</h2>
+                <div class="form-group">
+                    <label for="direccion">Dirección Completa <span class="required">*</span></label>
+                    <input type="text" id="direccion" name="direccion" required placeholder="Calle, número, apartamento, etc.">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ciudad">Ciudad <span class="required">*</span></label>
+                        <input type="text" id="ciudad" name="ciudad" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="departamento">Departamento <span class="required">*</span></label>
+                        <input type="text" id="departamento" name="departamento" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="codigo_postal">Código Postal (Opcional)</label>
+                    <input type="text" id="codigo_postal" name="codigo_postal" placeholder="Ej: 110111">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Notas Adicionales</h2>
+                <div class="form-group">
+                    <label for="notas_adicionales">Instrucciones especiales para la entrega (Opcional)</label>
+                    <textarea id="notas_adicionales" name="notas_adicionales" placeholder="Ej: Tocar el timbre dos veces, dejar en la portería, etc."></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                Confirmar Pedido y Datos de Envío
+            </button>
+        </form>
+    </div>
+</body>
+</html>

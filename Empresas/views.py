@@ -6,8 +6,12 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.middleware.csrf import get_token
 from django.utils import timezone
-from core.models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, Idea, UserEmpresa, UserClientes
+from core.models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, Idea, UserEmpresa, UserClientes, Pago, Pedido
 from core.forms import IdeaForm
+import json
+
+# Importar vistas adicionales
+from .views_estadisticas import estadisticas_view, inventario_view, actualizar_inventario_view
 
 # Create your views here.
 
@@ -374,6 +378,173 @@ def toggle_user_status(request, user_id, user_type, action):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
+def gestion_pedidos_view(request):
+    """Vista para gestión de pedidos por parte de la empresa"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        messages.error(request, 'Debes iniciar sesión como empresa')
+        return redirect('loginEmpresa')
+    
+    # Obtener todos los pedidos ordenados por fecha
+    pedidos = Pedido.objects.all().select_related('cliente', 'pago').order_by('-fecha_creacion')
+    
+    # Parsear JSON de productos para cada pedido
+    for pedido in pedidos:
+        try:
+            pedido.productos_parseados = json.loads(pedido.productos)
+        except:
+            pedido.productos_parseados = []
+    
+    context = {
+        'pedidos': pedidos,
+    }
+    
+    return render(request, 'Empresas/gestion_pedidos.html', context)
+
+@require_POST
+def actualizar_estado_pedido_view(request, pedido_id):
+    """Vista para actualizar el estado de un pedido"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        pedido = Pedido.objects.get(id=pedido_id)
+        nuevo_estado = request.POST.get('estado')
+        numero_seguimiento = request.POST.get('numero_seguimiento', '')
+        empresa_envio = request.POST.get('empresa_envio', '')
+        
+        # Validar estado
+        estados_validos = ['procesando', 'empacado', 'enviado', 'en_transito', 'entregado', 'cancelado']
+        if nuevo_estado not in estados_validos:
+            return JsonResponse({'success': False, 'error': 'Estado no válido'}, status=400)
+        
+        pedido.estado = nuevo_estado
+        
+        if numero_seguimiento:
+            pedido.numero_seguimiento = numero_seguimiento
+        if empresa_envio:
+            pedido.empresa_envio = empresa_envio
+        
+        # Si se marca como entregado, guardar fecha
+        if nuevo_estado == 'entregado' and not pedido.fecha_entrega_real:
+            pedido.fecha_entrega_real = timezone.now()
+        
+        pedido.save()
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Estado del pedido actualizado'
+        })
+        
+    except Pedido.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Pedido no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+def gestion_pagos_view(request):
+    """Vista para gestión de pagos por parte de la empresa"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        messages.error(request, 'Debes iniciar sesión como empresa')
+        return redirect('loginEmpresa')
+    
+    # Obtener todos los pagos ordenados por fecha
+    pagos = Pago.objects.all().select_related('cliente').order_by('-fecha_creacion')
+    
+    # Parsear JSON de productos para cada pago
+    for pago in pagos:
+        try:
+            pago.productos_parseados = json.loads(pago.productos)
+        except:
+            pago.productos_parseados = []
+    
+    # Clasificar pagos por estado
+    pagos_pendientes = pagos.filter(estado='pendiente')
+    pagos_confirmados = pagos.filter(estado='confirmado')
+    pagos_rechazados = pagos.filter(estado='rechazado')
+    
+    context = {
+        'pagos_pendientes': pagos_pendientes,
+        'pagos_confirmados': pagos_confirmados,
+        'pagos_rechazados': pagos_rechazados,
+    }
+    
+    return render(request, 'Empresas/gestion_pagos.html', context)
+
+@require_POST
+def confirmar_pago_view(request, pago_id):
+    """Vista para confirmar un pago y crear pedido automáticamente"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        from core.models import Pedido
+        from datetime import timedelta
+        
+        pago = Pago.objects.get(id=pago_id)
+        pago.estado = 'confirmado'
+        pago.fecha_confirmacion = timezone.now()
+        
+        # Obtener notas opcionales
+        notas = request.POST.get('notas', '')
+        if notas:
+            pago.notas_empresa = notas
+        
+        pago.save()
+        
+        # Verificar si ya existe un pedido para este pago
+        if not hasattr(pago, 'pedido'):
+            # Crear el pedido SIN datos de envío (el cliente los completará después)
+            pedido = Pedido.objects.create(
+                pago=pago,
+                cliente=pago.cliente,
+                productos=pago.productos,
+                monto_total=pago.monto_total,
+                estado='procesando',
+                fecha_entrega_estimada=timezone.now().date() + timedelta(days=7)
+            )
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Pago confirmado y pedido creado. El cliente debe completar sus datos de envío.'
+        })
+        
+    except Pago.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Pago no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@require_POST
+def rechazar_pago_view(request, pago_id):
+    """Vista para rechazar un pago"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        pago = Pago.objects.get(id=pago_id)
+        pago.estado = 'rechazado'
+        
+        # Obtener notas obligatorias al rechazar
+        notas = request.POST.get('notas', '')
+        if not notas:
+            return JsonResponse({'success': False, 'error': 'Debes proporcionar una razón para rechazar el pago'}, status=400)
+        
+        pago.notas_empresa = notas
+        pago.save()
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Pago rechazado'
+        })
+        
+    except Pago.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Pago no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
 @require_POST
 def update_user(request):
     if not request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -425,3 +596,16 @@ def update_user(request):
         return JsonResponse({'success': False, 'error': 'Usuario no encontrado'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+def estadisticas_view(request):
+    if 'usernameEmpresa' not in request.session:
+        return redirect('loginEmpresa')
+    from core.models import UserClientes, Pedido, Pago, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios
+    from django.db.models import Sum, Count, Q
+    total_usuarios = UserClientes.objects.count()
+    usuarios_activos = UserClientes.objects.filter(is_active=True).count()
+    total_pedidos = Pedido.objects.count()
+    ingresos_totales = Pago.objects.filter(estado='confirmado').aggregate(total=Sum('monto_total'))['total'] or 0
+    context = {'total_usuarios': total_usuarios, 'usuarios_activos': usuarios_activos, 'total_pedidos': total_pedidos, 'ingresos_totales': ingresos_totales}
+    return render(request, 'Empresas/estadisticas.html', context)
+

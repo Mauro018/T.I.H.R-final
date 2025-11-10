@@ -1,9 +1,13 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
 from django.utils import timezone
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 from .forms import LoginForm, AgregarForm, LoginFormEmpresa, IdeaForm
-from .models import UserClientes, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserEmpresa, Idea
+from .models import UserClientes, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserEmpresa, Idea, Pago, Pedido
 from .logic import obtener_respuesta
+import json
 
 html_base = """
 <h1>Gangazos</h1>
@@ -469,3 +473,187 @@ def rechazar_comentario_view(request, comentario_id):
         messages.error(request, 'Comentario no encontrado')
     
     return redirect('empresa_comentarios')
+
+@require_http_methods(["POST"])
+def procesar_pago(request):
+    """Vista para procesar el pago con comprobante"""
+    # Verificar que el usuario esté autenticado
+    usernameCliente = request.session.get('usernameCliente')
+    if not usernameCliente:
+        return JsonResponse({'success': False, 'error': 'Usuario no autenticado'}, status=401)
+    
+    try:
+        # Obtener el cliente
+        cliente = UserClientes.objects.get(usernameCliente=usernameCliente)
+        
+        # Obtener datos del formulario
+        metodo_pago = request.POST.get('metodo_pago')
+        monto_total = request.POST.get('monto_total')
+        productos = request.POST.get('productos')
+        comprobante = request.FILES.get('comprobante')
+        
+        # Validar datos
+        if not all([metodo_pago, monto_total, productos, comprobante]):
+            return JsonResponse({'success': False, 'error': 'Faltan datos requeridos'}, status=400)
+        
+        # Crear el registro de pago
+        pago = Pago.objects.create(
+            cliente=cliente,
+            metodo_pago=metodo_pago,
+            monto_total=float(monto_total),
+            comprobante=comprobante,
+            productos=productos,
+            estado='pendiente'
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Pago registrado exitosamente',
+            'pago_id': pago.id
+        })
+        
+    except UserClientes.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Cliente no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+def crear_pedido_view(request, pago_id):
+    """Vista para crear un pedido después de confirmar el pago"""
+    # Verificar sesión de cliente
+    if 'usernameCliente' not in request.session:
+        return redirect('login')
+    
+    try:
+        # Obtener cliente y pago
+        cliente = UserClientes.objects.get(usernameCliente=request.session['usernameCliente'])
+        pago = Pago.objects.get(id=pago_id, cliente=cliente)
+        
+        # Verificar que el pago esté confirmado
+        if pago.estado != 'confirmado':
+            return redirect('carrito')
+        
+        # Verificar que no exista ya un pedido para este pago
+        if hasattr(pago, 'pedido'):
+            return redirect('mis_pedidos')
+        
+        if request.method == 'POST':
+            from datetime import timedelta
+            from django.utils import timezone
+            
+            # Crear el pedido
+            pedido = Pedido.objects.create(
+                pago=pago,
+                cliente=cliente,
+                nombre_completo=request.POST.get('nombre_completo'),
+                telefono=request.POST.get('telefono'),
+                direccion=request.POST.get('direccion'),
+                ciudad=request.POST.get('ciudad'),
+                departamento=request.POST.get('departamento'),
+                codigo_postal=request.POST.get('codigo_postal', ''),
+                notas_adicionales=request.POST.get('notas_adicionales', ''),
+                productos=pago.productos,
+                monto_total=pago.monto_total,
+                estado='procesando',
+                fecha_entrega_estimada=timezone.now().date() + timedelta(days=7)
+            )
+            
+            return redirect('mis_pedidos')
+        
+        # Parsear productos del pago
+        try:
+            productos = json.loads(pago.productos)
+        except:
+            productos = []
+        
+        context = {
+            'pago': pago,
+            'productos': productos,
+            'cliente': cliente
+        }
+        
+        return render(request, 'core/crear_pedido.html', context)
+        
+    except (UserClientes.DoesNotExist, Pago.DoesNotExist):
+        return redirect('carrito')
+
+def mis_pedidos_view(request):
+    """Vista para ver los pedidos del cliente"""
+    # Verificar sesión de cliente
+    if 'usernameCliente' not in request.session:
+        return redirect('login')
+    
+    try:
+        cliente = UserClientes.objects.get(usernameCliente=request.session['usernameCliente'])
+        pedidos = Pedido.objects.filter(cliente=cliente).order_by('-fecha_creacion')
+        
+        # Parsear productos para cada pedido
+        for pedido in pedidos:
+            try:
+                pedido.productos_parseados = json.loads(pedido.productos)
+            except:
+                pedido.productos_parseados = []
+        
+        context = {
+            'pedidos': pedidos,
+            'cliente': cliente,
+            'usuario': cliente  # Añadir para compatibilidad con el template
+        }
+        
+        return render(request, 'core/mis_pedidos.html', context)
+        
+    except UserClientes.DoesNotExist:
+        return redirect('login')
+
+def detalle_pedido_view(request, pedido_id):
+    """Vista para ver el detalle de un pedido específico"""
+    # Verificar sesión de cliente
+    if 'usernameCliente' not in request.session:
+        return redirect('login')
+    
+    try:
+        cliente = UserClientes.objects.get(usernameCliente=request.session['usernameCliente'])
+        pedido = Pedido.objects.get(id=pedido_id, cliente=cliente)
+        
+        # Parsear productos
+        try:
+            pedido.productos_parseados = json.loads(pedido.productos)
+        except:
+            pedido.productos_parseados = []
+        
+        context = {
+            'pedido': pedido,
+            'cliente': cliente
+        }
+        
+        return render(request, 'core/detalle_pedido.html', context)
+        
+    except (UserClientes.DoesNotExist, Pedido.DoesNotExist):
+        return redirect('mis_pedidos')
+
+def completar_datos_envio_view(request, pedido_id):
+    """Vista para completar los datos de envío de un pedido"""
+    if 'usernameCliente' not in request.session:
+        return redirect('login')
+    
+    if request.method == 'POST':
+        try:
+            cliente = UserClientes.objects.get(usernameCliente=request.session['usernameCliente'])
+            pedido = Pedido.objects.get(id=pedido_id, cliente=cliente)
+            
+            # Actualizar datos de envío
+            pedido.nombre_completo = request.POST.get('nombre_completo')
+            pedido.telefono = request.POST.get('telefono')
+            pedido.direccion = request.POST.get('direccion')
+            pedido.ciudad = request.POST.get('ciudad')
+            pedido.departamento = request.POST.get('departamento')
+            pedido.codigo_postal = request.POST.get('codigo_postal', '')
+            pedido.notas_adicionales = request.POST.get('notas_adicionales', '')
+            
+            pedido.save()
+            
+            return redirect('mis_pedidos')
+            
+        except (UserClientes.DoesNotExist, Pedido.DoesNotExist):
+            return redirect('mis_pedidos')
+    
+    return redirect('mis_pedidos')

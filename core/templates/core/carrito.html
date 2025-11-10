@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{% static 'core/css/carrito.css' %}">
 </head>
 <body>
+{% csrf_token %}
 
 <!-- BARRA LATERAL (MENÚ + FILTROS) -->
 <div class="sidebar">
@@ -30,6 +31,7 @@
         Carrito
         <span id="cart-count-badge" class="cart-badge" style="display: none;">0</span>
     </a></li>
+    <li><a href="{% url 'mis_pedidos' %}">Mis Pedidos</a></li>
     <li><a href="{% url 'contact' %}">Contáctenos</a></li>
     <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
     <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
@@ -138,6 +140,25 @@
                     <h3>Código QR Davivienda</h3>
                     <div class="qr-placeholder">
                         Aquí aparecerá el código QR de Davivienda
+                    </div>
+                </div>
+
+                <!-- Sección para cargar comprobante -->
+                <div id="upload-section" class="upload-section" style="display: none;">
+                    <div class="upload-instructions">
+                        <h3>Cargar Comprobante de Pago</h3>
+                        <p>Por favor, carga una foto o captura de pantalla del pago realizado</p>
+                    </div>
+                    
+                    <div class="upload-area">
+                        <input type="file" id="comprobante-input" accept="image/*" style="display: none;">
+                        <button id="upload-btn" class="btn-upload">
+                            Cargar Comprobante
+                        </button>
+                        <div id="preview-area" class="preview-area" style="display: none;">
+                            <img id="preview-image" src="" alt="Vista previa del comprobante">
+                            <button id="remove-image-btn" class="btn-remove-image">✕ Eliminar</button>
+                        </div>
                     </div>
                 </div>
 
@@ -276,6 +297,15 @@
     const paymentOptionButtons = document.querySelectorAll('.payment-option-btn');
     const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
     const qrDisplays = document.querySelectorAll('.qr-display');
+    const uploadSection = document.getElementById('upload-section');
+    const uploadBtn = document.getElementById('upload-btn');
+    const comprobanteInput = document.getElementById('comprobante-input');
+    const previewArea = document.getElementById('preview-area');
+    const previewImage = document.getElementById('preview-image');
+    const removeImageBtn = document.getElementById('remove-image-btn');
+    
+    let selectedPaymentMethod = null;
+    let comprobanteFile = null;
 
     // Abrir modal de pago
     function openPaymentModal() {
@@ -290,7 +320,12 @@
         // Resetear selecciones
         paymentOptionButtons.forEach(btn => btn.classList.remove('active'));
         qrDisplays.forEach(display => display.classList.remove('active'));
+        uploadSection.style.display = 'none';
+        previewArea.style.display = 'none';
         confirmPaymentBtn.disabled = true;
+        selectedPaymentMethod = null;
+        comprobanteFile = null;
+        comprobanteInput.value = '';
     }
 
     // Cerrar modal al hacer clic en X
@@ -307,6 +342,7 @@
     paymentOptionButtons.forEach(button => {
         button.addEventListener('click', function() {
             const paymentType = this.getAttribute('data-payment');
+            selectedPaymentMethod = paymentType;
             
             // Remover clase active de todos los botones y QR displays
             paymentOptionButtons.forEach(btn => btn.classList.remove('active'));
@@ -321,26 +357,113 @@
                 qrDisplay.classList.add('active');
             }
             
-            // Habilitar botón de confirmación
-            confirmPaymentBtn.disabled = false;
+            // Mostrar sección de carga de comprobante
+            uploadSection.style.display = 'block';
+            
+            // Verificar si se debe habilitar el botón de confirmación
+            checkConfirmButtonState();
         });
     });
 
-    // Confirmar pago realizado
-    confirmPaymentBtn.addEventListener('click', function() {
-        if (confirm('¿Confirmas que has realizado el pago?')) {
-            // Vaciar el carrito
-            sessionStorage.removeItem('carrito');
-            renderCart();
-            updateCartBadge();
+    // Manejar clic en botón de cargar
+    uploadBtn.addEventListener('click', function() {
+        comprobanteInput.click();
+    });
+
+    // Manejar cambio de archivo
+    comprobanteInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            comprobanteFile = file;
             
-            // Cerrar modal
-            closePaymentModal();
-            
-            // Mostrar mensaje de éxito
-            alert('¡Gracias por tu compra! Tu pedido ha sido registrado correctamente.');
+            // Mostrar vista previa
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewArea.style.display = 'block';
+                uploadBtn.style.display = 'none';
+                checkConfirmButtonState();
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Por favor, selecciona una imagen válida');
         }
     });
+
+    // Manejar eliminación de imagen
+    removeImageBtn.addEventListener('click', function() {
+        comprobanteFile = null;
+        comprobanteInput.value = '';
+        previewArea.style.display = 'none';
+        uploadBtn.style.display = 'inline-block';
+        checkConfirmButtonState();
+    });
+
+    // Verificar estado del botón de confirmación
+    function checkConfirmButtonState() {
+        if (selectedPaymentMethod && comprobanteFile) {
+            confirmPaymentBtn.disabled = false;
+        } else {
+            confirmPaymentBtn.disabled = true;
+        }
+    }
+
+    // Confirmar pago realizado
+    confirmPaymentBtn.addEventListener('click', function() {
+        if (!comprobanteFile) {
+            alert('Por favor, carga el comprobante de pago antes de confirmar');
+            return;
+        }
+
+        if (confirm('¿Confirmas que has realizado el pago y cargado el comprobante?')) {
+            // Enviar el pago al servidor
+            enviarPago();
+        }
+    });
+
+    // Función para enviar el pago al servidor
+    function enviarPago() {
+        const cart = getCart();
+        const total = calculateTotal(cart);
+        
+        const formData = new FormData();
+        formData.append('metodo_pago', selectedPaymentMethod);
+        formData.append('monto_total', total.toFixed(2));
+        formData.append('comprobante', comprobanteFile);
+        formData.append('productos', JSON.stringify(cart));
+        
+        // Obtener el token CSRF
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        fetch('/procesar-pago/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Vaciar el carrito
+                sessionStorage.removeItem('carrito');
+                renderCart();
+                updateCartBadge();
+                
+                // Cerrar modal
+                closePaymentModal();
+                
+                // Mostrar mensaje de éxito
+                alert('¡Gracias por tu compra! Tu pago está siendo verificado y recibirás confirmación pronto.');
+            } else {
+                alert('Error al procesar el pago: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ocurrió un error al procesar tu pago. Por favor, intenta de nuevo.');
+        });
+    }
 
     // Cerrar modal con tecla ESC
     document.addEventListener('keydown', function(event) {

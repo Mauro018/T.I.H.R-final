@@ -38,6 +38,7 @@ urlpatterns = [
     path('home3/',views.Home3_view,name='home3'),
     path('carrito', views.carrito, name='carrito'),
     path('MetodosPago', views.MetodosPago, name='MetodosPago'),
+    path('procesar-pago/', views.procesar_pago, name='procesar_pago'),
     path('idea/', views.ideas_view, name='idea'),
     path('perfilUsuario/', views.perfilUsuario_view, name='perfilUsuario'),
     # Incluir URLs de comentarios y perfil desde core
@@ -49,6 +50,11 @@ urlpatterns = [
     path('empresa/comentarios/', views.empresa_comentarios_view, name='empresa_comentarios'),
     path('empresa/comentarios/aprobar/<int:comentario_id>/', views.aprobar_comentario_view, name='aprobar_comentario'),
     path('empresa/comentarios/rechazar/<int:comentario_id>/', views.rechazar_comentario_view, name='rechazar_comentario'),
+    # URLs para pedidos
+    path('pedido/crear/<int:pago_id>/', views.crear_pedido_view, name='crear_pedido'),
+    path('mis-pedidos/', views.mis_pedidos_view, name='mis_pedidos'),
+    path('pedido/<int:pedido_id>/', views.detalle_pedido_view, name='detalle_pedido'),
+    path('pedido/<int:pedido_id>/completar-datos/', views.completar_datos_envio_view, name='completar_datos_envio'),
     path('',include('Productos.urls')),
     path('',include('Empresas.urls')),
     path('admin/', admin.site.urls),

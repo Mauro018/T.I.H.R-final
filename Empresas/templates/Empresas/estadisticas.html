@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas | Panel Empresa</title>
+    <link rel="stylesheet" href="{% static 'Empresas/css/styles3.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside>
+            <h2>Dashboard de Empresa</h2>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboardEmpresa' %}">Inicio</a></li>
+                    <li><a href="{% url 'usuarios' %}">Gestión de usuarios</a></li>
+                    <li><a href="{% url 'GestiProductos' %}">Gestión de productos</a></li>
+                    <li><a href="{% url 'inventario' %}">Inventario</a></li>
+                    <li><a href="{% url 'empresa_ideas' %}">Gestión de ideas</a></li>
+                    <li><a href="{% url 'empresa_comentarios' %}">Gestión de comentarios</a></li>
+                    <li><a href="{% url 'gestion_pagos' %}">Gestión de pagos</a></li>
+                    <li><a href="{% url 'gestion_pedidos' %}">Gestión de pedidos</a></li>
+                    <li><a href="{% url 'estadisticas' %}" style="background-color: #149abf;">Estadísticas</a></li>
+                </ul>
+            </nav>
+            <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <header>
+                <h1><i class="fas fa-chart-bar"></i> Estadísticas del Negocio</h1>
+            </header>
+
+            <!-- Tarjetas de Estadísticas Principales -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon usuarios">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Usuarios Totales</h3>
+                        <p class="stat-number">{{ total_usuarios }}</p>
+                        <p class="stat-label">{{ usuarios_activos }} activos</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon productos">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Productos</h3>
+                        <p class="stat-number">{{ total_productos }}</p>
+                        <p class="stat-label">Todas las categorías</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon pedidos">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Pedidos Totales</h3>
+                        <p class="stat-number">{{ total_pedidos }}</p>
+                        <p class="stat-label">{{ pedidos_entregados }} entregados</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon ingresos">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Ingresos Totales</h3>
+                        <p class="stat-number">${{ ingresos_totales|floatformat:2 }}</p>
+                        <p class="stat-label">pagos confirmados</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Productos por Categoría -->
+            <div class="stats-section">
+                <h2><i class="fas fa-layer-group"></i> Productos por Categoría</h2>
+                <div class="productos-categoria-grid">
+                    <div class="categoria-item">
+                        <div class="categoria-icon"><i class="fas fa-table"></i></div>
+                        <p class="categoria-nombre">Mesas</p>
+                        <p class="categoria-cantidad">{{ total_mesas }}</p>
+                    </div>
+                    <div class="categoria-item">
+                        <div class="categoria-icon"><i class="fas fa-chair"></i></div>
+                        <p class="categoria-nombre">Sillas</p>
+                        <p class="categoria-cantidad">{{ total_sillas }}</p>
+                    </div>
+                    <div class="categoria-item">
+                        <div class="categoria-icon"><i class="fas fa-door-closed"></i></div>
+                        <p class="categoria-nombre">Armarios</p>
+                        <p class="categoria-cantidad">{{ total_armarios }}</p>
+                    </div>
+                    <div class="categoria-item">
+                        <div class="categoria-icon"><i class="fas fa-archive"></i></div>
+                        <p class="categoria-nombre">Cajoneras</p>
+                        <p class="categoria-cantidad">{{ total_cajoneras }}</p>
+                    </div>
+                    <div class="categoria-item">
+                        <div class="categoria-icon"><i class="fas fa-desk"></i></div>
+                        <p class="categoria-nombre">Escritorios</p>
+                        <p class="categoria-cantidad">{{ total_escritorios }}</p>
+                    </div>
+                    <div class="categoria-item">
+                        <div class="categoria-icon"><i class="fas fa-utensils"></i></div>
+                        <p class="categoria-nombre">Utensilios</p>
+                        <p class="categoria-cantidad">{{ total_utensilios }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estado de Pedidos -->
+            <div class="stats-section">
+                <h2><i class="fas fa-truck"></i> Estado de Pedidos</h2>
+                <div class="estados-grid">
+                    <div class="estado-item procesando">
+                        <p class="estado-numero">{{ pedidos_procesando }}</p>
+                        <p class="estado-label">Procesando</p>
+                    </div>
+                    <div class="estado-item enviado">
+                        <p class="estado-numero">{{ pedidos_enviado }}</p>
+                        <p class="estado-label">Enviado</p>
+                    </div>
+                    <div class="estado-item entregado">
+                        <p class="estado-numero">{{ pedidos_entregados }}</p>
+                        <p class="estado-label">Entregado</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estado de Pagos -->
+            <div class="stats-section">
+                <h2><i class="fas fa-money-bill-wave"></i> Estado de Pagos</h2>
+                <div class="estados-grid">
+                    <div class="estado-item pendiente">
+                        <p class="estado-numero">{{ pagos_pendientes }}</p>
+                        <p class="estado-label">Pendiente</p>
+                    </div>
+                    <div class="estado-item confirmado">
+                        <p class="estado-numero">{{ pagos_confirmados }}</p>
+                        <p class="estado-label">Confirmado</p>
+                    </div>
+                    <div class="estado-item rechazado">
+                        <p class="estado-numero">{{ pagos_rechazados }}</p>
+                        <p class="estado-label">Rechazado</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

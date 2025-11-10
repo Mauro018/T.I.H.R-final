@@ -14,6 +14,11 @@ urlpatterns = [
     path('empresa/ideas', views.empresa_ideas_view, name='empresa_ideas'),
     path('carrito', views.carrito, name='carrito'),
     path ('MetodosPago', views.MetodosPago, name='MetodosPago'),
+    path('procesar-pago/', views.procesar_pago, name='procesar_pago'),
+    # URLs para pedidos
+    path('pedido/crear/<int:pago_id>/', views.crear_pedido_view, name='crear_pedido'),
+    path('mis-pedidos/', views.mis_pedidos_view, name='mis_pedidos'),
+    path('pedido/<int:pedido_id>/', views.detalle_pedido_view, name='detalle_pedido'),
     # URLs para comentarios
     path('comentarios/', views.comentarios_view, name='comentarios'),
     path('comentarios/crear/', views.crear_comentario_view, name='crear_comentario'),
