@@ -30,6 +30,7 @@
         Carrito
         <span id="cart-count-badge" class="cart-badge" style="display: none;">0</span>
     </a></li>
+    <li><a href="{% url 'mis_pedidos' %}">Mis Pedidos</a></li>
     <li><a href="{% url 'contact' %}">Contáctenos</a></li>
     <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
     <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
@@ -121,10 +122,11 @@
             <h2 id="modalProductName">Producto</h2>
         </div>
         <div class="modal-body">
-            <img id="modalProductImage" src="" alt="Producto" class="modal-product-image">
+            <img id="modalImage" src="" alt="Producto" class="modal-product-image">
             <div class="modal-product-info">
                 <p id="modalProductDescription">Descripción del producto</p>
                 <p class="precio-destacado">Precio: $<span id="modalProductPrice">0</span></p>
+                <p id="disponibilidadText" style="font-weight: bold; margin-top: 10px;"></p>
             </div>
             <div class="quantity-selector">
                 <button onclick="cambiarCantidad(-1)">-</button>
