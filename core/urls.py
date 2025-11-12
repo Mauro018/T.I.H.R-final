@@ -1,38 +1,16 @@
 from django.urls import path, include
 from . import views
+from . import views_chat
 
 urlpatterns = [
-    path('', views.Login_view, name='login'),
-    path('', views.LoginAdmin_view, name='loginAdmin'),
-    path('', views.chatbot, name="chatbot"),
-    path('registro', views.registro, name='registro'),
-    path('logout', views.Logout_view, name='logout'),
-    path('home3', views.Home3_view, name='home3'),
-    path('contactenos', views.contactenos, name='contactenos'),
-    path('reglas', views.reglas, name='reglas'),
-    path('idea', views.ideas_view, name='idea'),
-    path('empresa/ideas', views.empresa_ideas_view, name='empresa_ideas'),
-    path('carrito', views.carrito, name='carrito'),
-    path ('MetodosPago', views.MetodosPago, name='MetodosPago'),
-    path('procesar-pago/', views.procesar_pago, name='procesar_pago'),
-    # URLs para pedidos
-    path('pedido/crear/<int:pago_id>/', views.crear_pedido_view, name='crear_pedido'),
-    path('mis-pedidos/', views.mis_pedidos_view, name='mis_pedidos'),
-    path('pedido/<int:pedido_id>/', views.detalle_pedido_view, name='detalle_pedido'),
-    # API para obtener cantidad disponible de productos
-    path('api/producto/cantidad-disponible/', views.get_cantidad_disponible_view, name='api_cantidad_disponible'),
-    # URLs para comentarios
-    path('comentarios/', views.comentarios_view, name='comentarios'),
-    path('comentarios/crear/', views.crear_comentario_view, name='crear_comentario'),
-    path('comentarios/eliminar/<int:comentario_id>/', views.eliminar_comentario_view, name='eliminar_comentario'),
-    # URLs para perfil de usuario
-    path('perfil/', views.perfil_usuario_view, name='perfilUsuario'),
-    path('perfil/editar/', views.editar_perfil_view, name='editar_perfil'),
+    # APIs para sistema de chat
+    path('api/test-session/', views_chat.test_session, name='test_session'),
+    path('api/conversaciones/', views_chat.api_conversaciones, name='api_conversaciones'),
+    path('api/mensajes-idea/<int:idea_id>/', views_chat.api_mensajes_idea, name='api_mensajes_idea'),
+    path('api/enviar-mensaje/<int:idea_id>/', views_chat.api_enviar_mensaje, name='api_enviar_mensaje'),
+    path('api/marcar-leidos/<int:idea_id>/', views_chat.api_marcar_leidos, name='api_marcar_leidos'),
     # URLs para ideas - interacción cliente
     path('idea/responder/<int:idea_id>/', views.responder_mensaje_empresa, name='responder_mensaje_empresa'),
     path('idea/otorgar-permiso/<int:idea_id>/', views.otorgar_permiso_publicacion, name='otorgar_permiso_publicacion'),
     path('idea/revocar-permiso/<int:idea_id>/', views.revocar_permiso_publicacion, name='revocar_permiso_publicacion'),
-    path('',include('Productos.urls')),
-    path('',include('Administrador.urls')),
-    path('',include('Empresas.urls')),
 ]

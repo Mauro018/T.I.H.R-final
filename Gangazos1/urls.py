@@ -57,6 +57,8 @@ urlpatterns = [
     path('pedido/<int:pedido_id>/completar-datos/', views.completar_datos_envio_view, name='completar_datos_envio'),
     # API para obtener cantidad disponible de productos
     path('api/producto/cantidad-disponible/', views.get_cantidad_disponible_view, name='api_cantidad_disponible'),
+    # Incluir URLs de core (APIs de chat)
+    path('', include('core.urls')),
     path('',include('Productos.urls')),
     path('',include('Empresas.urls')),
     path('admin/', admin.site.urls),

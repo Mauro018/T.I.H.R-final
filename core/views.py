@@ -758,6 +758,24 @@ def get_cantidad_disponible_view(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
+def verificar_notificaciones_ideas(request):
+    """Vista API para verificar si el usuario tiene notificaciones de ideas"""
+    usernameCliente = request.session.get('usernameCliente')
+    
+    if not usernameCliente:
+        return JsonResponse({'has_notifications': False})
+    
+    try:
+        # Buscar ideas del usuario con mensajes de empresa o solicitudes de permiso
+        has_notif = Idea.objects.filter(autor=usernameCliente).filter(
+            mensaje_empresa__isnull=False
+        ).exclude(mensaje_empresa='').exists()
+        
+        return JsonResponse({'has_notifications': has_notif})
+        
+    except Exception as e:
+        return JsonResponse({'has_notifications': False, 'error': str(e)})
+
 @require_http_methods(["POST"])
 @csrf_exempt
 def responder_mensaje_empresa(request, idea_id):
@@ -841,3 +859,5 @@ def revocar_permiso_publicacion(request, idea_id):
         return JsonResponse({'success': False, 'error': 'Idea no encontrada o no tienes permiso'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+

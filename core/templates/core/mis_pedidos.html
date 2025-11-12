@@ -27,10 +27,6 @@
     <ul>
         <li><a href="{% url 'productos' %}">Ofertas</a></li>
         <li><a href="{% url 'idea' %}">Crear Idea</a></li>
-        <li><a href="{% url 'carrito' %}" style="position: relative;">
-            Carrito
-            <span id="cart-count-badge" class="cart-badge" style="display: none;">0</span>
-        </a></li>
         <li><a href="{% url 'mis_pedidos' %}" style="background-color: #0056b3; color: white;">Mis Pedidos</a></li>
         <li><a href="{% url 'contact' %}">Contáctenos</a></li>
         <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
@@ -269,5 +265,6 @@
 </div>
 
 <script src="{% static 'core/javascript/Carrito.js' %}"></script>
+{% include 'core/floating_buttons.html' %}
 </body>
 </html>

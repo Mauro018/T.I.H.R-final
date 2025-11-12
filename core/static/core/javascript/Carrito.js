@@ -10,18 +10,14 @@ function getCartGlobal() {
 
 // Función para actualizar el badge del carrito en todas las páginas
 function updateCartBadgeGlobal() {
-    const carrito = getCartGlobal();
-    const badge = document.getElementById('cart-count-badge');
+    // Actualizar botón flotante si existe la función global
+    if (typeof updateFloatingCartButton === 'function') {
+        updateFloatingCartButton();
+    }
     
-    if (!badge) return;
-    
-    const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
-    
-    if (totalItems > 0) {
-        badge.textContent = totalItems;
-        badge.style.display = 'flex';
-    } else {
-        badge.style.display = 'none';
+    // También actualizar badge en menús si existe (compatibilidad con páginas antiguas)
+    if (typeof updateCartBadgeInMenus === 'function') {
+        updateCartBadgeInMenus();
     }
 }
 

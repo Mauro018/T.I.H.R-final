@@ -22,15 +22,14 @@
         <span class="username-display">{{ usuario.usernameCliente }}</span>
     </div>
   <h2 class="h2-side">Menú</h2>
-  <ul>
-    <li><a href="{% url 'productos' %}">Ofertas</a></li>
-    <li><a href="{% url 'idea' %}">Crear Idea</a></li>
-    <li><a href="{% url 'carrito' %}">Carrito</a></li>
-    <li><a href="{% url 'mis_pedidos' %}">Mis Pedidos</a></li>
-    <li><a href="{% url 'contact' %}">Contáctenos</a></li>
-    <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
-    <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
-  </ul>
+    <ul>
+        <li><a href="{% url 'productos' %}">Ofertas</a></li>
+        <li><a href="{% url 'idea' %}">Crear Idea</a></li>
+        <li><a href="{% url 'mis_pedidos' %}">Mis Pedidos</a></li>
+        <li><a href="{% url 'contact' %}">Contáctenos</a></li>
+        <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
+        <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+    </ul>
 
   <!-- FILTROS -->
   <div class="filtros">
@@ -237,5 +236,6 @@
     }
 </script>
 
+{% include 'core/floating_buttons.html' %}
 </body>
 </html>

@@ -612,24 +612,51 @@ def update_user(request):
 @require_POST
 def contactar_usuario_idea(request, idea_id):
     """Vista para que la empresa contacte al usuario sobre la idea"""
+    from core.models import MensajeIdea
+    
+    print(f"=== CONTACTAR USUARIO IDEA ===")
+    print(f"Idea ID: {idea_id}")
+    print(f"Session: {request.session.get('usernameEmpresa', 'No session')}")
+    print(f"POST data: {request.POST}")
+    
     # Verificar si hay una sesión activa de empresa
     if 'usernameEmpresa' not in request.session:
+        print("ERROR: No hay sesión de empresa")
         return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
     
     try:
         empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        print(f"Empresa encontrada: {empresa.usernameEmpresa}")
+        
         idea = Idea.objects.get(id=idea_id)
+        print(f"Idea encontrada: {idea.titulo}")
         
         # Verificar que la empresa es la asignada
         if idea.empresa_asignada != empresa:
+            print(f"ERROR: Empresa no asignada. Asignada: {idea.empresa_asignada}, Actual: {empresa}")
             return JsonResponse({'success': False, 'error': 'No tienes permiso para contactar sobre esta idea'}, status=403)
         
         mensaje = request.POST.get('mensaje', '')
+        print(f"Mensaje recibido: '{mensaje}'")
+        
         if not mensaje:
+            print("ERROR: Mensaje vacío")
             return JsonResponse({'success': False, 'error': 'Debes escribir un mensaje'}, status=400)
         
+        # Crear mensaje en el sistema de chat
+        MensajeIdea.objects.create(
+            idea=idea,
+            remitente_tipo='empresa',
+            remitente_nombre=empresa.usernameEmpresa,
+            mensaje=mensaje,
+            leido=False,
+            es_solicitud_permiso=False
+        )
+        
+        # Mantener compatibilidad con el campo antiguo
         idea.mensaje_empresa = mensaje
         idea.save()
+        print("Mensaje guardado exitosamente")
         
         return JsonResponse({
             'success': True,
@@ -637,36 +664,67 @@ def contactar_usuario_idea(request, idea_id):
         })
         
     except Idea.DoesNotExist:
+        print("ERROR: Idea no encontrada")
         return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
     except UserEmpresa.DoesNotExist:
+        print("ERROR: Empresa no encontrada")
         return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
     except Exception as e:
+        print(f"ERROR INESPERADO: {str(e)}")
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 @require_POST
 def solicitar_permiso_publicacion(request, idea_id):
     """Vista para que la empresa solicite permiso para publicar la idea"""
+    from core.models import MensajeIdea
+    
+    print(f"=== SOLICITAR PERMISO PUBLICACIÓN ===")
+    print(f"Idea ID: {idea_id}")
+    print(f"Session: {request.session.get('usernameEmpresa', 'No session')}")
+    print(f"POST data: {request.POST}")
+    
     # Verificar si hay una sesión activa de empresa
     if 'usernameEmpresa' not in request.session:
+        print("ERROR: No hay sesión de empresa")
         return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
     
     try:
         empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        print(f"Empresa encontrada: {empresa.usernameEmpresa}")
+        
         idea = Idea.objects.get(id=idea_id)
+        print(f"Idea encontrada: {idea.titulo}, Estado: {idea.estado}")
         
         # Verificar que la empresa es la asignada y la idea está finalizada
         if idea.empresa_asignada != empresa:
+            print(f"ERROR: Empresa no asignada. Asignada: {idea.empresa_asignada}, Actual: {empresa}")
             return JsonResponse({'success': False, 'error': 'No tienes permiso sobre esta idea'}, status=403)
         
         if idea.estado != 'finalizada':
+            print(f"ERROR: Estado incorrecto. Estado actual: {idea.estado}")
             return JsonResponse({'success': False, 'error': 'La idea debe estar finalizada'}, status=400)
         
         mensaje = request.POST.get('mensaje', '')
+        print(f"Mensaje recibido: '{mensaje}'")
+        
         if not mensaje:
+            print("ERROR: Mensaje vacío")
             return JsonResponse({'success': False, 'error': 'Debes escribir un mensaje de solicitud'}, status=400)
         
+        # Crear mensaje de solicitud de permiso en el sistema de chat
+        MensajeIdea.objects.create(
+            idea=idea,
+            remitente_tipo='empresa',
+            remitente_nombre=empresa.usernameEmpresa,
+            mensaje=mensaje,
+            leido=False,
+            es_solicitud_permiso=True  # Marca especial para solicitudes de permiso
+        )
+        
+        # Mantener compatibilidad con el campo antiguo
         idea.mensaje_empresa = mensaje
         idea.save()
+        print("Solicitud guardada exitosamente")
         
         return JsonResponse({
             'success': True,
@@ -674,10 +732,14 @@ def solicitar_permiso_publicacion(request, idea_id):
         })
         
     except Idea.DoesNotExist:
+        print("ERROR: Idea no encontrada")
         return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
     except UserEmpresa.DoesNotExist:
+        print("ERROR: Empresa no encontrada")
         return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
     except Exception as e:
+        print(f"ERROR INESPERADO: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 def publicar_idea_como_producto(request, idea_id):

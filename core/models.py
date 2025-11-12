@@ -112,6 +112,24 @@ class Idea(models.Model):
     def __str__(self):
         return self.titulo
 
+class MensajeIdea(models.Model):
+    """Modelo para almacenar mensajes entre empresa y cliente sobre una idea"""
+    idea = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='mensajes')
+    remitente_tipo = models.CharField(max_length=10, choices=[('empresa', 'Empresa'), ('cliente', 'Cliente')])
+    remitente_nombre = models.CharField(max_length=100)  # username de quien envía
+    mensaje = models.TextField(max_length=1000)
+    fecha_envio = models.DateTimeField(auto_now_add=True)
+    leido = models.BooleanField(default=False)
+    
+    # Campo especial para solicitud de permiso
+    es_solicitud_permiso = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['fecha_envio']
+    
+    def __str__(self):
+        return f"{self.remitente_tipo} - {self.idea.titulo} - {self.fecha_envio}"
+
 class Comentario(models.Model):
     ESTADO_CHOICES = [
         ('pendiente', 'Pendiente'),
