@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicar Idea como Producto | Dashboard Empresa</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Empresas/css/styles3.css' %}">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-header h2 {
+            color: #003366;
+            margin-bottom: 10px;
+        }
+        
+        .idea-preview {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .idea-preview h3 {
+            color: #007BFF;
+            margin-bottom: 10px;
+        }
+        
+        .idea-preview img {
+            max-width: 200px;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e6ec;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007BFF;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .required {
+            color: #dc3545;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #007BFF, #0056b3);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside>
+            <h2>Dashboard de Empresa</h2>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboardEmpresa' %}">Inicio</a></li>
+                    <li><a href="{% url 'usuarios' %}">Gestión de usuarios</a></li>
+                    <li><a href="{% url 'GestiProductos' %}">Gestión de productos</a></li>
+                    <li><a href="{% url 'inventario' %}">Inventario</a></li>
+                    <li><a href="{% url 'empresa_ideas' %}">Gestión de ideas</a></li>
+                    <li><a href="{% url 'empresa_comentarios' %}">Gestión de comentarios</a></li>
+                    <li><a href="{% url 'gestion_pagos' %}">Gestión de pagos</a></li>
+                    <li><a href="{% url 'gestion_pedidos' %}">Gestión de pedidos</a></li>
+                    <li><a href="{% url 'estadisticas' %}">Estadísticas</a></li>
+                </ul>
+            </nav>
+            <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+        </aside>
+
+        <main>
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Publicar Idea como Producto</h2>
+                    <p>Convierte esta idea aprobada en un producto disponible para venta</p>
+                </div>
+
+                <div class="idea-preview">
+                    <h3>{{ idea.titulo }}</h3>
+                    <p><strong>Autor:</strong> {{ idea.autor }}</p>
+                    <p><strong>Descripción Original:</strong> {{ idea.descripcion }}</p>
+                    {% if idea.imagen %}
+                    <img src="{{ idea.imagen.url }}" alt="{{ idea.titulo }}">
+                    {% endif %}
+                </div>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="nombre">Nombre del Producto <span class="required">*</span></label>
+                        <input type="text" id="nombre" name="nombre" value="{{ idea.titulo }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descripcion">Descripción del Producto <span class="required">*</span></label>
+                        <textarea id="descripcion" name="descripcion" required>{{ idea.descripcion }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="precio">Precio (COP) <span class="required">*</span></label>
+                        <input type="number" id="precio" name="precio" step="0.01" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cantidad">Cantidad Disponible en Inventario <span class="required">*</span></label>
+                        <input type="number" id="cantidad" name="cantidad" min="0" value="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoria">Categoría <span class="required">*</span></label>
+                        <select id="categoria" name="categoria" required>
+                            <option value="">Selecciona una categoría</option>
+                            <option value="mesas">Mesas</option>
+                            <option value="sillas">Sillas</option>
+                            <option value="armarios">Armarios</option>
+                            <option value="cajoneras">Cajoneras</option>
+                            <option value="escritorios">Escritorios</option>
+                            <option value="utensilios">Utensilios</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Publicar como Producto</button>
+                        <a href="{% url 'empresa_ideas' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -266,6 +266,13 @@ def empresa_ideas_view(request):
                         mensaje = "Idea marcada como completada"
                     else:
                         mensaje = "Error: No tienes permiso para completar esta idea"
+                elif accion == 'finalizar' and idea.estado == 'completada':
+                    if idea.empresa_asignada == empresa:
+                        idea.estado = 'finalizada'
+                        idea.save()
+                        mensaje = "Idea marcada como finalizada"
+                    else:
+                        mensaje = "Error: No tienes permiso para finalizar esta idea"
             except Idea.DoesNotExist:
                 mensaje = "Error: La idea no existe"
     
@@ -273,11 +280,13 @@ def empresa_ideas_view(request):
     ideas_pendientes = ideas.filter(estado='pendiente')
     ideas_en_proceso = ideas.filter(estado='en_proceso')
     ideas_completadas = ideas.filter(estado='completada')
+    ideas_finalizadas = ideas.filter(estado='finalizada')
     
     context = {
         'ideas_pendientes': ideas_pendientes,
         'ideas_en_proceso': ideas_en_proceso,
         'ideas_completadas': ideas_completadas,
+        'ideas_finalizadas': ideas_finalizadas,
         'mensaje': mensaje,
         'empresa': empresa
     }
@@ -599,4 +608,189 @@ def update_user(request):
 
 # La función estadisticas_view se importa desde views_estadisticas.py
 # No debe estar duplicada aquí
+
+@require_POST
+def contactar_usuario_idea(request, idea_id):
+    """Vista para que la empresa contacte al usuario sobre la idea"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        idea = Idea.objects.get(id=idea_id)
+        
+        # Verificar que la empresa es la asignada
+        if idea.empresa_asignada != empresa:
+            return JsonResponse({'success': False, 'error': 'No tienes permiso para contactar sobre esta idea'}, status=403)
+        
+        mensaje = request.POST.get('mensaje', '')
+        if not mensaje:
+            return JsonResponse({'success': False, 'error': 'Debes escribir un mensaje'}, status=400)
+        
+        idea.mensaje_empresa = mensaje
+        idea.save()
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Mensaje enviado al usuario exitosamente'
+        })
+        
+    except Idea.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
+    except UserEmpresa.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@require_POST
+def solicitar_permiso_publicacion(request, idea_id):
+    """Vista para que la empresa solicite permiso para publicar la idea"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        idea = Idea.objects.get(id=idea_id)
+        
+        # Verificar que la empresa es la asignada y la idea está finalizada
+        if idea.empresa_asignada != empresa:
+            return JsonResponse({'success': False, 'error': 'No tienes permiso sobre esta idea'}, status=403)
+        
+        if idea.estado != 'finalizada':
+            return JsonResponse({'success': False, 'error': 'La idea debe estar finalizada'}, status=400)
+        
+        mensaje = request.POST.get('mensaje', '')
+        if not mensaje:
+            return JsonResponse({'success': False, 'error': 'Debes escribir un mensaje de solicitud'}, status=400)
+        
+        idea.mensaje_empresa = mensaje
+        idea.save()
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Solicitud de permiso enviada al usuario'
+        })
+        
+    except Idea.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
+    except UserEmpresa.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+def publicar_idea_como_producto(request, idea_id):
+    """Vista para publicar una idea como producto"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        messages.error(request, 'Debes iniciar sesión como empresa')
+        return redirect('loginEmpresa')
+    
+    try:
+        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        idea = Idea.objects.get(id=idea_id)
+        
+        # Verificar permisos
+        if idea.empresa_asignada != empresa:
+            messages.error(request, 'No tienes permiso sobre esta idea')
+            return redirect('empresa_ideas')
+        
+        if not idea.permiso_publicacion:
+            messages.error(request, 'No tienes permiso del usuario para publicar esta idea')
+            return redirect('empresa_ideas')
+        
+        if idea.publicada_como_producto:
+            messages.warning(request, 'Esta idea ya fue publicada como producto')
+            return redirect('empresa_ideas')
+        
+        if request.method == 'POST':
+            nombre = request.POST.get('nombre')
+            descripcion = request.POST.get('descripcion')
+            precio = request.POST.get('precio')
+            cantidad = request.POST.get('cantidad', 0)
+            categoria = request.POST.get('categoria')
+            
+            if not all([nombre, descripcion, precio, categoria]):
+                messages.error(request, 'Todos los campos son obligatorios')
+                return render(request, 'Empresas/publicar_idea_producto.html', {'idea': idea})
+            
+            # Crear el producto según la categoría seleccionada
+            try:
+                if categoria == 'mesas':
+                    producto = Mesas.objects.create(
+                        nombre1=nombre,
+                        descripcion1=descripcion,
+                        precio1=precio,
+                        imagen1=idea.imagen if idea.imagen else None,
+                        cantidad_disponible=int(cantidad)
+                    )
+                elif categoria == 'sillas':
+                    producto = Sillas.objects.create(
+                        nombre2=nombre,
+                        descripcion2=descripcion,
+                        precio2=precio,
+                        imagen2=idea.imagen if idea.imagen else None,
+                        cantidad_disponible=int(cantidad)
+                    )
+                elif categoria == 'armarios':
+                    producto = Armarios.objects.create(
+                        nombre3=nombre,
+                        descripcion3=descripcion,
+                        precio3=precio,
+                        imagen3=idea.imagen if idea.imagen else None,
+                        cantidad_disponible=int(cantidad)
+                    )
+                elif categoria == 'cajoneras':
+                    producto = Cajoneras.objects.create(
+                        nombre4=nombre,
+                        descripcion4=descripcion,
+                        precio4=precio,
+                        imagen4=idea.imagen if idea.imagen else None,
+                        cantidad_disponible=int(cantidad)
+                    )
+                elif categoria == 'escritorios':
+                    producto = Escritorios.objects.create(
+                        nombre5=nombre,
+                        descripcion5=descripcion,
+                        precio5=precio,
+                        imagen5=idea.imagen if idea.imagen else None,
+                        cantidad_disponible=int(cantidad)
+                    )
+                elif categoria == 'utensilios':
+                    producto = Utensilios.objects.create(
+                        nombre6=nombre,
+                        descripcion6=descripcion,
+                        precio6=precio,
+                        imagen6=idea.imagen if idea.imagen else None,
+                        cantidad_disponible=int(cantidad)
+                    )
+                else:
+                    messages.error(request, 'Categoría no válida')
+                    return render(request, 'Empresas/publicar_idea_producto.html', {'idea': idea})
+                
+                # Marcar la idea como publicada
+                idea.publicada_como_producto = True
+                idea.fecha_publicacion = timezone.now()
+                idea.save()
+                
+                messages.success(request, f'¡Idea publicada exitosamente como producto en la categoría {categoria}!')
+                return redirect('GestiProductos')
+                
+            except Exception as e:
+                messages.error(request, f'Error al crear el producto: {str(e)}')
+                return render(request, 'Empresas/publicar_idea_producto.html', {'idea': idea})
+        
+        return render(request, 'Empresas/publicar_idea_producto.html', {'idea': idea})
+        
+    except Idea.DoesNotExist:
+        messages.error(request, 'Idea no encontrada')
+        return redirect('empresa_ideas')
+    except UserEmpresa.DoesNotExist:
+        messages.error(request, 'Empresa no encontrada')
+        return redirect('loginEmpresa')
+    except Exception as e:
+        messages.error(request, f'Error: {str(e)}')
+        return redirect('empresa_ideas')
+
 

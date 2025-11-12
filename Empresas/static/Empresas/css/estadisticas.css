@@ -1,0 +1,45 @@
+/* Estilos de refuerzo para asegurar visibilidad de números */
+.stat-number {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: #003366 !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1.2 !important;
+}
+
+.categoria-cantidad {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: #003366 !important;
+    display: block !important;
+    margin: 0.5rem 0 !important;
+}
+
+.estado-numero {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: #003366 !important;
+    display: block !important;
+    margin: 0 !important;
+}
+
+.stat-label {
+    font-size: 0.875rem !important;
+    color: #627d98 !important;
+    display: block !important;
+}
+
+.categoria-nombre {
+    font-size: 0.875rem !important;
+    color: #627d98 !important;
+    font-weight: 600 !important;
+    margin: 0.5rem 0 !important;
+}
+
+.estado-label {
+    font-size: 0.875rem !important;
+    color: #627d98 !important;
+    font-weight: 600 !important;
+}

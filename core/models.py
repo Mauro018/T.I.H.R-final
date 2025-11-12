@@ -89,6 +89,7 @@ class Idea(models.Model):
         ('pendiente', 'Pendiente'),
         ('en_proceso', 'En Proceso'),
         ('completada', 'Completada'),
+        ('finalizada', 'Finalizada'),
     ]
     
     titulo = models.CharField(max_length=100)
@@ -99,6 +100,14 @@ class Idea(models.Model):
     estado = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendiente')
     empresa_asignada = models.ForeignKey(UserEmpresa, on_delete=models.SET_NULL, null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    
+    # Nuevos campos para contacto y publicación
+    mensaje_empresa = models.TextField(max_length=1000, blank=True, null=True, help_text='Mensaje de la empresa al cliente sobre la idea')
+    respuesta_cliente = models.TextField(max_length=1000, blank=True, null=True, help_text='Respuesta del cliente a la empresa')
+    permiso_publicacion = models.BooleanField(default=False, help_text='Permiso del cliente para publicar como producto')
+    fecha_permiso = models.DateTimeField(null=True, blank=True)
+    publicada_como_producto = models.BooleanField(default=False)
+    fecha_publicacion = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):
         return self.titulo

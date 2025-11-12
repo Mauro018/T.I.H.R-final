@@ -23,4 +23,7 @@ urlpatterns = [
     path('estadisticas/', views.estadisticas_view, name='estadisticas'),
     path('inventario/', views.inventario_view, name='inventario'),
     path('actualizar-inventario/', csrf_exempt(views.actualizar_inventario_view), name='actualizar_inventario'),
+    path('contactar-usuario-idea/<int:idea_id>/', csrf_exempt(views.contactar_usuario_idea), name='contactar_usuario_idea'),
+    path('solicitar-permiso-publicacion/<int:idea_id>/', csrf_exempt(views.solicitar_permiso_publicacion), name='solicitar_permiso_publicacion'),
+    path('publicar-idea-producto/<int:idea_id>/', views.publicar_idea_como_producto, name='publicar_idea_producto'),
 ]

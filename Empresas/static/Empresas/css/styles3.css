@@ -1127,19 +1127,16 @@ td:last-child {
 }
 
 .stat-content .stat-number {
-    font-size: 2rem !important;
-    font-weight: 700 !important;
-    color: #003366 !important;
-    margin: 0 !important;
-    display: block !important;
-    line-height: 1.2 !important;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #003366;
+    margin: 0;
 }
 
 .stat-content .stat-label {
-    font-size: 0.75rem !important;
-    color: #627d98 !important;
-    margin: 0.25rem 0 0 0 !important;
-    display: block !important;
+    font-size: 0.75rem;
+    color: #627d98;
+    margin: 0.25rem 0 0 0;
 }
 
 .stats-section {
@@ -1188,22 +1185,18 @@ td:last-child {
 }
 
 .categoria-item .categoria-nombre {
-    font-size: 0.875rem !important;
-    color: #627d98 !important;
-    margin-bottom: 0.5rem !important;
-    font-weight: 600 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-    display: block !important;
+    font-size: 0.875rem;
+    color: #627d98;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .categoria-item .categoria-cantidad {
-    font-size: 1.5rem !important;
-    font-weight: 700 !important;
-    color: #003366 !important;
-    display: block !important;
-    margin: 0.5rem 0 !important;
-    line-height: 1.2 !important;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #003366;
 }
 
 .estados-grid {
@@ -1226,19 +1219,16 @@ td:last-child {
 }
 
 .estado-item .estado-numero {
-    font-size: 2rem !important;
-    font-weight: 700 !important;
-    color: #003366 !important;
-    margin-bottom: 0.5rem !important;
-    display: block !important;
-    line-height: 1.2 !important;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #003366;
+    margin-bottom: 0.5rem;
 }
 
 .estado-item .estado-label {
-    font-size: 0.875rem !important;
-    color: #627d98 !important;
-    font-weight: 600 !important;
-    display: block !important;
+    font-size: 0.875rem;
+    color: #627d98;
+    font-weight: 600;
 }
 
 .estado-item.procesando {

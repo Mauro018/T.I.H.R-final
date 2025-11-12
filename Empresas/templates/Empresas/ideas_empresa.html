@@ -7,6 +7,109 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'Empresas/css/styles3.css' %}">
     <link rel="stylesheet" href="{% static 'Empresas/css/styles_ideas.css' %}">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #000;
+        }
+        
+        .modal-form-group {
+            margin-bottom: 20px;
+        }
+        
+        .modal-form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #003366;
+        }
+        
+        .modal-form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e6ec;
+            border-radius: 8px;
+            min-height: 120px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .btn-modal {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .btn-modal-primary {
+            background-color: #007BFF;
+            color: white;
+        }
+        
+        .btn-modal-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.875rem;
+            margin: 5px 2px;
+        }
+        
+        .mensaje-info {
+            background-color: #e7f3ff;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 4px solid #007BFF;
+        }
+        
+        .permiso-otorgado {
+            background-color: #d4edda;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-container">
@@ -88,13 +191,25 @@
                         {% endif %}
                     </div>
                     
-                    {% if idea.empresa_asignada == request.user.userempresa %}
-                    <form method="post" class="idea-actions">
-                        {% csrf_token %}
-                        <input type="hidden" name="idea_id" value="{{ idea.id }}">
-                        <input type="hidden" name="accion" value="completar">
-                        <button type="submit" class="btn btn-primary">Marcar como Completada</button>
-                    </form>
+                    {% if idea.mensaje_empresa %}
+                    <div class="mensaje-info">
+                        <strong>Mensaje enviado:</strong>
+                        <p>{{ idea.mensaje_empresa }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if idea.empresa_asignada.id == empresa.id %}
+                    <div class="idea-actions">
+                        <button onclick="contactarUsuario({{ idea.id }})" class="btn btn-info btn-small">
+                            Contactar Usuario
+                        </button>
+                        <form method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="idea_id" value="{{ idea.id }}">
+                            <input type="hidden" name="accion" value="completar">
+                            <button type="submit" class="btn btn-primary btn-small">Marcar como Completada</button>
+                        </form>
+                    </div>
                     {% endif %}
                 </div>
                 {% empty %}
@@ -124,6 +239,17 @@
                         {% endif %}
                     </div>
                     
+                    {% if idea.empresa_asignada.id == empresa.id %}
+                    <div class="idea-actions">
+                        <form method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="idea_id" value="{{ idea.id }}">
+                            <input type="hidden" name="accion" value="finalizar">
+                            <button type="submit" class="btn btn-success btn-small">Marcar como Finalizada</button>
+                        </form>
+                    </div>
+                    {% endif %}
+                    
                     <p class="estado">Completada ✓</p>
                 </div>
                 {% empty %}
@@ -131,9 +257,211 @@
                 {% endfor %}
             </div>
         </section>
+
+        <!-- Ideas Finalizadas -->
+        <section class="ideas-section">
+            <h3>Ideas Finalizadas</h3>
+            <div class="ideas-grid">
+                {% for idea in ideas_finalizadas %}
+                <div class="idea-card finalizada" style="border-left: 4px solid #6f42c1;">
+                    <h4>{{ idea.titulo }}</h4>
+                    <p><strong>Autor:</strong> {{ idea.autor }}</p>
+                    <p><strong>Descripción:</strong> {{ idea.descripcion }}</p>
+                    <p class="fecha">{{ idea.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                    
+                    <!-- Botones para ver imagen y modelo 3D -->
+                    <div class="idea-media-buttons">
+                        {% if idea.imagen %}
+                        <a href="{% url 'ver_imagen_idea' idea.id %}" class="btn btn-info" target="_blank">Ver Imagen</a>
+                        {% endif %}
+                        {% if idea.modelo_3d %}
+                        <a href="{% url 'ver_modelo_3d_idea' idea.id %}" class="btn btn-info" target="_blank">Ver Modelo 3D</a>
+                        {% endif %}
+                    </div>
+                    
+                    {% if idea.mensaje_empresa %}
+                    <div class="mensaje-info">
+                        <strong>Solicitud enviada:</strong>
+                        <p>{{ idea.mensaje_empresa }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if idea.permiso_publicacion %}
+                    <div class="permiso-otorgado">
+                        <strong>✓ Permiso otorgado por el usuario</strong>
+                        <p>Fecha: {{ idea.fecha_permiso|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if idea.publicada_como_producto %}
+                    <div class="permiso-otorgado" style="background-color: #d1ecf1; border-left-color: #0c5460; color: #0c5460;">
+                        <strong>✓ Publicada como producto</strong>
+                        <p>Fecha: {{ idea.fecha_publicacion|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if idea.empresa_asignada.id == empresa.id %}
+                    <div class="idea-actions">
+                        {% if not idea.permiso_publicacion %}
+                        <button onclick="solicitarPermiso({{ idea.id }})" class="btn btn-warning btn-small">
+                            Solicitar Permiso para Publicar
+                        </button>
+                        {% elif not idea.publicada_como_producto %}
+                        <a href="{% url 'publicar_idea_producto' idea.id %}" class="btn btn-success btn-small">
+                            Publicar como Producto
+                        </a>
+                        {% endif %}
+                        
+                        <button onclick="contactarUsuario({{ idea.id }})" class="btn btn-info btn-small">
+                            Contactar Usuario
+                        </button>
+                    </div>
+                    {% endif %}
+                    
+                    <p class="estado">Finalizada ✓✓</p>
+                </div>
+                {% empty %}
+                <p class="no-ideas">No hay ideas finalizadas</p>
+                {% endfor %}
+            </div>
+        </section>
     </div>
 </div>
         </main>
     </div>
+
+    <!-- Modal para Contactar Usuario -->
+    <div id="contactarModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('contactarModal')">&times;</span>
+            <h2>Contactar Usuario</h2>
+            <form id="contactarForm">
+                {% csrf_token %}
+                <div class="modal-form-group">
+                    <label for="mensajeContacto">Mensaje para el usuario:</label>
+                    <textarea id="mensajeContacto" name="mensaje" required placeholder="Escribe tu mensaje aquí..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-modal btn-modal-primary">Enviar Mensaje</button>
+                    <button type="button" class="btn-modal btn-modal-secondary" onclick="cerrarModal('contactarModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Solicitar Permiso -->
+    <div id="permisoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('permisoModal')">&times;</span>
+            <h2>Solicitar Permiso de Publicación</h2>
+            <p>Solicita permiso al usuario para publicar su idea como un producto en la tienda.</p>
+            <form id="permisoForm">
+                {% csrf_token %}
+                <div class="modal-form-group">
+                    <label for="mensajePermiso">Mensaje de solicitud:</label>
+                    <textarea id="mensajePermiso" name="mensaje" required placeholder="Explica al usuario por qué quieres publicar su idea..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-modal btn-modal-primary">Enviar Solicitud</button>
+                    <button type="button" class="btn-modal btn-modal-secondary" onclick="cerrarModal('permisoModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let ideaIdActual = null;
+
+        function contactarUsuario(ideaId) {
+            ideaIdActual = ideaId;
+            document.getElementById('contactarModal').style.display = 'block';
+        }
+
+        function solicitarPermiso(ideaId) {
+            ideaIdActual = ideaId;
+            document.getElementById('permisoModal').style.display = 'block';
+        }
+
+        function cerrarModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            if (modalId === 'contactarModal') {
+                document.getElementById('contactarForm').reset();
+            } else if (modalId === 'permisoModal') {
+                document.getElementById('permisoForm').reset();
+            }
+        }
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const contactarModal = document.getElementById('contactarModal');
+            const permisoModal = document.getElementById('permisoModal');
+            if (event.target === contactarModal) {
+                cerrarModal('contactarModal');
+            }
+            if (event.target === permisoModal) {
+                cerrarModal('permisoModal');
+            }
+        }
+
+        // Formulario de contactar usuario
+        document.getElementById('contactarForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const formData = new FormData(this);
+            
+            fetch(`/empresa/contactar-usuario-idea/${ideaIdActual}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.mensaje);
+                    cerrarModal('contactarModal');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al enviar el mensaje');
+            });
+        });
+
+        // Formulario de solicitar permiso
+        document.getElementById('permisoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const formData = new FormData(this);
+            
+            fetch(`/empresa/solicitar-permiso-publicacion/${ideaIdActual}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.mensaje);
+                    cerrarModal('permisoModal');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al enviar la solicitud');
+            });
+        });
+    </script>
 </body>
 </html>

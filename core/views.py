@@ -248,6 +248,9 @@ def ideas_view(request):
     # Recupera todas las ideas de la base de datos
     ideas = Idea.objects.all().order_by('-fecha_creacion')
     
+    # Filtrar las ideas del usuario actual
+    mis_ideas = ideas.filter(autor=usernameCliente) if usernameCliente else []
+    
     # Agregar información del usuario a cada idea
     for idea in ideas:
         try:
@@ -258,6 +261,7 @@ def ideas_view(request):
     return render(request, 'core/idea.html', {
         'form': form,
         'ideas': ideas,
+        'mis_ideas': mis_ideas,
         'usuario': usuario,
     })
 
@@ -753,3 +757,87 @@ def get_cantidad_disponible_view(request):
         
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+@require_http_methods(["POST"])
+@csrf_exempt
+def responder_mensaje_empresa(request, idea_id):
+    """Vista para que el cliente responda al mensaje de la empresa"""
+    usernameCliente = request.session.get('usernameCliente')
+    if not usernameCliente:
+        return JsonResponse({'success': False, 'error': 'No autenticado'}, status=401)
+    
+    try:
+        idea = Idea.objects.get(id=idea_id, autor=usernameCliente)
+        respuesta = request.POST.get('respuesta', '')
+        
+        if not respuesta:
+            return JsonResponse({'success': False, 'error': 'La respuesta no puede estar vacía'}, status=400)
+        
+        idea.respuesta_cliente = respuesta
+        idea.save()
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Respuesta enviada exitosamente'
+        })
+        
+    except Idea.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Idea no encontrada o no tienes permiso'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@require_http_methods(["POST"])
+@csrf_exempt
+def otorgar_permiso_publicacion(request, idea_id):
+    """Vista para que el cliente otorgue permiso de publicación"""
+    usernameCliente = request.session.get('usernameCliente')
+    if not usernameCliente:
+        return JsonResponse({'success': False, 'error': 'No autenticado'}, status=401)
+    
+    try:
+        idea = Idea.objects.get(id=idea_id, autor=usernameCliente)
+        
+        if idea.estado != 'finalizada':
+            return JsonResponse({'success': False, 'error': 'La idea debe estar finalizada'}, status=400)
+        
+        idea.permiso_publicacion = True
+        idea.fecha_permiso = timezone.now()
+        idea.save()
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Permiso otorgado exitosamente. La empresa ya puede publicar tu idea como producto.'
+        })
+        
+    except Idea.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Idea no encontrada o no tienes permiso'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@require_http_methods(["POST"])
+@csrf_exempt
+def revocar_permiso_publicacion(request, idea_id):
+    """Vista para que el cliente revoque el permiso de publicación"""
+    usernameCliente = request.session.get('usernameCliente')
+    if not usernameCliente:
+        return JsonResponse({'success': False, 'error': 'No autenticado'}, status=401)
+    
+    try:
+        idea = Idea.objects.get(id=idea_id, autor=usernameCliente)
+        
+        if idea.publicada_como_producto:
+            return JsonResponse({'success': False, 'error': 'No puedes revocar el permiso, la idea ya fue publicada como producto'}, status=400)
+        
+        idea.permiso_publicacion = False
+        idea.fecha_permiso = None
+        idea.save()
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Permiso revocado exitosamente'
+        })
+        
+    except Idea.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Idea no encontrada o no tienes permiso'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)

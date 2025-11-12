@@ -107,6 +107,73 @@
         </form>
       </section>
       <br>
+      
+      <!-- Sección de Mis Ideas -->
+      {% if mis_ideas %}
+      <section class="seccion-at">
+        <h2>Mis Ideas</h2>
+        <div class="contenedor-articulos">
+          {% for idea in mis_ideas %}
+            <div class="articulo {% if idea.estado == 'en_proceso' %}en-proceso{% elif idea.estado == 'completada' %}completada{% elif idea.estado == 'finalizada' %}finalizada{% endif %}" style="{% if idea.estado == 'finalizada' %}border-left: 4px solid #6f42c1;{% endif %}">
+              <div class="contenido-articulo">
+                <h3>{{ idea.titulo }}</h3>
+                <p>{{ idea.descripcion }}</p>
+                <p><strong>Estado:</strong> {{ idea.get_estado_display }}</p>
+                {% if idea.empresa_asignada %}
+                <p><strong>Empresa asignada:</strong> {{ idea.empresa_asignada.usernameEmpresa }}</p>
+                {% endif %}
+                
+                <!-- Mensaje de la empresa -->
+                {% if idea.mensaje_empresa %}
+                <div class="mensaje-empresa" style="background-color: #e7f3ff; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #007BFF;">
+                  <h4 style="color: #007BFF; margin-top: 0;">Mensaje de la Empresa:</h4>
+                  <p>{{ idea.mensaje_empresa }}</p>
+                  
+                  {% if not idea.respuesta_cliente %}
+                  <button onclick="responderEmpresa({{ idea.id }})" class="articulo-boton" style="margin-top: 10px; padding: 8px 15px;">
+                    Responder
+                  </button>
+                  {% else %}
+                  <div style="background-color: #d4edda; padding: 10px; border-radius: 6px; margin-top: 10px;">
+                    <strong style="color: #155724;">Tu respuesta:</strong>
+                    <p style="margin: 5px 0 0 0; color: #155724;">{{ idea.respuesta_cliente }}</p>
+                  </div>
+                  {% endif %}
+                </div>
+                {% endif %}
+                
+                <!-- Permiso de publicación -->
+                {% if idea.estado == 'finalizada' %}
+                <div class="permiso-publicacion" style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #ffc107;">
+                  {% if not idea.permiso_publicacion %}
+                  <h4 style="color: #856404; margin-top: 0;">¿Permitir publicar tu idea como producto?</h4>
+                  <p style="color: #856404;">La empresa te solicita permiso para publicar tu idea como un producto en la tienda.</p>
+                  <button onclick="otorgarPermiso({{ idea.id }})" class="articulo-boton" style="background-color: #28a745; margin-top: 10px; padding: 8px 15px;">
+                    ✓ Otorgar Permiso
+                  </button>
+                  {% else %}
+                  <div style="background-color: #d4edda; padding: 10px; border-radius: 6px;">
+                    <strong style="color: #155724;">✓ Permiso Otorgado</strong>
+                    <p style="margin: 5px 0 0 0; color: #155724;">Fecha: {{ idea.fecha_permiso|date:"d/m/Y H:i" }}</p>
+                    {% if not idea.publicada_como_producto %}
+                    <button onclick="revocarPermiso({{ idea.id }})" class="articulo-boton" style="background-color: #dc3545; margin-top: 10px; padding: 6px 12px; font-size: 0.9rem;">
+                      Revocar Permiso
+                    </button>
+                    {% else %}
+                    <p style="margin: 10px 0 0 0; color: #0c5460; font-weight: bold;">✓ Ya fue publicada como producto</p>
+                    {% endif %}
+                  </div>
+                  {% endif %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+      <br>
+      {% endif %}
+      
       <section class="seccion-at">
         <h2>Ideas Publicadas</h2>
         {% if ideas %}
@@ -170,6 +237,91 @@
             window.location.href = '/productos/'; 
         }
     }
+
+  // Función para responder a la empresa
+  function responderEmpresa(ideaId) {
+    const respuesta = prompt('Escribe tu respuesta a la empresa:');
+    if (respuesta && respuesta.trim()) {
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      const formData = new FormData();
+      formData.append('respuesta', respuesta.trim());
+      
+      fetch(`/idea/responder/${ideaId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+        },
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert(data.mensaje);
+          location.reload();
+        } else {
+          alert('Error: ' + data.error);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error al enviar la respuesta');
+      });
+    }
+  }
+
+  // Función para otorgar permiso de publicación
+  function otorgarPermiso(ideaId) {
+    if (confirm('¿Estás seguro de que deseas otorgar permiso a la empresa para publicar tu idea como producto en la tienda?')) {
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      
+      fetch(`/idea/otorgar-permiso/${ideaId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert(data.mensaje);
+          location.reload();
+        } else {
+          alert('Error: ' + data.error);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error al otorgar el permiso');
+      });
+    }
+  }
+
+  // Función para revocar permiso de publicación
+  function revocarPermiso(ideaId) {
+    if (confirm('¿Estás seguro de que deseas revocar el permiso de publicación?')) {
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      
+      fetch(`/idea/revocar-permiso/${ideaId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert(data.mensaje);
+          location.reload();
+        } else {
+          alert('Error: ' + data.error);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error al revocar el permiso');
+      });
+    }
+  }
 </script>
 
 </body>

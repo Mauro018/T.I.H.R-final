@@ -28,6 +28,10 @@ urlpatterns = [
     # URLs para perfil de usuario
     path('perfil/', views.perfil_usuario_view, name='perfilUsuario'),
     path('perfil/editar/', views.editar_perfil_view, name='editar_perfil'),
+    # URLs para ideas - interacción cliente
+    path('idea/responder/<int:idea_id>/', views.responder_mensaje_empresa, name='responder_mensaje_empresa'),
+    path('idea/otorgar-permiso/<int:idea_id>/', views.otorgar_permiso_publicacion, name='otorgar_permiso_publicacion'),
+    path('idea/revocar-permiso/<int:idea_id>/', views.revocar_permiso_publicacion, name='revocar_permiso_publicacion'),
     path('',include('Productos.urls')),
     path('',include('Administrador.urls')),
     path('',include('Empresas.urls')),
