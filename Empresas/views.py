@@ -597,15 +597,6 @@ def update_user(request):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
-def estadisticas_view(request):
-    if 'usernameEmpresa' not in request.session:
-        return redirect('loginEmpresa')
-    from core.models import UserClientes, Pedido, Pago, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios
-    from django.db.models import Sum, Count, Q
-    total_usuarios = UserClientes.objects.count()
-    usuarios_activos = UserClientes.objects.filter(is_active=True).count()
-    total_pedidos = Pedido.objects.count()
-    ingresos_totales = Pago.objects.filter(estado='confirmado').aggregate(total=Sum('monto_total'))['total'] or 0
-    context = {'total_usuarios': total_usuarios, 'usuarios_activos': usuarios_activos, 'total_pedidos': total_pedidos, 'ingresos_totales': ingresos_totales}
-    return render(request, 'Empresas/estadisticas.html', context)
+# La función estadisticas_view se importa desde views_estadisticas.py
+# No debe estar duplicada aquí
 

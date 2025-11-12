@@ -5,10 +5,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estadísticas | Panel Empresa</title>
-    <link rel="stylesheet" href="{% static 'Empresas/css/styles3.css' %}">
+    <link rel="stylesheet" href="{% static 'Empresas/css/styles3.css' %}?v=4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Estilos de refuerzo para asegurar visibilidad de números */
+        .stat-number {
+            font-size: 2rem !important;
+            font-weight: 700 !important;
+            color: #003366 !important;
+            display: block !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            line-height: 1.2 !important;
+        }
+        .categoria-cantidad {
+            font-size: 1.5rem !important;
+            font-weight: 700 !important;
+            color: #003366 !important;
+            display: block !important;
+            margin: 0.5rem 0 !important;
+        }
+        .estado-numero {
+            font-size: 2rem !important;
+            font-weight: 700 !important;
+            color: #003366 !important;
+            display: block !important;
+            margin: 0 !important;
+        }
+        .stat-label {
+            font-size: 0.875rem !important;
+            color: #627d98 !important;
+            display: block !important;
+        }
+        .categoria-nombre {
+            font-size: 0.875rem !important;
+            color: #627d98 !important;
+            font-weight: 600 !important;
+            margin: 0.5rem 0 !important;
+        }
+        .estado-label {
+            font-size: 0.875rem !important;
+            color: #627d98 !important;
+            font-weight: 600 !important;
+        }
+    </style>
 </head>
 <body>
+    <!-- DEBUG: Ver valores en consola -->
+    <script>
+        console.log("=== VALORES DEL CONTEXTO ===");
+        console.log("total_productos:", "{{ total_productos }}");
+        console.log("total_mesas:", "{{ total_mesas }}");
+        console.log("total_sillas:", "{{ total_sillas }}");
+        console.log("pedidos_procesando:", "{{ pedidos_procesando }}");
+        console.log("pedidos_enviado:", "{{ pedidos_enviado }}");
+        console.log("pedidos_entregado:", "{{ pedidos_entregado }}");
+        console.log("pagos_pendientes:", "{{ pagos_pendientes }}");
+        console.log("pagos_confirmados:", "{{ pagos_confirmados }}");
+        console.log("pagos_rechazados:", "{{ pagos_rechazados }}");
+    </script>
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside>
@@ -66,7 +121,7 @@
                     <div class="stat-content">
                         <h3>Pedidos Totales</h3>
                         <p class="stat-number">{{ total_pedidos }}</p>
-                        <p class="stat-label">{{ pedidos_entregados }} entregados</p>
+                        <p class="stat-label">{{ pedidos_entregado }} entregados</p>
                     </div>
                 </div>
 
