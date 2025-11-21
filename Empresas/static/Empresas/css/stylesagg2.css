@@ -27,7 +27,7 @@ form {
 /* 3. Título (También centrado y estilizado) */
 h1 {
     text-align: center;
-    color: #007bff;
+    color: #A0662F;
     margin: 20px auto 30px auto; /* Centra el h1 de forma independiente */
     max-width: 500px; /* Asegura que el h1 esté centrado con el formulario */
     font-size: 1.8em;

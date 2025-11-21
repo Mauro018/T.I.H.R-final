@@ -5,7 +5,7 @@
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    color: #003366;
+    color: #4A3428;
     font-weight: 600;
 }
 
@@ -21,7 +21,7 @@
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #007BFF;
+    border-color: #A0662F;
 }
 
 .badge-procesando {

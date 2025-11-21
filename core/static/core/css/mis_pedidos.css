@@ -10,13 +10,15 @@
 }
 
 .main-content-wrapper header {
-    background: linear-gradient(135deg, #004d99, #00264d);
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: #ffffff;
-    padding: 1.5rem 1rem;
+    padding: 2rem 3rem;
     text-align: center;
-    border-radius: 0 0 15px 15px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    margin-bottom: 30px;
+    margin: -20px -40px 30px -40px;
+    width: calc(100% + 80px);
+    padding-left: calc(40px + 3rem);
+    padding-right: calc(40px + 3rem);
     position: relative;
     overflow: hidden;
 }
@@ -58,19 +60,13 @@
 }
 
 .main-content-wrapper footer {
-    background-color: #003366;
-    padding: 1rem;
+    background-color: #7A3E0E;
+    padding: 2rem 3rem;
     text-align: center;
-    margin-top: 2rem;
-    border-radius: 8px;
-}
-
-.main-content-wrapper footer {
-    background-color: #003366;
-    padding: 1rem;
-    text-align: center;
-    margin-top: 2rem;
-    border-radius: 8px;
+    margin: 2rem -40px -20px -40px;
+    width: calc(100% + 80px);
+    padding-left: calc(40px + 3rem);
+    padding-right: calc(40px + 3rem);
 }
 
 .main-content-wrapper footer p {
@@ -83,7 +79,7 @@
     margin: 0 auto;
     padding: 20px;
     flex: 1;
-    background: linear-gradient(135deg, #49bcff 0%, #e6e7e9 100%);
+    background: linear-gradient(135deg, #F5F5F5 0%, #e6e7e9 100%);
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
@@ -103,10 +99,10 @@
 }
 
 .pedido-card.procesando { border-left-color: #ffc107; }
-.pedido-card.empacado { border-left-color: #17a2b8; }
-.pedido-card.enviado { border-left-color: #007BFF; }
+.pedido-card.empacado { border-left-color: #C7591F; }
+.pedido-card.enviado { border-left-color: #C7591F; }
 .pedido-card.en_transito { border-left-color: #6f42c1; }
-.pedido-card.entregado { border-left-color: #28a745; }
+.pedido-card.entregado { border-left-color: #6B8E23; }
 .pedido-card.cancelado { border-left-color: #dc3545; }
 
 .pedido-card:hover {
@@ -126,7 +122,7 @@
 .pedido-numero {
     font-size: 1.3rem;
     font-weight: 700;
-    color: #003366;
+    color: #7A3E0E;
 }
 
 .pedido-fecha {
@@ -192,7 +188,7 @@
 
 .info-item strong {
     display: block;
-    color: #003366;
+    color: #7A3E0E;
     margin-bottom: 5px;
     font-size: 0.9rem;
 }
@@ -210,7 +206,7 @@
 }
 
 .pedido-productos h3 {
-    color: #003366;
+    color: #7A3E0E;
     font-size: 1.1rem;
     margin-bottom: 10px;
 }
@@ -227,7 +223,7 @@
 }
 
 .pedido-total {
-    background: linear-gradient(135deg, #007BFF, #0056b3);
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: white;
     padding: 15px;
     border-radius: 10px;
@@ -238,16 +234,16 @@
 }
 
 .pedido-seguimiento {
-    background: #e7f3ff;
+    background: #FDF5E6;
     padding: 15px;
     border-radius: 10px;
-    border-left: 4px solid #007BFF;
+    border-left: 4px solid #C7591F;
     margin-top: 15px;
 }
 
 .pedido-seguimiento strong {
     display: block;
-    color: #003366;
+    color: #7A3E0E;
     margin-bottom: 8px;
 }
 
@@ -294,14 +290,14 @@
 }
 
 .timeline-icon.active {
-    background: #007BFF;
-    border-color: #007BFF;
+    background: #A0662F;
+    border-color: #A0662F;
     color: white;
 }
 
 .timeline-icon.completed {
-    background: #28a745;
-    border-color: #28a745;
+    background: #6B8E23;
+    border-color: #6B8E23;
     color: white;
 }
 
@@ -312,7 +308,7 @@
 
 .timeline-content h4 {
     margin: 0;
-    color: #003366;
+    color: #7A3E0E;
     font-size: 1rem;
 }
 
@@ -325,7 +321,7 @@
 .btn-ver-detalles {
     display: inline-block;
     padding: 10px 20px;
-    background: linear-gradient(135deg, #007BFF, #0056b3);
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: white;
     text-decoration: none;
     border-radius: 8px;
@@ -412,7 +408,7 @@
 
 .form-group label {
     font-weight: 600;
-    color: #003366;
+    color: #7A3E0E;
     margin-bottom: 8px;
     font-size: 0.95rem;
 }
@@ -428,8 +424,8 @@
 
 .form-control:focus {
     outline: none;
-    border-color: #007BFF;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: #A0662F;
+    box-shadow: 0 0 0 3px rgba(160, 102, 47, 0.1);
 }
 
 .form-control::placeholder {
@@ -442,7 +438,7 @@ textarea.form-control {
 }
 
 .btn-guardar-datos {
-    background: linear-gradient(135deg, #28a745, #20c997);
+    background: linear-gradient(135deg, #6B8E23, #8FBC8F);
     color: white;
     padding: 14px 30px;
     border: none;
@@ -471,12 +467,12 @@ textarea.form-control {
     padding: 15px;
     border-radius: 8px;
     margin-top: 15px;
-    border-left: 4px solid #17a2b8;
+    border-left: 4px solid #C7591F;
 }
 
 .pedido-notas strong {
     display: block;
-    color: #003366;
+    color: #7A3E0E;
     margin-bottom: 8px;
 }
 

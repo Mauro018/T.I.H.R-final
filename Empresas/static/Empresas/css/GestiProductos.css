@@ -3,8 +3,8 @@
 }
 
 .category-section h2 {
-    color: #007BFF;
-    border-bottom: 2px solid #007BFF;
+    color: #A0662F;
+    border-bottom: 2px solid #A0662F;
     padding-bottom: 10px;
     margin-bottom: 15px;
 }
@@ -18,7 +18,7 @@ table {
 }
 
 table th {
-    background-color: #007BFF;
+    background-color: #6B4E3D;
     color: white;
     padding: 12px;
     text-align: left;

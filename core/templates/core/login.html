@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'core/css/StylesLogin.css' %}">
 </head>
-<body>
+<body class="landing-page">
+
     <div class="login-container">
         <form class="form" method="POST" action="{% url 'login' %}">
             {% csrf_token %}
@@ -46,10 +47,6 @@
         <div class="register-link">
             ¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate</a>
         </div>
-    </div>
-    <!-- New div for the back button -->
-    <div class="back-link-container">
-        <a href="{% url 'home' %}" class="btn-back-to-home">← Volver a Inicio</a>
     </div>
 
 </body>

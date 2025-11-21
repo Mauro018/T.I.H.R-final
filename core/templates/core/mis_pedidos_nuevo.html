@@ -16,9 +16,9 @@
     <div class="sidebar-user-info">
         <a href="{% url 'perfilUsuario' %}" class="user-avatar-link">
             {% if cliente.foto_perfil %}
-                <img src="{{ cliente.foto_perfil.url }}" alt="Foto de perfil" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF; object-fit: cover;">
+                <img src="{{ cliente.foto_perfil.url }}" alt="Foto de perfil" width="50" height="50" style="border-radius: 50%; border: 2px solid #A0662F; object-fit: cover;">
             {% else %}
-                <img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF;">
+                <img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #A0662F;">
             {% endif %}
         </a>
         <span class="username-display">{{ cliente.usernameCliente }}</span>
@@ -27,7 +27,7 @@
     <ul>
         <li><a href="{% url 'productos' %}">Ofertas</a></li>
         <li><a href="{% url 'idea' %}">Crear Idea</a></li>
-        <li><a href="{% url 'mis_pedidos' %}" style="background-color: #0056b3; color: white;">Mis Pedidos</a></li>
+        <li><a href="{% url 'mis_pedidos' %}" style="background-color: #7A3E0E; color: white;">Mis Pedidos</a></li>
         <li><a href="{% url 'contact' %}">Contáctenos</a></li>
         <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
         <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
@@ -60,14 +60,14 @@
     </header>
 
     {% if pedidos_sin_datos %}
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <div style="background: linear-gradient(135deg, #A0662F, #7A3E0E); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             <h3 style="margin: 0 0 10px 0; display: flex; align-items: center;">
                 <i class="fas fa-exclamation-circle" style="margin-right: 10px; font-size: 24px;"></i>
                 ¡Acción Requerida!
             </h3>
             <p style="margin: 0 0 15px 0;">Tienes {{ pedidos_sin_datos|length }} pedido{{ pedidos_sin_datos|length|pluralize }} pendiente{{ pedidos_sin_datos|length|pluralize }} de completar datos de envío.</p>
             {% for pedido in pedidos_sin_datos %}
-                <button onclick="abrirModalCompletarDatos({{ pedido.id }}, {{ pedido.numero_secuencial }})" style="display: inline-block; background: white; color: #667eea; padding: 10px 20px; border-radius: 5px; border: none; font-weight: bold; margin-right: 10px; margin-top: 5px; cursor: pointer;">
+                <button onclick="abrirModalCompletarDatos({{ pedido.id }}, {{ pedido.numero_secuencial }})" style="display: inline-block; background: white; color: #A0662F; padding: 10px 20px; border-radius: 5px; border: none; font-weight: bold; margin-right: 10px; margin-top: 5px; cursor: pointer;">
                     <i class="fas fa-map-marker-alt"></i> Completar Pedido #{{ pedido.numero_secuencial }}
                 </button>
             {% endfor %}
@@ -120,8 +120,50 @@
         </div>
     {% endif %}
 
-    <footer style="margin-top: 50px; text-align: center; padding: 20px; color: #6b7280;">
-        <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">📞 Contáctenos</h3>
+                <div class="footer-info">
+                    <i>📞</i>
+                    <span>+57 300 123 4567</span>
+                </div>
+                <div class="footer-info">
+                    <i>✉️</i>
+                    <span>info@gangasca-tirr.com</span>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">📍 Dirección</h3>
+                <div class="footer-info">
+                    <i>📍</i>
+                    <span>Carrera 45 P. 26-85<br>RoyalA, Colombia</span>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">🌐 Síguenos</h3>
+                <div class="footer-social">
+                    <div class="social-container">
+                        <a href="https://www.instagram.com/tu_idea_hecha_realidad?igsh=Y3ByM2lyZGcwNHVy" class="social-icon" aria-label="Instagram">
+                            <span>📷</span>
+                        </a>
+                        <div class="social-username">@Gangazos Thir</div>
+                    </div>
+                    <div class="social-container">
+                        <a href="https://www.facebook.com/share/1ACEVZbZHV/" class="social-icon" aria-label="Facebook">
+                            <span>📘</span>
+                        </a>
+                        <div class="social-username">/gangazoz_thir</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2025 Tu Idea Herba Realidad - Todos los derechos reservados</p>
+        </div>
     </footer>
 </div>
 
@@ -165,12 +207,12 @@
                         <span class="info-value" id="direccionCompleta"></span>
                     </div>
                     <div class="info-item" style="grid-column: 1 / -1;">
-                        <button type="button" class="btn-editar-ubicacion" onclick="abrirEditarUbicacion()" style="margin-top: 10px; padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        <button type="button" class="btn-editar-ubicacion" onclick="abrirEditarUbicacion()" style="margin-top: 10px; padding: 8px 16px; background: #A0662F; color: white; border: none; border-radius: 5px; cursor: pointer;">
                             <i class="fas fa-edit"></i> Editar Ubicación
                         </button>
                     </div>
                 </div>
-                <div id="seguimientoInfo" style="display: none; margin-top: 15px; padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #667eea;">
+                <div id="seguimientoInfo" style="display: none; margin-top: 15px; padding: 15px; background: #FDF5E6; border-radius: 8px; border-left: 4px solid #C7591F;">
                     <div class="info-item">
                         <span class="info-label">Número de Seguimiento</span>
                         <span class="info-value" id="numeroSeguimiento"></span>
@@ -249,7 +291,7 @@
             
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
                 <button type="button" onclick="cerrarModalCompletarDatos()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">Cancelar</button>
-                <button type="submit" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">Guardar Datos</button>
+                <button type="submit" style="padding: 10px 20px; background: #A0662F; color: white; border: none; border-radius: 5px; cursor: pointer;">Guardar Datos</button>
             </div>
         </form>
     </div>
@@ -299,7 +341,7 @@
             
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
                 <button type="button" onclick="cerrarEditarUbicacion()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">Cancelar</button>
-                <button type="submit" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">Guardar Cambios</button>
+                <button type="submit" style="padding: 10px 20px; background: #A0662F; color: white; border: none; border-radius: 5px; cursor: pointer;">Guardar Cambios</button>
             </div>
         </form>
     </div>

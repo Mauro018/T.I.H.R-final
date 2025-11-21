@@ -152,14 +152,14 @@
 }
 
 .media-actions-box .btn-info {
-    background: #5d9cec;
+    background: #A0662F;
     color: white;
 }
 
 .media-actions-box .btn-info:hover {
-    background: #4a89dc;
+    background: #7A3E0E;
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(93, 156, 236, 0.3);
+    box-shadow: 0 6px 15px rgba(160, 102, 47, 0.3);
 }
 
 .media-actions-box .btn-secondary {
@@ -196,14 +196,14 @@
 }
 
 .idea-media-buttons .btn-info {
-    background: #5d9cec;
+    background: #A0662F;
     color: white;
 }
 
 .idea-media-buttons .btn-info:hover {
-    background: #4a89dc;
+    background: #7A3E0E;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(93, 156, 236, 0.3);
+    box-shadow: 0 4px 8px rgba(160, 102, 47, 0.3);
 }
 
 /* Responsive */

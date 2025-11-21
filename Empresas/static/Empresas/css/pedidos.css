@@ -304,7 +304,7 @@
         }
         
         .tabla-pedidos thead {
-            background: #667eea;
+            background: linear-gradient(135deg, #A0662F, #7A3E0E);
             color: white;
         }
         
@@ -362,7 +362,7 @@
         }
         
         .btn-ver-detalles {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #A0662F, #7A3E0E);
             color: white;
             padding: 8px 20px;
             border: none;
@@ -377,7 +377,7 @@
         
         .btn-ver-detalles:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 12px rgba(160, 102, 47, 0.4);
         }
         
         .no-pedidos {
@@ -418,7 +418,7 @@
         }
         
         .modal-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #A0662F, #7A3E0E);
             color: white;
             padding: 20px;
             border-radius: 12px 12px 0 0;
@@ -455,7 +455,7 @@
         }
         
         .detalle-seccion h3 {
-            color: #667eea;
+            color: #A0662F;
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 2px solid #f0f0f0;
@@ -527,14 +527,14 @@
         
         .producto-precio {
             font-weight: 600;
-            color: #667eea;
+            color: #A0662F;
             font-size: 1.1rem;
         }
         
         .total-pedido {
             margin-top: 20px;
             padding: 15px;
-            background: #667eea;
+            background: linear-gradient(135deg, #A0662F, #7A3E0E);
             color: white;
             border-radius: 8px;
             text-align: right;

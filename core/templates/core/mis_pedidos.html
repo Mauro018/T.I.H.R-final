@@ -16,9 +16,9 @@
     <div class="sidebar-user-info">
         <a href="{% url 'perfilUsuario' %}" class="user-avatar-link">
             {% if cliente.foto_perfil %}
-                <img src="{{ cliente.foto_perfil.url }}" alt="Foto de perfil" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF; object-fit: cover;">
+                <img src="{{ cliente.foto_perfil.url }}" alt="Foto de perfil" width="50" height="50" style="border-radius: 50%; border: 2px solid #A0662F; object-fit: cover;">
             {% else %}
-                <img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF;">
+                <img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #A0662F;">
             {% endif %}
         </a>
         <span class="username-display">{{ cliente.usernameCliente }}</span>
@@ -27,7 +27,7 @@
     <ul>
         <li><a href="{% url 'productos' %}">Ofertas</a></li>
         <li><a href="{% url 'idea' %}">Crear Idea</a></li>
-        <li><a href="{% url 'mis_pedidos' %}" style="background-color: #0056b3; color: white;">Mis Pedidos</a></li>
+        <li><a href="{% url 'mis_pedidos' %}" style="background-color: #7A3E0E; color: white;">Mis Pedidos</a></li>
         <li><a href="{% url 'contact' %}">Contáctenos</a></li>
         <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
         <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
@@ -260,7 +260,49 @@
     </div>
 
     <footer>
-        <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">📞 Contáctenos</h3>
+                <div class="footer-info">
+                    <i>📞</i>
+                    <span>+57 300 123 4567</span>
+                </div>
+                <div class="footer-info">
+                    <i>✉️</i>
+                    <span>info@gangasca-tirr.com</span>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">📍 Dirección</h3>
+                <div class="footer-info">
+                    <i>📍</i>
+                    <span>Carrera 45 P. 26-85<br>RoyalA, Colombia</span>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">🌐 Síguenos</h3>
+                <div class="footer-social">
+                    <div class="social-container">
+                        <a href="https://www.instagram.com/tu_idea_hecha_realidad?igsh=Y3ByM2lyZGcwNHVy" class="social-icon" aria-label="Instagram">
+                            <span>📷</span>
+                        </a>
+                        <div class="social-username">@Gangazos Thir</div>
+                    </div>
+                    <div class="social-container">
+                        <a href="https://www.facebook.com/share/1ACEVZbZHV/" class="social-icon" aria-label="Facebook">
+                            <span>📘</span>
+                        </a>
+                        <div class="social-username">/gangazoz_thir</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2025 Tu Idea Herba Realidad - Todos los derechos reservados</p>
+        </div>
     </footer>
 </div>
 

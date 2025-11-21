@@ -61,8 +61,8 @@ h1 {
 
 .payment-methods label:hover,
 .payment-methods input[type="radio"]:checked + span + .payment-details {
-    border-color: #007bff;
-    background-color: #eaf6ff;
+    border-color: #A0662F;
+    background-color: #FDF5E6;
 }
 
 .payment-methods input[type="radio"] {
@@ -101,7 +101,7 @@ h1 {
     display: block;
     width: 100%;
     padding: 15px;
-    background-color: #28a745;
+    background-color: #6B8E23;
     color: white;
     border: none;
     border-radius: 4px;
@@ -118,7 +118,7 @@ h1 {
     display: block;
     text-align: center;
     margin-top: 20px;
-    color: #007bff;
+    color: #A0662F;
     text-decoration: none;
 }
 

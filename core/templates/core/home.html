@@ -14,7 +14,7 @@
     <nav class="landing-navbar">
         <div class="landing-nav-container">
             <div class="landing-nav-logo">
-                <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="50" height="50">
+                <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo">
                 <span>Gangazos</span>
             </div>
             <ul class="landing-nav-menu">
@@ -26,95 +26,112 @@
     </nav>
 
     <div class="main-content-wrapper">
+    
+    <!-- Carrusel de Categorías -->
+    <section class="carousel-hero">
+        <div class="carousel-hero-container">
+            <button class="carousel-hero-btn prev-btn" onclick="moveHeroCarousel(-1)">❮</button>
+            
+            <div class="carousel-hero-wrapper">
+                <div class="carousel-hero-track" id="heroTrack">
+                    <div class="carousel-hero-item">
+                        <img src="{% static 'core/img/Mesa.jpg' %}" alt="Mesas">
+                        <div class="carousel-hero-caption">
+                            <h2>Carpintería Artesanal</h2>
+                            <p>Muebles únicos hechos a mano con la mejor calidad</p>
+                        </div>
+                    </div>
+                    <div class="carousel-hero-item">
+                        <img src="{% static 'core/img/Sillas.jpg' %}" alt="Sillas">
+                        <div class="carousel-hero-caption">
+                            <h2>Sillas Elegantes</h2>
+                            <p>Diseños modernos y cómodos para tu hogar</p>
+                        </div>
+                    </div>
+                    <div class="carousel-hero-item">
+                        <img src="{% static 'core/img/Armario.jpg' %}" alt="Armarios">
+                        <div class="carousel-hero-caption">
+                            <h2>Almacenamiento</h2>
+                            <p>Armarios y cajoneras funcionales</p>
+                        </div>
+                    </div>
+                    <div class="carousel-hero-item">
+                        <img src="{% static 'core/img/Mesa.jpg' %}" alt="Escritorios">
+                        <div class="carousel-hero-caption">
+                            <h2>Escritorios</h2>
+                            <p>Espacios de trabajo personalizados</p>
+                        </div>
+                    </div>
+                    <div class="carousel-hero-item">
+                        <img src="{% static 'core/img/Sillas.jpg' %}" alt="Mesas">
+                        <div class="carousel-hero-caption">
+                            <h2>Mesas de Centro</h2>
+                            <p>El punto focal de tu sala de estar</p>
+                        </div>
+                    </div>
+                    <div class="carousel-hero-item">
+                        <img src="{% static 'core/img/Armario.jpg' %}" alt="Estanterías">
+                        <div class="carousel-hero-caption">
+                            <h2>Estanterías</h2>
+                            <p>Soluciones de almacenamiento con estilo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="carousel-hero-btn next-btn" onclick="moveHeroCarousel(1)">❯</button>
+        </div>
+        <div class="carousel-hero-indicators" id="heroIndicators"></div>
+    </section>
+
     <section>
         <div>
             <h2>GANGAZOS TIHR</h2>
             <br>
         </div>
-        <section class="seccion-at">
-        <div>
-            <h2>¡Gangazos! DISFRUTA BUENOS PRODUCTOS EN OFERTA Y DE BUENA CALIDAD.</h2>
-            <P>Disfruta de nuevos productos y en oferta que puedes que puedes llevar a buen precio 
-                y de buena calidad, donde apollas a personas y empresas que se dedican a hacer estos productos a base 
-                de ideas por los usuarios de nuestra plataforma. ¡Disfruta de nuestros productos en oferta!</P>
-        </div>
-        </section>
-        <br>
-        <section class="seccion-at">
-        <div>
-            <h2>Carpinteria</h2>
-            <p>En Tu Idea Hecha Realidad, diseñamos y creamos productos únicos, adaptados a tus necesidades y gustos. Trabajamos con la carpinteria 
-                para hacer diseños unicos en nuestras subcategorias a base de las ideas de nuestros usuarios y clientes, trabajamos en compañia de la 
-                empresa <b>""""""""""</b> para garanrizar diseños de alta calidad y originalidad.</p>
-            <p>Siguiendo al pie de la letra la idea de nuestros clientes y teniendo en sus necesidades para la realizacion del producto, diseñamos de 
-                acuerdo con las reglas de usuario para la creacion de las ideas para garantizar su seguridad y la nuestra.</p>
-        </div>
-        </section>
-        <div class="contenedor-articulos" id="contenedorArticulos">
-        <div class="articulo">
-            <img src="{% static 'core/img/Mesa.jpg' %}" alt="Imagen del Producto 1">
-            <div class="contenido-articulo">
-                <h3>MESAS</h3>
-                <p>Creacion de mesas a medida para la cultura, con un diseño elegante y moderno, diseñados a partir de sus ideas y gustos, 
-                    manteniendo la simplicidad y la elegancia de estas mesas.</p>
-            </div>
-        </div>
-
-        <div class="articulo">
-            <img src="{% static 'core/img/Sillas.jpg' %}" alt="Imagen del Producto 2"> 
-            <div class="contenido-articulo">
-                <h3>SILLAS</h3>
-                <p>Creacion de sillas a medida para la cultura, con un diseño elegante y moderno, diseñados a partir de sus ideas y gustos, 
-                    manteniendo la simplicidad y la elegancia de estas sillas.</p>
-            </div>
-        </div>
-
-        <div class="articulo">
-            <img src="{% static 'core/img/Armario.jpg' %}" alt="Imagen del Producto 3">
-            <div class="contenido-articulo">
-                <h3>ARMARIOS</h3>
-                <p>Creacion de armarios a medida para la cultura, con un diseño elegante y moderno, diseñados a partir de sus ideas y gustos, 
-                    manteniendo la simplicidad y la elegancia de estas armarios.</p>
-            </div>
-        </div>
-    </div>
-
-    <div id="modalDetalle" class="modal">
-        <div class="modal-contenido">
-            <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
-            <h2 id="modalTitulo"></h2>
-            <img id="modalImagen" src="" alt="Imagen del Producto" style="width:100%; height:auto; max-height: 350px; object-fit: contain; margin-bottom: 15px;">
-            <p id="modalDescripcion"></p>
-            <div id="modalPrecio" style="font-size: 1.5em; font-weight: bold; color: #28a745; margin-top: 10px;"></div>
-        </div>
-    </div>
     </section>
-<br>
-    <section>
-        <section class="seccion-at">
-        <div>
-            <h2>¿Por qué aprovechar los diferentes gangazos?</h2>
-            <p>Aprovechar los gangazos no solo es una excelente manera de comprar de forma inteligente, 
-                sino también una oportunidad de maximizar el valor de cada peso que inviertes. Aquí te explicamos por qué:</p>
-            <ul>
-                <li><p><b>Beneficio 1: Ahorra dinero.</b></p>
-                <li><p>Los gangazos te permiten acceder a productos y servicios a precios reducidos sin sacrificar la calidad. 
-                    Esto significa que puedes cuidar tu presupuesto, comprar más por menos y destinar tus ahorros a otras prioridades 
-                    o gustos personales. Ideal para quienes quieren cuidar su economía sin dejar de disfrutar de lo mejor.</p></li>
-                </li>
-                <li><p><b>Beneficio 2: Obtén calidad superior.</b></p>
-                <li><p>Muchas ofertas especiales incluyen artículos de alta gama o con excelente reputación en el mercado. Al aprovechar 
-                    estos descuentos, puedes llevarte a casa productos de gran calidad que quizás no adquirirías a precio completo. Es la 
-                    oportunidad perfecta para elevar tus estándares sin elevar tus gastos.</p></li>
-                </li>
-                <li><p><b>Beneficio 3: Disfruta de características exclusivas.</b></p>
-                <li><p>Algunos gangazos incluyen ediciones limitadas, productos con diseños únicos o servicios con beneficios adicionales 
-                    que normalmente no están disponibles. Esto te permite disfrutar de una experiencia más personalizada y especial, 
-                    diferenciándote con artículos o servicios únicos y de alto valor.</p></li>
-                </li>
-            </ul>
+
+    <!-- Sección contenido en columnas -->
+    <section class="seccion-at">
+        <div class="content-columns">
+            <div class="content-column">
+                <h2>¿QUIENES SOMOS?</h2>
+                <p>En Tu Idea Hecha Realidad, diseñamos y creamos productos únicos, adaptados a tus necesidades y gustos. Trabajamos con la carpintería para hacer diseños únicos en nuestras subcategorías a base de las ideas de nuestros usuarios y clientes tanto de la empresa para garantizar diseños de alta calidad y originalidad.</p>
+            </div>
+            <div class="content-column">
+                <h2>GANGAZOS</h2>
+                <p>Disfruta de nuevos productos y en oferta que puedes que puedes llevar a buen precio y de buena calidad, donde apollas a personas y empresas que se dedican a hacer estos productos a base de ideas por los usuarios de nuestra plataforma. ¡Disfruta de nuestros productos en oferta!</p>
+            </div>
         </div>
-        </section>
+    </section>
+    <br>
+    <section class="seccion-at">
+        <div style="max-width: 1400px; margin: 0 auto; padding: 0 3rem;">
+            <h2 style="text-align: center;">¿Por qué aprovechar los diferentes gangazos?</h2>
+            <p style="text-align: center; font-size: 1.1rem; color: #555; max-width: 900px; margin: 0 auto 2rem;">Aprovechar los gangazos no solo es una excelente manera de comprar de forma inteligente, 
+                sino también una oportunidad de maximizar el valor de cada peso que inviertes.</p>
+        </div>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <span class="benefit-icon">💰</span>
+                <h3>Ahorra dinero</h3>
+                <p>Los gangazos te permiten acceder a productos y servicios a precios reducidos sin sacrificar la calidad. 
+                    Esto significa que puedes cuidar tu presupuesto, comprar más por menos y destinar tus ahorros a otras prioridades 
+                    o gustos personales.</p>
+            </div>
+            <div class="benefit-card">
+                <span class="benefit-icon">⭐</span>
+                <h3>Calidad superior</h3>
+                <p>Muchas ofertas especiales incluyen artículos de alta gama o con excelente reputación en el mercado. Al aprovechar 
+                    estos descuentos, puedes llevarte a casa productos de gran calidad que quizás no adquirirías a precio completo.</p>
+            </div>
+            <div class="benefit-card">
+                <span class="benefit-icon">🎁</span>
+                <h3>Características exclusivas</h3>
+                <p>Algunos gangazos incluyen ediciones limitadas, productos con diseños únicos o servicios con beneficios adicionales 
+                    que normalmente no están disponibles. Esto te permite disfrutar de una experiencia más personalizada y especial.</p>
+            </div>
+        </div>
     </section>
 
     <section>
@@ -122,16 +139,73 @@
             <h2></h2>
         </div>
     </section>
+    <!-- Sección Productos Disponibles -->
     <section>
-        <section class="seccion-at">
-            <div class=".div">
-                <h2>¡Actúa ahora!</h2>
-            <div class="imagen-oferta">
-                <img src="{% static 'core/img/Descuento.jfif' %}" alt="Descuentos" height="200" width="200"> 
+        <div>
+            <h2>Productos Disponibles</h2>
+        </div>
+        <div class="productos-disponibles-grid">
+            <div class="producto-card">
+                <img src="{% static 'core/img/Mesa.jpg' %}" alt="Mesa de Centro Roble">
+                <div class="producto-info">
+                    <h3>Mesa de Centro Roble</h3>
+                    <div class="producto-precio">
+                        <span class="precio-original">$450.000</span>
+                        <span class="precio-oferta">$320.000</span>
+                    </div>
+                </div>
             </div>
-            <p>La oferta termina pronto. ¡No esperes más!</p>
+            <div class="producto-card">
+                <img src="{% static 'core/img/Sillas.jpg' %}" alt="Silla Artesanal">
+                <div class="producto-info">
+                    <h3>Silla Artesanal</h3>
+                    <div class="producto-precio">
+                        <span class="precio-original">$180.000</span>
+                        <span class="precio-oferta">$120.000</span>
+                    </div>
+                </div>
             </div>
-        </section>
+            <div class="producto-card">
+                <img src="{% static 'core/img/Armario.jpg' %}" alt="Estantería Flotante">
+                <div class="producto-info">
+                    <h3>Estantería Flotante</h3>
+                    <div class="producto-precio">
+                        <span class="precio-original">$280.000</span>
+                        <span class="precio-oferta">$190.000</span>
+                    </div>
+                </div>
+            </div>
+            <div class="producto-card">
+                <img src="{% static 'core/img/Mesa.jpg' %}" alt="Escritorio Moderno">
+                <div class="producto-info">
+                    <h3>Escritorio Moderno</h3>
+                    <div class="producto-precio">
+                        <span class="precio-original">$520.000</span>
+                        <span class="precio-oferta">$380.000</span>
+                    </div>
+                </div>
+            </div>
+            <div class="producto-card">
+                <img src="{% static 'core/img/Sillas.jpg' %}" alt="Sillas Comedor">
+                <div class="producto-info">
+                    <h3>Sillas Comedor</h3>
+                    <div class="producto-precio">
+                        <span class="precio-original">$350.000</span>
+                        <span class="precio-oferta">$245.000</span>
+                    </div>
+                </div>
+            </div>
+            <div class="producto-card">
+                <img src="{% static 'core/img/Armario.jpg' %}" alt="Cajonera Vintage">
+                <div class="producto-info">
+                    <h3>Cajonera Vintage</h3>
+                    <div class="producto-precio">
+                        <span class="precio-original">$420.000</span>
+                        <span class="precio-oferta">$295.000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
     <br>
     <section class="comments-section">
@@ -194,11 +268,131 @@
         </section>
     </section>
     <footer>
-        <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">📞 Contáctenos</h3>
+                <div class="footer-info">
+                    <i>📞</i>
+                    <span>+57 300 123 4567</span>
+                </div>
+                <div class="footer-info">
+                    <i>✉️</i>
+                    <span>info@gangasca-tirr.com</span>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">📍 Dirección</h3>
+                <div class="footer-info">
+                    <i>📍</i>
+                    <span>Carrera 45 P. 26-85<br>RoyalA, Colombia</span>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">🌐 Síguenos</h3>
+                <div class="footer-social">
+                    <div class="social-container">
+                        <a href="https://www.instagram.com/tu_idea_hecha_realidad?igsh=Y3ByM2lyZGcwNHVy" class="social-icon" aria-label="Instagram">
+                            <span>📷</span>
+                        </a>
+                        <div class="social-username">@Gangazos Thir</div>
+                    </div>
+                    <div class="social-container">
+                        <a href="https://www.facebook.com/share/1ACEVZbZHV/" class="social-icon" aria-label="Facebook">
+                            <span>📘</span>
+                        </a>
+                        <div class="social-username">/gangazoz_thir</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2025 Tu Idea Herba Realidad - Todos los derechos reservados</p>
+        </div>
     </footer>
 </div>
 
 <script>
+    // Carrusel Hero de Categorías
+    let currentHeroIndex = 0;
+    let heroAutoplayInterval;
+
+    function initHeroCarousel() {
+        const track = document.getElementById('heroTrack');
+        const items = track.querySelectorAll('.carousel-hero-item');
+        const indicatorsContainer = document.getElementById('heroIndicators');
+        
+        // Crear indicadores
+        items.forEach((_, index) => {
+            const indicator = document.createElement('span');
+            indicator.className = 'indicator';
+            indicator.onclick = () => goToHero(index);
+            indicatorsContainer.appendChild(indicator);
+        });
+        
+        updateHeroCarousel();
+        startHeroAutoplay();
+        
+        // Event listeners para pausar en hover
+        const container = document.querySelector('.carousel-hero-container');
+        container.addEventListener('mouseenter', pauseHeroAutoplay);
+        container.addEventListener('mouseleave', startHeroAutoplay);
+    }
+
+    function updateHeroCarousel() {
+        const track = document.getElementById('heroTrack');
+        const items = track.querySelectorAll('.carousel-hero-item');
+        const indicators = document.querySelectorAll('#heroIndicators .indicator');
+        
+        if (items.length === 0) return;
+        
+        const offset = -(currentHeroIndex * 100);
+        track.style.transform = `translateX(${offset}%)`;
+        
+        // Actualizar indicadores
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentHeroIndex);
+        });
+    }
+
+    function moveHeroCarousel(direction) {
+        const track = document.getElementById('heroTrack');
+        const items = track.querySelectorAll('.carousel-hero-item');
+        
+        currentHeroIndex += direction;
+        
+        if (currentHeroIndex < 0) {
+            currentHeroIndex = items.length - 1;
+        } else if (currentHeroIndex >= items.length) {
+            currentHeroIndex = 0;
+        }
+        
+        updateHeroCarousel();
+    }
+
+    function goToHero(index) {
+        currentHeroIndex = index;
+        updateHeroCarousel();
+    }
+
+    function startHeroAutoplay() {
+        if (heroAutoplayInterval) {
+            clearInterval(heroAutoplayInterval);
+        }
+        heroAutoplayInterval = setInterval(() => {
+            moveHeroCarousel(1);
+        }, 4000);
+    }
+
+    function pauseHeroAutoplay() {
+        if (heroAutoplayInterval) {
+            clearInterval(heroAutoplayInterval);
+            heroAutoplayInterval = null;
+        }
+    }
+
     // Carrusel de Comentarios
     let currentComentarioIndex = 0;
     let comentariosAutoplayInterval;
@@ -311,8 +505,11 @@
         }, COMENTARIOS_RESUME_DELAY);
     }
 
-    // Inicializar carrusel cuando carga la página
-    document.addEventListener('DOMContentLoaded', initComentariosCarousel);
+    // Inicializar carruseles cuando carga la página
+    document.addEventListener('DOMContentLoaded', () => {
+        initHeroCarousel();
+        initComentariosCarousel();
+    });
     
     // Actualizar en resize
     window.addEventListener('resize', updateComentariosCarousel);

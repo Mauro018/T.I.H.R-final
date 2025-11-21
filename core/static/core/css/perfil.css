@@ -6,7 +6,7 @@
 }
 
 .perfil-header-card {
-    background: #003366;
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     border-radius: 15px;
     padding: 40px;
     text-align: center;
@@ -36,7 +36,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #667eea;
+    color: #A0662F;
     font-size: 64px;
     font-weight: bold;
     border: 5px solid white;
@@ -56,7 +56,7 @@
 
 .btn-editar-perfil {
     background: white;
-    color: #667eea;
+    color: #A0662F;
     padding: 12px 30px;
     border-radius: 25px;
     text-decoration: none;
@@ -138,7 +138,7 @@
 .articulo-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    border-color: #667eea;
+    border-color: #A0662F;
 }
 
 .articulo-imagen {
@@ -166,7 +166,7 @@
 }
 
 .articulo-precio {
-    color: #667eea;
+    color: #A0662F;
     font-size: 18px;
     font-weight: 600;
 }
@@ -207,7 +207,7 @@
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid #667eea;
+    border: 4px solid #A0662F;
     margin-bottom: 15px;
 }
 
@@ -215,7 +215,7 @@
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -249,7 +249,7 @@
 
 .form-control:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #A0662F;
 }
 
 .file-input-wrapper {
@@ -268,7 +268,7 @@
     display: block;
     padding: 12px 15px;
     background: #f8f9fa;
-    border: 2px dashed #667eea;
+    border: 2px dashed #A0662F;
     border-radius: 8px;
     text-align: center;
     cursor: pointer;
@@ -314,18 +314,18 @@
 }
 
 .btn-primary {
-    background: #003366;
+    background: #A0662F;
     color: white;
 }
 
 .btn-primary:hover {
-    background: #00264d;
+    background: #7A3E0E;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 51, 102, 0.4);
+    box-shadow: 0 5px 15px rgba(160, 102, 47, 0.4);
 }
 
 .btn-secondary {
-    background: #6c757d;
+    background: #A0662F;
     color: white;
 }
 
@@ -346,7 +346,7 @@
 .alert-success {
     background: #d4edda;
     color: #155724;
-    border-left: 4px solid #28a745;
+    border-left: 4px solid #6B8E23;
 }
 
 .alert-error {

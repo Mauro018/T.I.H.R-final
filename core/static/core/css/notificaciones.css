@@ -374,14 +374,14 @@
 }
 
 .btn-otorgar-permiso:disabled {
-    background: #6c757d;
+    background: #A0662F;
     cursor: not-allowed;
     transform: none;
 }
 
 .permiso-otorgado {
     background: #d4edda !important;
-    border-color: #28a745 !important;
+    border-color: #6B8E23 !important;
     color: #155724 !important;
 }
 

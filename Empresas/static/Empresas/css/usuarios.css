@@ -66,12 +66,12 @@
 
 .modal-content .form-group input:focus {
     outline: none;
-    border-color: #5d9cec;
+    border-color: #A0662F;
 }
 
 /* Estilos de botones específicos para usuarios */
 .action-links .edit-user {
-    background-color: #5d9cec;
+    background-color: #A0662F;
 }
 
 .action-links .disable-user {

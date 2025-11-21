@@ -38,7 +38,7 @@
     width: 45px;
     height: 45px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -129,11 +129,11 @@
 
 .form-control:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #A0662F;
 }
 
 .btn-primary {
-    background: #003366;
+    background: #A0662F;
     color: white;
     border: none;
     padding: 12px 30px;
@@ -145,7 +145,7 @@
 }
 
 .btn-primary:hover {
-    background: #00264d;
+    background: #7A3E0E;
     transform: translateY(-2px);
 }
 

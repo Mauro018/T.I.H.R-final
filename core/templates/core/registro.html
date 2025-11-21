@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'core/css/StylesRegistro.css' %}">
 </head>
-<body>
+<body class="landing-page">
+
     <div class="container">
         <form class="form-glass" method="POST" id="registerForm">
             {% csrf_token %}
@@ -56,11 +57,6 @@
                 ¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a>
             </div>
         </form>
-    </div>
-
-    <!-- The back button section -->
-    <div class="back-link-container">
-        <a href="{% url 'home' %}" class="btn-back-to-home">← Volver a Inicio</a>
     </div>
 
 </body>
