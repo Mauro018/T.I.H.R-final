@@ -38,11 +38,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="nombre_completo">Nombre Completo <span class="required">*</span></label>
-                        <input type="text" id="nombre_completo" name="nombre_completo" required>
+                        <input type="text" id="nombre_completo" name="nombre_completo" value="{{ cliente.nombre_completo|default:'' }}" required>
                     </div>
                     <div class="form-group">
                         <label for="telefono">Teléfono <span class="required">*</span></label>
-                        <input type="tel" id="telefono" name="telefono" required placeholder="Ej: 3001234567">
+                        <input type="tel" id="telefono" name="telefono" value="{{ cliente.telefono|default:'' }}" required placeholder="Ej: 3001234567">
                     </div>
                 </div>
             </div>
@@ -51,23 +51,30 @@
                 <h2>Dirección de Envío</h2>
                 <div class="form-group">
                     <label for="direccion">Dirección Completa <span class="required">*</span></label>
-                    <input type="text" id="direccion" name="direccion" required placeholder="Calle, número, apartamento, etc.">
+                    <input type="text" id="direccion" name="direccion" value="{{ cliente.direccion|default:'' }}" required placeholder="Calle, número, apartamento, etc.">
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="ciudad">Ciudad <span class="required">*</span></label>
-                        <input type="text" id="ciudad" name="ciudad" required>
+                        <input type="text" id="ciudad" name="ciudad" value="{{ cliente.ciudad|default:'' }}" required>
                     </div>
                     <div class="form-group">
                         <label for="departamento">Departamento <span class="required">*</span></label>
-                        <input type="text" id="departamento" name="departamento" required>
+                        <input type="text" id="departamento" name="departamento" value="{{ cliente.departamento|default:'' }}" required>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="codigo_postal">Código Postal (Opcional)</label>
-                    <input type="text" id="codigo_postal" name="codigo_postal" placeholder="Ej: 110111">
+                    <input type="text" id="codigo_postal" name="codigo_postal" value="{{ cliente.codigo_postal|default:'' }}" placeholder="Ej: 110111">
+                </div>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" name="guardar_direccion" style="margin-right: 10px;" checked>
+                        <span>Guardar/Actualizar esta dirección como predeterminada para futuros pedidos</span>
+                    </label>
                 </div>
             </div>
 

@@ -59,6 +59,14 @@ class UserClientes(models.Model):
     status_changed_at = models.DateTimeField(null=True, blank=True)
     foto_perfil = models.ImageField(upload_to='uploads/perfiles/', blank=True, null=True)
     
+    # Dirección predeterminada para envíos
+    nombre_completo = models.CharField(max_length=200, blank=True, null=True)
+    telefono = models.CharField(max_length=20, blank=True, null=True)
+    direccion = models.CharField(max_length=300, blank=True, null=True)
+    ciudad = models.CharField(max_length=100, blank=True, null=True)
+    departamento = models.CharField(max_length=100, blank=True, null=True)
+    codigo_postal = models.CharField(max_length=10, blank=True, null=True)
+    
     def save(self, *args, **kwargs):
         if self.is_active != getattr(self, '_original_is_active', True):
             self.status_changed_at = timezone.now()
@@ -90,6 +98,7 @@ class Idea(models.Model):
         ('en_proceso', 'En Proceso'),
         ('completada', 'Completada'),
         ('finalizada', 'Finalizada'),
+        ('rechazada', 'Rechazada'),
     ]
     
     titulo = models.CharField(max_length=100)
@@ -221,3 +230,20 @@ class Pedido(models.Model):
     
     def __str__(self):
         return f"Pedido #{self.id} - {self.cliente.usernameCliente} - {self.get_estado_display()}"
+
+
+class MensajePago(models.Model):
+    """Modelo para almacenar mensajes entre empresa y cliente sobre un pago"""
+    pago = models.ForeignKey(Pago, on_delete=models.CASCADE, related_name='mensajes')
+    remitente_tipo = models.CharField(max_length=10, choices=[('empresa', 'Empresa'), ('cliente', 'Cliente')])
+    remitente_nombre = models.CharField(max_length=100)  # username de quien envía
+    mensaje = models.TextField(max_length=1000)
+    imagen = models.ImageField(upload_to='uploads/chat_pagos/', blank=True, null=True)
+    fecha_envio = models.DateTimeField(auto_now_add=True)
+    leido = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['fecha_envio']
+    
+    def __str__(self):
+        return f"{self.remitente_tipo} - Pago #{self.pago.id} - {self.fecha_envio}"

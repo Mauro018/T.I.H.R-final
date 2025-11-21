@@ -1,0 +1,585 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Pedidos | Gangazos</title>
+    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/carrito.css' %}">
+    <link rel="stylesheet" href="{% static 'Empresas/css/pedidos.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<!-- Sidebar Navigation -->
+<aside class="sidebar">
+    <div class="sidebar-user-info">
+        <a href="{% url 'perfilUsuario' %}" class="user-avatar-link">
+            {% if cliente.foto_perfil %}
+                <img src="{{ cliente.foto_perfil.url }}" alt="Foto de perfil" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF; object-fit: cover;">
+            {% else %}
+                <img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #007BFF;">
+            {% endif %}
+        </a>
+        <span class="username-display">{{ cliente.usernameCliente }}</span>
+    </div>
+    <h2 class="h2-side">Menú</h2>
+    <ul>
+        <li><a href="{% url 'productos' %}">Ofertas</a></li>
+        <li><a href="{% url 'idea' %}">Crear Idea</a></li>
+        <li><a href="{% url 'mis_pedidos' %}" style="background-color: #0056b3; color: white;">Mis Pedidos</a></li>
+        <li><a href="{% url 'contact' %}">Contáctenos</a></li>
+        <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
+        <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
+    </ul>
+
+    <!-- FILTROS -->
+    <div class="filtros">
+        <h3>Filtrar productos</h3>
+        <h2 for="categoria" class="h2-side">Categoría:</h2>
+        <select id="categoria">
+            <option value="">Elegir Categoria</option> 
+            <option value="carpinteria">Armarios</option>
+            <option value="marroquineria">Escritorios</option>
+            <option value="vidrieria">Sillas</option>
+            <option value="metaleria">Cajoneras</option>
+            <option value="ceramica">Mesas</option>
+            <option value="tapiceria">Utensilios</option>
+        </select>
+    </div>
+</aside>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="main-content-wrapper">
+    <header>
+        <h1>
+            <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="75" height="75">
+            Mis Pedidos
+        </h1>
+        <p class="subtitulo">Sigue el estado de tus compras en tiempo real</p>
+    </header>
+
+    {% if pedidos_sin_datos %}
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0 0 10px 0; display: flex; align-items: center;">
+                <i class="fas fa-exclamation-circle" style="margin-right: 10px; font-size: 24px;"></i>
+                ¡Acción Requerida!
+            </h3>
+            <p style="margin: 0 0 15px 0;">Tienes {{ pedidos_sin_datos|length }} pedido{{ pedidos_sin_datos|length|pluralize }} pendiente{{ pedidos_sin_datos|length|pluralize }} de completar datos de envío.</p>
+            {% for pedido in pedidos_sin_datos %}
+                <button onclick="abrirModalCompletarDatos({{ pedido.id }}, {{ pedido.numero_secuencial }})" style="display: inline-block; background: white; color: #667eea; padding: 10px 20px; border-radius: 5px; border: none; font-weight: bold; margin-right: 10px; margin-top: 5px; cursor: pointer;">
+                    <i class="fas fa-map-marker-alt"></i> Completar Pedido #{{ pedido.numero_secuencial }}
+                </button>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if pedidos %}
+        <div class="tabla-pedidos">
+            <table>
+                <thead>
+                    <tr>
+                        <th>N° Pedido</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pedido in pedidos %}
+                    <tr>
+                        <td><strong>#{{ pedido.numero_secuencial }}</strong></td>
+                        <td>{{ pedido.fecha_creacion|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <span class="badge-estado badge-{{ pedido.estado }}">
+                                {{ pedido.get_estado_display }}
+                            </span>
+                        </td>
+                        <td><strong>${{ pedido.monto_total }}</strong></td>
+                        <td>
+                            <button class="btn-ver-detalles" 
+                                    data-pedido-id="{{ pedido.id }}"
+                                    onclick="verDetallesPedidoById({{ pedido.id }})">
+                                Ver Detalles
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="no-pedidos">
+            <i class="fas fa-box-open"></i>
+            <h2>No tienes pedidos aún</h2>
+            <p>Cuando realices una compra, aparecerá aquí</p>
+            <a href="{% url 'productos' %}" class="btn-ver-detalles" style="margin-top: 20px;">
+                Ir a Comprar
+            </a>
+        </div>
+    {% endif %}
+
+    <footer style="margin-top: 50px; text-align: center; padding: 20px; color: #6b7280;">
+        <p>&copy; 2025 Tu Idea Hecha Realidad</p>
+    </footer>
+</div>
+
+<!-- Modal Detalles del Pedido -->
+<div id="modalDetallesPedido" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Detalles del Pedido #<span id="numeroPedidoSecuencial"></span></h2>
+            <button class="close" onclick="cerrarModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <!-- Información General -->
+            <div class="detalle-seccion">
+                <h3><i class="fas fa-info-circle"></i> Información General</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Estado</span>
+                        <span class="info-value" id="estadoPedido"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fecha del Pedido</span>
+                        <span class="info-value" id="fechaPedido"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Datos de Envío -->
+            <div class="detalle-seccion" id="seccionEnvio" style="display: none;">
+                <h3><i class="fas fa-shipping-fast"></i> Datos de Envío</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Nombre Completo</span>
+                        <span class="info-value" id="nombreCompleto"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Teléfono</span>
+                        <span class="info-value" id="telefono"></span>
+                    </div>
+                    <div class="info-item" style="grid-column: 1 / -1;">
+                        <span class="info-label">Dirección</span>
+                        <span class="info-value" id="direccionCompleta"></span>
+                    </div>
+                    <div class="info-item" style="grid-column: 1 / -1;">
+                        <button type="button" class="btn-editar-ubicacion" onclick="abrirEditarUbicacion()" style="margin-top: 10px; padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            <i class="fas fa-edit"></i> Editar Ubicación
+                        </button>
+                    </div>
+                </div>
+                <div id="seguimientoInfo" style="display: none; margin-top: 15px; padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <div class="info-item">
+                        <span class="info-label">Número de Seguimiento</span>
+                        <span class="info-value" id="numeroSeguimiento"></span>
+                    </div>
+                    <div class="info-item" style="margin-top: 10px;">
+                        <span class="info-label">Empresa de Envío</span>
+                        <span class="info-value" id="empresaEnvio"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Productos -->
+            <div class="detalle-seccion">
+                <h3><i class="fas fa-box"></i> Productos del Pedido</h3>
+                <div class="productos-lista" id="productosLista">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Total -->
+            <div class="total-pedido">
+                Total: $<span id="totalPedido"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Completar Datos de Envío -->
+<div id="modalCompletarDatos" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h2><i class="fas fa-shipping-fast"></i> Completar Datos de Envío - Pedido #<span id="numeroPedidoCompletar"></span></h2>
+            <button class="close" onclick="cerrarModalCompletarDatos()">&times;</button>
+        </div>
+        <form id="formCompletarDatos" method="POST" style="padding: 20px;">
+            {% csrf_token %}
+            <input type="hidden" id="pedido_id_completar" name="pedido_id">
+            
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Nombre Completo <span style="color: red;">*</span></label>
+                <input type="text" id="completar_nombre_completo" name="nombre_completo" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Teléfono <span style="color: red;">*</span></label>
+                <input type="tel" id="completar_telefono" name="telefono" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Dirección Completa <span style="color: red;">*</span></label>
+                <input type="text" id="completar_direccion" name="direccion" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div class="form-group">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Ciudad <span style="color: red;">*</span></label>
+                    <input type="text" id="completar_ciudad" name="ciudad" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div class="form-group">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Departamento <span style="color: red;">*</span></label>
+                    <input type="text" id="completar_departamento" name="departamento" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Código Postal (Opcional)</label>
+                <input type="text" id="completar_codigo_postal" name="codigo_postal" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" name="guardar_direccion" id="completar_guardar_direccion" checked style="margin-right: 10px;">
+                    <span>Guardar como dirección predeterminada para futuros pedidos</span>
+                </label>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" onclick="cerrarModalCompletarDatos()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">Cancelar</button>
+                <button type="submit" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">Guardar Datos</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Editar Ubicación -->
+<div id="modalEditarUbicacion" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h2><i class="fas fa-map-marker-alt"></i> Editar Ubicación de Entrega</h2>
+            <button class="close" onclick="cerrarEditarUbicacion()">&times;</button>
+        </div>
+        <form id="formEditarUbicacion" method="POST" style="padding: 20px;">
+            {% csrf_token %}
+            <input type="hidden" id="pedido_id_editar" name="pedido_id">
+            
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Nombre Completo <span style="color: red;">*</span></label>
+                <input type="text" id="edit_nombre_completo" name="nombre_completo" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Teléfono <span style="color: red;">*</span></label>
+                <input type="tel" id="edit_telefono" name="telefono" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Dirección Completa <span style="color: red;">*</span></label>
+                <input type="text" id="edit_direccion" name="direccion" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div class="form-group">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Ciudad <span style="color: red;">*</span></label>
+                    <input type="text" id="edit_ciudad" name="ciudad" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div class="form-group">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Departamento <span style="color: red;">*</span></label>
+                    <input type="text" id="edit_departamento" name="departamento" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Código Postal (Opcional)</label>
+                <input type="text" id="edit_codigo_postal" name="codigo_postal" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" onclick="cerrarEditarUbicacion()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">Cancelar</button>
+                <button type="submit" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">Guardar Cambios</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Datos del cliente actual
+const clienteData = {
+    nombreCompleto: "{{ cliente.nombre_completo|default:'' }}",
+    telefono: "{{ cliente.telefono|default:'' }}",
+    direccion: "{{ cliente.direccion|default:'' }}",
+    ciudad: "{{ cliente.ciudad|default:'' }}",
+    departamento: "{{ cliente.departamento|default:'' }}",
+    codigoPostal: "{{ cliente.codigo_postal|default:'' }}"
+};
+
+// Almacenar datos de pedidos
+const pedidosData = {
+    {% for pedido in pedidos %}
+    {{ pedido.id }}: {
+        id: {{ pedido.id }},
+        numeroSecuencial: {{ pedido.numero_secuencial }},
+        productos: {{ pedido.productos_json|safe }},
+        estado: "{{ pedido.get_estado_display }}",
+        fecha: "{{ pedido.fecha_creacion|date:'d/m/Y H:i' }}",
+        total: "{{ pedido.monto_total }}",
+        nombre: "{{ pedido.nombre_completo|default:'' }}",
+        telefono: "{{ pedido.telefono|default:'' }}",
+        direccion: "{{ pedido.direccion|default:'' }}",
+        ciudad: "{{ pedido.ciudad|default:'' }}",
+        departamento: "{{ pedido.departamento|default:'' }}",
+        codigo_postal: "{{ pedido.codigo_postal|default:'' }}",
+        seguimiento: "{{ pedido.numero_seguimiento|default:'' }}",
+        empresaEnvio: "{{ pedido.empresa_envio|default:'' }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+};
+
+function verDetallesPedidoById(pedidoId) {
+    try {
+        const pedido = pedidosData[pedidoId];
+        if (!pedido) {
+            console.error('Pedido no encontrado:', pedidoId);
+            alert('Error al cargar los detalles del pedido');
+            return;
+        }
+        
+        verDetallesPedido(
+            pedido.id,
+            pedido.numeroSecuencial,
+            pedido.productos,
+            pedido.estado,
+            pedido.fecha,
+            pedido.total,
+            pedido.nombre,
+            pedido.telefono,
+            pedido.direccion,
+            pedido.ciudad,
+            pedido.departamento,
+            pedido.seguimiento,
+            pedido.empresaEnvio
+        );
+    } catch (error) {
+        console.error('Error al cargar detalles:', error);
+        alert('Error al cargar los detalles del pedido');
+    }
+}
+
+function verDetallesPedido(id, numeroSecuencial, productos, estado, fecha, total, nombre, telefono, direccion, ciudad, departamento, seguimiento, empresaEnvio) {
+    // Guardar el ID del pedido actual
+    pedidoIdActual = id;
+    
+    document.getElementById('numeroPedidoSecuencial').textContent = numeroSecuencial;
+    document.getElementById('estadoPedido').textContent = estado;
+    document.getElementById('fechaPedido').textContent = fecha;
+    document.getElementById('totalPedido').textContent = total;
+    
+    // Datos de envío
+    if (nombre && telefono && direccion) {
+        document.getElementById('seccionEnvio').style.display = 'block';
+        document.getElementById('nombreCompleto').textContent = nombre;
+        document.getElementById('telefono').textContent = telefono;
+        document.getElementById('direccionCompleta').textContent = `${direccion}, ${ciudad}, ${departamento}`;
+        
+        if (seguimiento) {
+            document.getElementById('seguimientoInfo').style.display = 'block';
+            document.getElementById('numeroSeguimiento').textContent = seguimiento;
+            document.getElementById('empresaEnvio').textContent = empresaEnvio || 'No especificada';
+        } else {
+            document.getElementById('seguimientoInfo').style.display = 'none';
+        }
+    } else {
+        document.getElementById('seccionEnvio').style.display = 'none';
+    }
+    
+    // Productos
+    const productosLista = document.getElementById('productosLista');
+    productosLista.innerHTML = '';
+    
+    console.log('Productos recibidos:', productos);
+    
+    if (productos && productos.length > 0) {
+        productos.forEach(producto => {
+            console.log('Procesando producto:', producto);
+            
+            const div = document.createElement('div');
+            div.className = 'producto-item';
+            
+            // Crear elemento de imagen o placeholder
+            let imagenHTML = '';
+            if (producto.imagen && producto.imagen !== 'None' && producto.imagen !== '') {
+                console.log('Imagen encontrada:', producto.imagen);
+                imagenHTML = `<img src="${producto.imagen}" alt="${producto.nombre || 'Producto'}" class="producto-imagen" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                              <div style="width: 80px; height: 80px; background: #e5e7eb; border-radius: 8px; display: none; align-items: center; justify-content: center;">
+                                  <i class="fas fa-image" style="color: #9ca3af; font-size: 2rem;"></i>
+                              </div>`;
+            } else {
+                console.log('Sin imagen, mostrando placeholder');
+                imagenHTML = `<div style="width: 80px; height: 80px; background: #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                  <i class="fas fa-image" style="color: #9ca3af; font-size: 2rem;"></i>
+                              </div>`;
+            }
+            
+            div.innerHTML = `
+                ${imagenHTML}
+                <div class="producto-info">
+                    <div class="producto-nombre">${producto.nombre || 'Producto sin nombre'}</div>
+                    <div class="producto-detalles">
+                        Cantidad: ${producto.cantidad || 0} | Precio unitario: $${producto.precio || 0}
+                    </div>
+                </div>
+                <div class="producto-precio">
+                    $${((producto.precio || 0) * (producto.cantidad || 0)).toFixed(2)}
+                </div>
+            `;
+            productosLista.appendChild(div);
+        });
+    } else {
+        productosLista.innerHTML = '<p style="text-align: center; color: #6b7280;">No hay productos para mostrar</p>';
+    }
+    
+    document.getElementById('modalDetallesPedido').style.display = 'block';
+}
+
+function cerrarModal() {
+    document.getElementById('modalDetallesPedido').style.display = 'none';
+}
+
+// Variables globales para edición
+let pedidoIdActual = null;
+
+function abrirEditarUbicacion() {
+    // Obtener el pedido actual de pedidosData
+    const pedido = pedidosData[pedidoIdActual];
+    if (!pedido) return;
+    
+    // Prellenar el formulario con los datos actuales
+    document.getElementById('pedido_id_editar').value = pedido.id;
+    document.getElementById('edit_nombre_completo').value = pedido.nombre || '';
+    document.getElementById('edit_telefono').value = pedido.telefono || '';
+    document.getElementById('edit_direccion').value = pedido.direccion || '';
+    document.getElementById('edit_ciudad').value = pedido.ciudad || '';
+    document.getElementById('edit_departamento').value = pedido.departamento || '';
+    document.getElementById('edit_codigo_postal').value = pedido.codigo_postal || '';
+    
+    // Mostrar el modal de edición
+    document.getElementById('modalEditarUbicacion').style.display = 'block';
+}
+
+function cerrarEditarUbicacion() {
+    document.getElementById('modalEditarUbicacion').style.display = 'none';
+}
+
+// Funciones para modal de completar datos
+function abrirModalCompletarDatos(pedidoId, numeroSecuencial) {
+    const pedido = pedidosData[pedidoId];
+    if (!pedido) return;
+    
+    // Establecer el pedido actual
+    document.getElementById('pedido_id_completar').value = pedidoId;
+    document.getElementById('numeroPedidoCompletar').textContent = numeroSecuencial;
+    
+    // Prellenar con datos guardados del cliente o datos existentes del pedido
+    document.getElementById('completar_nombre_completo').value = pedido.nombre || clienteData.nombreCompleto;
+    document.getElementById('completar_telefono').value = pedido.telefono || clienteData.telefono;
+    document.getElementById('completar_direccion').value = pedido.direccion || clienteData.direccion;
+    document.getElementById('completar_ciudad').value = pedido.ciudad || clienteData.ciudad;
+    document.getElementById('completar_departamento').value = pedido.departamento || clienteData.departamento;
+    document.getElementById('completar_codigo_postal').value = pedido.codigo_postal || clienteData.codigoPostal;
+    
+    // Marcar checkbox si no hay dirección guardada del cliente
+    document.getElementById('completar_guardar_direccion').checked = !clienteData.direccion;
+    
+    document.getElementById('modalCompletarDatos').style.display = 'block';
+}
+
+function cerrarModalCompletarDatos() {
+    document.getElementById('modalCompletarDatos').style.display = 'none';
+}
+
+// Manejar el envío del formulario de completar datos
+document.getElementById('formCompletarDatos').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const pedidoId = document.getElementById('pedido_id_completar').value;
+    
+    fetch(`/editar-ubicacion-pedido/${pedidoId}/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Datos de envío completados correctamente');
+            cerrarModalCompletarDatos();
+            location.reload();
+        } else {
+            alert('Error: ' + (data.error || 'No se pudieron guardar los datos'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al guardar los datos de envío');
+    });
+});
+
+// Manejar el envío del formulario de edición
+document.getElementById('formEditarUbicacion').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const pedidoId = document.getElementById('pedido_id_editar').value;
+    
+    fetch(`/editar-ubicacion-pedido/${pedidoId}/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Ubicación actualizada correctamente');
+            cerrarEditarUbicacion();
+            location.reload(); // Recargar para mostrar los cambios
+        } else {
+            alert('Error: ' + (data.error || 'No se pudo actualizar la ubicación'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al actualizar la ubicación');
+    });
+});
+
+// Cerrar modales al hacer clic fuera
+window.onclick = function(event) {
+    const modalDetalles = document.getElementById('modalDetallesPedido');
+    const modalEditar = document.getElementById('modalEditarUbicacion');
+    const modalCompletar = document.getElementById('modalCompletarDatos');
+    
+    if (event.target === modalDetalles) {
+        cerrarModal();
+    }
+    if (event.target === modalEditar) {
+        cerrarEditarUbicacion();
+    }
+    if (event.target === modalCompletar) {
+        cerrarModalCompletarDatos();
+    }
+}
+</script>
+
+<script src="{% static 'core/javascript/Carrito.js' %}"></script>
+{% include 'core/modal_notificaciones.html' %}
+{% include 'core/floating_buttons.html' %}
+</body>
+</html>

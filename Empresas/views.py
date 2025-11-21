@@ -243,51 +243,28 @@ def empresa_ideas_view(request):
         messages.error(request, 'Debes iniciar sesión como empresa')
         return redirect('loginEmpresa')
 
-    # Obtener todas las ideas ordenadas por fecha
-    ideas = Idea.objects.all().order_by('-fecha_creacion')
-    mensaje = None
+    # Agrupar ideas por autor (usuario)
+    from django.db.models import Count, Q
     
-    if request.method == 'POST':
-        idea_id = request.POST.get('idea_id')
-        accion = request.POST.get('accion')
-        
-        if idea_id and accion:
-            try:
-                idea = Idea.objects.get(pk=idea_id)
-                if accion == 'aceptar' and idea.estado == 'pendiente':
-                    idea.estado = 'en_proceso'
-                    idea.empresa_asignada = empresa
-                    idea.save()
-                    mensaje = "Idea aceptada exitosamente"
-                elif accion == 'completar' and idea.estado == 'en_proceso':
-                    if idea.empresa_asignada == empresa:
-                        idea.estado = 'completada'
-                        idea.save()
-                        mensaje = "Idea marcada como completada"
-                    else:
-                        mensaje = "Error: No tienes permiso para completar esta idea"
-                elif accion == 'finalizar' and idea.estado == 'completada':
-                    if idea.empresa_asignada == empresa:
-                        idea.estado = 'finalizada'
-                        idea.save()
-                        mensaje = "Idea marcada como finalizada"
-                    else:
-                        mensaje = "Error: No tienes permiso para finalizar esta idea"
-            except Idea.DoesNotExist:
-                mensaje = "Error: La idea no existe"
+    # Obtener todas las ideas
+    todas_ideas = Idea.objects.values_list('autor', flat=True).distinct()
     
-    # Clasificar las ideas por estado
-    ideas_pendientes = ideas.filter(estado='pendiente')
-    ideas_en_proceso = ideas.filter(estado='en_proceso')
-    ideas_completadas = ideas.filter(estado='completada')
-    ideas_finalizadas = ideas.filter(estado='finalizada')
+    # Obtener usuarios que tienen ideas
+    usuarios_con_ideas = []
+    for username in todas_ideas:
+        try:
+            usuario = UserClientes.objects.get(usernameCliente=username)
+            cantidad = Idea.objects.filter(autor=username).count()
+            usuario.cantidad_ideas = cantidad
+            usuarios_con_ideas.append(usuario)
+        except UserClientes.DoesNotExist:
+            continue
+    
+    # Ordenar por cantidad de ideas
+    usuarios_con_ideas.sort(key=lambda x: x.cantidad_ideas, reverse=True)
     
     context = {
-        'ideas_pendientes': ideas_pendientes,
-        'ideas_en_proceso': ideas_en_proceso,
-        'ideas_completadas': ideas_completadas,
-        'ideas_finalizadas': ideas_finalizadas,
-        'mensaje': mensaje,
+        'usuarios_con_ideas': usuarios_con_ideas,
         'empresa': empresa
     }
     
@@ -394,21 +371,70 @@ def gestion_pedidos_view(request):
         messages.error(request, 'Debes iniciar sesión como empresa')
         return redirect('loginEmpresa')
     
-    # Obtener todos los pedidos ordenados por fecha
-    pedidos = Pedido.objects.all().select_related('cliente', 'pago').order_by('-fecha_creacion')
+    # Agrupar pedidos por cliente
+    from django.db.models import Count
     
-    # Parsear JSON de productos para cada pedido
-    for pedido in pedidos:
-        try:
-            pedido.productos_parseados = json.loads(pedido.productos)
-        except:
-            pedido.productos_parseados = []
+    clientes_con_pedidos = UserClientes.objects.filter(
+        pedidos__isnull=False
+    ).annotate(
+        cantidad_pedidos=Count('pedidos')
+    ).order_by('-cantidad_pedidos')
     
     context = {
-        'pedidos': pedidos,
+        'clientes_con_pedidos': clientes_con_pedidos,
     }
     
     return render(request, 'Empresas/gestion_pedidos.html', context)
+
+
+def obtener_pedidos_cliente_view(request, cliente_id):
+    """Vista para obtener los pedidos de un cliente específico"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        cliente = UserClientes.objects.get(id=cliente_id)
+        pedidos = Pedido.objects.filter(cliente=cliente).select_related('pago').order_by('-fecha_creacion')
+        
+        pedidos_data = []
+        for pedido in pedidos:
+            try:
+                productos_parseados = json.loads(pedido.productos)
+                cantidad_productos = sum(int(p.get('cantidad', 0)) for p in productos_parseados)
+            except:
+                productos_parseados = []
+                cantidad_productos = 0
+            
+            pedidos_data.append({
+                'id': pedido.id,
+                'estado': pedido.estado,
+                'monto_total': float(pedido.monto_total),
+                'cantidad_productos': cantidad_productos,
+                'productos': productos_parseados,
+                'fecha_creacion': pedido.fecha_creacion.strftime('%d/%m/%Y %H:%M'),
+                'numero_seguimiento': pedido.numero_seguimiento or '',
+                'empresa_envio': pedido.empresa_envio or '',
+                'direccion': pedido.direccion or 'No especificada',
+                'ciudad': pedido.ciudad or '',
+                'departamento': pedido.departamento or '',
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'cliente': {
+                'id': cliente.id,
+                'username': cliente.usernameCliente,
+                'email': cliente.email
+            },
+            'pedidos': pedidos_data
+        })
+        
+    except UserClientes.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Cliente no encontrado'}, status=404)
+    except Exception as e:
+        print(f"Error en obtener_pedidos_cliente_view: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 @require_POST
 def actualizar_estado_pedido_view(request, pedido_id):
@@ -458,28 +484,62 @@ def gestion_pagos_view(request):
         messages.error(request, 'Debes iniciar sesión como empresa')
         return redirect('loginEmpresa')
     
-    # Obtener todos los pagos ordenados por fecha
-    pagos = Pago.objects.all().select_related('cliente').order_by('-fecha_creacion')
+    # Agrupar pagos por cliente
+    from django.db.models import Count
     
-    # Parsear JSON de productos para cada pago
-    for pago in pagos:
-        try:
-            pago.productos_parseados = json.loads(pago.productos)
-        except:
-            pago.productos_parseados = []
-    
-    # Clasificar pagos por estado
-    pagos_pendientes = pagos.filter(estado='pendiente')
-    pagos_confirmados = pagos.filter(estado='confirmado')
-    pagos_rechazados = pagos.filter(estado='rechazado')
+    clientes_con_pagos = UserClientes.objects.filter(
+        pagos__isnull=False
+    ).annotate(
+        cantidad_pagos=Count('pagos')
+    ).order_by('-cantidad_pagos')
     
     context = {
-        'pagos_pendientes': pagos_pendientes,
-        'pagos_confirmados': pagos_confirmados,
-        'pagos_rechazados': pagos_rechazados,
+        'clientes_con_pagos': clientes_con_pagos,
     }
     
     return render(request, 'Empresas/gestion_pagos.html', context)
+
+
+def obtener_pagos_cliente_view(request, cliente_id):
+    """Vista para obtener los pagos de un cliente específico"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        cliente = UserClientes.objects.get(id=cliente_id)
+        pagos = Pago.objects.filter(cliente=cliente).order_by('-fecha_creacion')
+        
+        pagos_data = []
+        for pago in pagos:
+            try:
+                productos_parseados = json.loads(pago.productos)
+                cantidad_productos = sum(int(p.get('cantidad', 0)) for p in productos_parseados)
+            except:
+                productos_parseados = []
+                cantidad_productos = 0
+            
+            pagos_data.append({
+                'id': pago.id,
+                'estado': pago.estado,
+                'monto_total': float(pago.monto_total),
+                'cantidad_productos': cantidad_productos,
+                'productos': productos_parseados,
+                'fecha_creacion': pago.fecha_creacion.strftime('%d/%m/%Y %H:%M'),
+                'comprobante_url': pago.comprobante.url if pago.comprobante else '',
+                'notas_empresa': pago.notas_empresa or '',
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'pagos': pagos_data
+        })
+    except UserClientes.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Cliente no encontrado'}, status=404)
+    except Exception as e:
+        print(f"Error en obtener_pagos_cliente_view: {e}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
 
 @require_POST
 def confirmar_pago_view(request, pago_id):
@@ -493,6 +553,92 @@ def confirmar_pago_view(request, pago_id):
         from datetime import timedelta
         
         pago = Pago.objects.get(id=pago_id)
+        
+        # Verificar que el pago no haya sido confirmado anteriormente
+        if pago.estado == 'confirmado':
+            return JsonResponse({'success': False, 'error': 'Este pago ya fue confirmado anteriormente'}, status=400)
+        
+        # Descontar productos del inventario ANTES de confirmar
+        try:
+            import json
+            from core.models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios
+            
+            productos = json.loads(pago.productos)
+            print(f"=== INICIANDO DEDUCCIÓN DE INVENTARIO ===")
+            print(f"Pago ID: {pago.id}")
+            print(f"Productos a descontar: {productos}")
+            
+            # Mapeo de categorías a modelos (soportar múltiples formatos)
+            modelos_map = {
+                'mesas': Mesas,
+                'mesa': Mesas,
+                'sillas': Sillas,
+                'silla': Sillas,
+                'armarios': Armarios,
+                'armario': Armarios,
+                'cajoneras': Cajoneras,
+                'cajonera': Cajoneras,
+                'escritorios': Escritorios,
+                'escritorio': Escritorios,
+                'utensilios': Utensilios,
+                'utensilio': Utensilios,
+            }
+            
+            # Primero verificar que hay suficiente stock de todos los productos
+            items_a_descontar = []
+            for producto in productos:
+                categoria = producto.get('categoria', producto.get('tipo', '')).lower()
+                producto_id = producto.get('id')
+                cantidad = int(producto.get('cantidad', 0))
+                
+                print(f"\n>>> Producto: {producto}")
+                print(f">>> Categoría extraída: '{categoria}'")
+                print(f">>> ID: {producto_id}, Cantidad: {cantidad}")
+                
+                modelo = modelos_map.get(categoria)
+                
+                if modelo and producto_id and cantidad > 0:
+                    try:
+                        item = modelo.objects.get(id=producto_id)
+                        print(f"Verificando: {categoria} ID={producto_id}, Stock={item.cantidad_disponible}, Solicitado={cantidad}")
+                        
+                        if item.cantidad_disponible < cantidad:
+                            print(f"⚠ Stock insuficiente para {categoria} ID {producto_id}")
+                            return JsonResponse({
+                                'success': False, 
+                                'error': f'Stock insuficiente para {categoria}. Disponible: {item.cantidad_disponible}, Solicitado: {cantidad}'
+                            }, status=400)
+                        
+                        items_a_descontar.append({'item': item, 'cantidad': cantidad, 'categoria': categoria})
+                    except modelo.DoesNotExist:
+                        print(f"✗ Producto {categoria} ID {producto_id} no encontrado")
+                        return JsonResponse({
+                            'success': False, 
+                            'error': f'Producto {categoria} no encontrado en el inventario'
+                        }, status=404)
+            
+            # Si llegamos aquí, hay suficiente stock. Proceder a descontar
+            for data in items_a_descontar:
+                item = data['item']
+                cantidad = data['cantidad']
+                categoria = data['categoria']
+                
+                stock_anterior = item.cantidad_disponible
+                item.cantidad_disponible -= cantidad
+                item.save()
+                print(f"✓ {categoria} actualizado: {stock_anterior} -> {item.cantidad_disponible}")
+            
+            print(f"=== FIN DEDUCCIÓN DE INVENTARIO ===")
+        except json.JSONDecodeError as e:
+            print(f"ERROR al parsear productos JSON: {e}")
+            return JsonResponse({'success': False, 'error': 'Error al procesar productos'}, status=500)
+        except Exception as e:
+            print(f"ERROR CRÍTICO al descontar inventario: {e}")
+            import traceback
+            traceback.print_exc()
+            return JsonResponse({'success': False, 'error': f'Error al descontar inventario: {str(e)}'}, status=500)
+        
+        # Ahora sí confirmar el pago
         pago.estado = 'confirmado'
         pago.fecha_confirmacion = timezone.now()
         
@@ -505,24 +651,39 @@ def confirmar_pago_view(request, pago_id):
         
         # Verificar si ya existe un pedido para este pago
         if not hasattr(pago, 'pedido'):
-            # Crear el pedido SIN datos de envío (el cliente los completará después)
+            # Obtener datos guardados del cliente si existen
+            cliente = pago.cliente
+            
+            # Crear el pedido con los datos guardados del cliente (si los tiene)
             pedido = Pedido.objects.create(
                 pago=pago,
-                cliente=pago.cliente,
+                cliente=cliente,
                 productos=pago.productos,
                 monto_total=pago.monto_total,
                 estado='procesando',
-                fecha_entrega_estimada=timezone.now().date() + timedelta(days=7)
+                fecha_entrega_estimada=timezone.now().date() + timedelta(days=7),
+                # Auto-rellenar con datos guardados del cliente
+                nombre_completo=cliente.nombre_completo if cliente.nombre_completo else '',
+                telefono=cliente.telefono if cliente.telefono else '',
+                direccion=cliente.direccion if cliente.direccion else '',
+                ciudad=cliente.ciudad if cliente.ciudad else '',
+                departamento=cliente.departamento if cliente.departamento else '',
+                codigo_postal=cliente.codigo_postal if cliente.codigo_postal else ''
             )
+            print(f"Pedido #{pedido.id} creado exitosamente con datos del cliente")
         
         return JsonResponse({
             'success': True,
-            'mensaje': 'Pago confirmado y pedido creado. El cliente debe completar sus datos de envío.'
+            'mensaje': 'Pago confirmado, inventario actualizado y pedido creado. El cliente debe completar sus datos de envío.',
+            'redirect_url': f'/crear-pedido/{pago.id}/'
         })
         
     except Pago.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Pago no encontrado'}, status=404)
     except Exception as e:
+        print(f"ERROR GENERAL en confirmar_pago_view: {e}")
+        import traceback
+        traceback.print_exc()
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 @require_POST
@@ -533,6 +694,9 @@ def rechazar_pago_view(request, pago_id):
         return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
     
     try:
+        from core.models import MensajePago
+        
+        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
         pago = Pago.objects.get(id=pago_id)
         pago.estado = 'rechazado'
         
@@ -543,6 +707,15 @@ def rechazar_pago_view(request, pago_id):
         
         pago.notas_empresa = notas
         pago.save()
+        
+        # Crear mensaje inicial en el chat
+        MensajePago.objects.create(
+            pago=pago,
+            remitente_tipo='empresa',
+            remitente_nombre=empresa.usernameEmpresa,
+            mensaje=f"Pago rechazado. Motivo: {notas}",
+            leido=False
+        )
         
         return JsonResponse({
             'success': True,
@@ -854,5 +1027,294 @@ def publicar_idea_como_producto(request, idea_id):
     except Exception as e:
         messages.error(request, f'Error: {str(e)}')
         return redirect('empresa_ideas')
+
+
+def obtener_mensajes_pago_view(request, pago_id):
+    """Vista para obtener los mensajes de un pago"""
+    from core.models import MensajePago
+    
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        pago = Pago.objects.get(id=pago_id)
+        mensajes = MensajePago.objects.filter(pago=pago).order_by('fecha_envio')
+        
+        mensajes_data = []
+        for mensaje in mensajes:
+            mensajes_data.append({
+                'id': mensaje.id,
+                'remitente_tipo': mensaje.remitente_tipo,
+                'remitente_nombre': mensaje.remitente_nombre,
+                'mensaje': mensaje.mensaje,
+                'imagen': mensaje.imagen.url if mensaje.imagen else None,
+                'fecha_envio': mensaje.fecha_envio.strftime('%d/%m/%Y %H:%M'),
+                'leido': mensaje.leido
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'mensajes': mensajes_data
+        })
+        
+    except Pago.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Pago no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@require_POST
+def enviar_mensaje_pago_view(request, pago_id):
+    """Vista para enviar un mensaje en el chat de un pago"""
+    from core.models import MensajePago
+    
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        pago = Pago.objects.get(id=pago_id)
+        
+        mensaje = request.POST.get('mensaje', '').strip()
+        imagen = request.FILES.get('imagen', None)
+        
+        if not mensaje and not imagen:
+            return JsonResponse({'success': False, 'error': 'Debes enviar un mensaje o una imagen'}, status=400)
+        
+        # Crear el mensaje
+        nuevo_mensaje = MensajePago.objects.create(
+            pago=pago,
+            remitente_tipo='empresa',
+            remitente_nombre=empresa.usernameEmpresa,
+            mensaje=mensaje if mensaje else '[Imagen enviada]',
+            imagen=imagen,
+            leido=False
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Mensaje enviado exitosamente'
+        })
+        
+    except Pago.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Pago no encontrado'}, status=404)
+    except UserEmpresa.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+def obtener_ideas_usuario_view(request, usuario_id):
+    """Vista para obtener las ideas de un usuario específico"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        usuario = UserClientes.objects.get(id=usuario_id)
+        ideas = Idea.objects.filter(autor=usuario.usernameCliente).order_by('-fecha_creacion')
+        
+        ideas_data = []
+        for idea in ideas:
+            ideas_data.append({
+                'id': idea.id,
+                'titulo': idea.titulo,
+                'descripcion': idea.descripcion,
+                'estado': idea.estado,
+                'fecha_creacion': idea.fecha_creacion.strftime('%d/%m/%Y %H:%M'),
+                'tiene_imagen': bool(idea.imagen),
+                'tiene_modelo_3d': bool(idea.modelo_3d),
+                'empresa_asignada': idea.empresa_asignada.usernameEmpresa if idea.empresa_asignada else None,
+                'permiso_publicacion': idea.permiso_publicacion,
+                'publicada_como_producto': idea.publicada_como_producto,
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'usuario': {
+                'id': usuario.id,
+                'username': usuario.usernameCliente
+            },
+            'ideas': ideas_data
+        })
+        
+    except UserClientes.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Usuario no encontrado'}, status=404)
+    except Exception as e:
+        print(f"Error en obtener_ideas_usuario_view: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@require_POST
+def rechazar_idea_view(request, idea_id):
+    """Vista para rechazar una idea y enviar mensaje al usuario"""
+    from core.models import MensajeIdea
+    
+    print(f"=== RECHAZAR IDEA ===")
+    print(f"Idea ID: {idea_id}")
+    print(f"Session: {request.session.get('usernameEmpresa', 'No session')}")
+    print(f"POST data: {request.POST}")
+    
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        print("ERROR: No hay sesión de empresa")
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        print(f"Empresa encontrada: {empresa.usernameEmpresa}")
+        
+        idea = Idea.objects.get(id=idea_id)
+        print(f"Idea encontrada: {idea.titulo}, Estado: {idea.estado}")
+        
+        # Verificar que la idea esté pendiente
+        if idea.estado != 'pendiente':
+            print(f"ERROR: Estado incorrecto. Estado actual: {idea.estado}")
+            return JsonResponse({'success': False, 'error': 'Solo se pueden rechazar ideas pendientes'}, status=400)
+        
+        motivo = request.POST.get('motivo', '').strip()
+        print(f"Motivo recibido: '{motivo}'")
+        
+        if not motivo:
+            print("ERROR: Motivo vacío")
+            return JsonResponse({'success': False, 'error': 'Debes proporcionar un motivo de rechazo'}, status=400)
+        
+        # Cambiar el estado a rechazado
+        idea.estado = 'rechazada'
+        idea.empresa_asignada = empresa  # Asignar empresa para poder chatear
+        idea.save()
+        
+        # Crear mensaje de rechazo en el sistema de chat
+        MensajeIdea.objects.create(
+            idea=idea,
+            remitente_tipo='empresa',
+            remitente_nombre=empresa.usernameEmpresa,
+            mensaje=f"Idea rechazada. Motivo: {motivo}",
+            leido=False,
+            es_solicitud_permiso=False
+        )
+        
+        print("Idea rechazada exitosamente")
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Idea rechazada y notificación enviada al usuario'
+        })
+        
+    except Idea.DoesNotExist:
+        print("ERROR: Idea no encontrada")
+        return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
+    except UserEmpresa.DoesNotExist:
+        print("ERROR: Empresa no encontrada")
+        return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
+    except Exception as e:
+        print(f"ERROR INESPERADO: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@require_POST
+def aceptar_idea_view(request, idea_id):
+    """Vista para aceptar una idea pendiente"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        idea = Idea.objects.get(id=idea_id)
+        
+        # Verificar que la idea esté pendiente
+        if idea.estado != 'pendiente':
+            return JsonResponse({'success': False, 'error': 'Solo se pueden aceptar ideas pendientes'}, status=400)
+        
+        # Cambiar el estado a en_proceso
+        idea.estado = 'en_proceso'
+        idea.empresa_asignada = empresa
+        idea.save()
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Idea aceptada exitosamente'
+        })
+        
+    except Idea.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
+    except UserEmpresa.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@require_POST
+def completar_idea_view(request, idea_id):
+    """Vista para completar una idea en proceso"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        idea = Idea.objects.get(id=idea_id)
+        
+        # Verificar permisos
+        if idea.empresa_asignada != empresa:
+            return JsonResponse({'success': False, 'error': 'No tienes permiso sobre esta idea'}, status=403)
+        
+        if idea.estado != 'en_proceso':
+            return JsonResponse({'success': False, 'error': 'Solo se pueden completar ideas en proceso'}, status=400)
+        
+        # Cambiar el estado a completada
+        idea.estado = 'completada'
+        idea.save()
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Idea completada exitosamente'
+        })
+        
+    except Idea.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
+    except UserEmpresa.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@require_POST
+def finalizar_idea_view(request, idea_id):
+    """Vista para finalizar una idea completada"""
+    # Verificar si hay una sesión activa de empresa
+    if 'usernameEmpresa' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        idea = Idea.objects.get(id=idea_id)
+        
+        # Verificar permisos
+        if idea.empresa_asignada != empresa:
+            return JsonResponse({'success': False, 'error': 'No tienes permiso sobre esta idea'}, status=403)
+        
+        if idea.estado != 'completada':
+            return JsonResponse({'success': False, 'error': 'Solo se pueden finalizar ideas completadas'}, status=400)
+        
+        # Cambiar el estado a finalizada
+        idea.estado = 'finalizada'
+        idea.save()
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Idea finalizada exitosamente'
+        })
+        
+    except Idea.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
+    except UserEmpresa.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
 
 

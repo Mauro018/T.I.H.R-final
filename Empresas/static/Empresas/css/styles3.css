@@ -1283,6 +1283,31 @@ td:last-child {
     font-size: 1.5rem;
 }
 
+.seccion-titulo {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.seccion-titulo:hover {
+    background: #f0f3f8;
+}
+
+.icono-toggle {
+    transition: transform 0.3s;
+    font-size: 1.2rem;
+}
+
+.seccion-content {
+    display: block;
+    transition: all 0.3s ease;
+}
+
 .productos-tabla {
     overflow-x: auto;
 }

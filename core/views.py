@@ -432,13 +432,53 @@ def empresa_comentarios_view(request):
         messages.error(request, 'Debes iniciar sesión como empresa')
         return redirect('loginEmpresa')
     
-    # Obtener todos los comentarios ordenados: pendientes primero, luego por fecha
-    comentarios = Comentario.objects.all().order_by('estado', '-fecha_creacion')
+    # Agrupar comentarios por cliente
+    from django.db.models import Count
+    
+    clientes_con_comentarios = UserClientes.objects.annotate(
+        cantidad_comentarios=Count('comentarios')
+    ).filter(
+        cantidad_comentarios__gt=0
+    ).order_by('-cantidad_comentarios')
     
     context = {
-        'comentarios': comentarios,
+        'clientes_con_comentarios': clientes_con_comentarios,
     }
     return render(request, 'Empresas/gestion_comentarios.html', context)
+
+
+def obtener_comentarios_cliente_view(request, cliente_id):
+    """Vista para obtener los comentarios de un cliente específico"""
+    # Verificar que sea una empresa autenticada
+    empresa_username = request.session.get('usernameEmpresa')
+    if not empresa_username:
+        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
+    
+    try:
+        from django.http import JsonResponse
+        cliente = UserClientes.objects.get(id=cliente_id)
+        comentarios = Comentario.objects.filter(usuario=cliente).order_by('-fecha_creacion')
+        
+        comentarios_data = []
+        for comentario in comentarios:
+            comentarios_data.append({
+                'id': comentario.id,
+                'contenido': comentario.contenido,
+                'estado': comentario.estado,
+                'fecha_creacion': comentario.fecha_creacion.strftime('%d/%m/%Y %H:%M'),
+                'fecha_aprobacion': comentario.fecha_aprobacion.strftime('%d/%m/%Y %H:%M') if comentario.fecha_aprobacion else None,
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'comentarios': comentarios_data
+        })
+    except UserClientes.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Cliente no encontrado'}, status=404)
+    except Exception as e:
+        print(f"Error en obtener_comentarios_cliente_view: {e}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
 
 def aprobar_comentario_view(request, comentario_id):
     """Vista para aprobar un comentario"""
@@ -544,73 +584,60 @@ def crear_pedido_view(request, pago_id):
             from datetime import timedelta
             from django.utils import timezone
             
-            # Parsear productos antes de crear el pedido
+            # NOTA: El inventario ya fue descontado cuando la empresa confirmó el pago
+            # Aquí solo actualizamos los datos de envío del pedido existente
+            
+            # Obtener datos del formulario
+            nombre_completo = request.POST.get('nombre_completo')
+            telefono = request.POST.get('telefono')
+            direccion = request.POST.get('direccion')
+            ciudad = request.POST.get('ciudad')
+            departamento = request.POST.get('departamento')
+            codigo_postal = request.POST.get('codigo_postal', '')
+            notas_adicionales = request.POST.get('notas_adicionales', '')
+            
+            # Guardar dirección predeterminada del cliente si está marcado
+            guardar_direccion = request.POST.get('guardar_direccion') == 'on'
+            if guardar_direccion:
+                cliente.nombre_completo = nombre_completo
+                cliente.telefono = telefono
+                cliente.direccion = direccion
+                cliente.ciudad = ciudad
+                cliente.departamento = departamento
+                cliente.codigo_postal = codigo_postal
+                cliente.save()
+            
+            # El pedido ya debe existir (creado por confirmar_pago_view)
             try:
-                productos_lista = json.loads(pago.productos)
-            except:
-                productos_lista = []
-            
-            # Verificar y descontar inventario
-            modelos_map = {
-                'mesa': Mesas,
-                'silla': Sillas,
-                'armario': Armarios,
-                'cajonera': Cajoneras,
-                'escritorio': Escritorios,
-                'utensilio': Utensilios,
-            }
-            
-            # Verificar que haya suficiente inventario antes de descontar
-            for item in productos_lista:
-                tipo = item.get('tipo')
-                producto_id = item.get('id')
-                cantidad_pedida = item.get('cantidad', 0)
+                pedido = Pedido.objects.get(pago=pago)
                 
-                modelo = modelos_map.get(tipo)
-                if modelo:
-                    try:
-                        producto = modelo.objects.get(id=producto_id)
-                        if producto.cantidad_disponible < cantidad_pedida:
-                            return render(request, 'core/crear_pedido.html', {
-                                'error': f'No hay suficiente inventario de {item.get("nombre")}. Disponible: {producto.cantidad_disponible}',
-                                'pago': pago,
-                                'productos': productos_lista,
-                                'cliente': cliente
-                            })
-                    except modelo.DoesNotExist:
-                        pass
-            
-            # Crear el pedido
-            pedido = Pedido.objects.create(
-                pago=pago,
-                cliente=cliente,
-                nombre_completo=request.POST.get('nombre_completo'),
-                telefono=request.POST.get('telefono'),
-                direccion=request.POST.get('direccion'),
-                ciudad=request.POST.get('ciudad'),
-                departamento=request.POST.get('departamento'),
-                codigo_postal=request.POST.get('codigo_postal', ''),
-                notas_adicionales=request.POST.get('notas_adicionales', ''),
-                productos=pago.productos,
-                monto_total=pago.monto_total,
-                estado='procesando',
-                fecha_entrega_estimada=timezone.now().date() + timedelta(days=7)
-            )
-            
-            # Descontar del inventario
-            for item in productos_lista:
-                tipo = item.get('tipo')
-                producto_id = item.get('id')
-                cantidad_pedida = item.get('cantidad', 0)
+                # Actualizar los datos de envío
+                pedido.nombre_completo = nombre_completo
+                pedido.telefono = telefono
+                pedido.direccion = direccion
+                pedido.ciudad = ciudad
+                pedido.departamento = departamento
+                pedido.codigo_postal = codigo_postal
+                pedido.notas_adicionales = notas_adicionales
+                pedido.save()
                 
-                modelo = modelos_map.get(tipo)
-                if modelo and cantidad_pedida > 0:
-                    try:
-                        producto = modelo.objects.get(id=producto_id)
-                        producto.cantidad_disponible = max(0, producto.cantidad_disponible - cantidad_pedida)
-                        producto.save()
-                    except modelo.DoesNotExist:
-                        pass
+            except Pedido.DoesNotExist:
+                # Si por alguna razón no existe el pedido, crearlo
+                pedido = Pedido.objects.create(
+                    pago=pago,
+                    cliente=cliente,
+                    nombre_completo=nombre_completo,
+                    telefono=telefono,
+                    direccion=direccion,
+                    ciudad=ciudad,
+                    departamento=departamento,
+                    codigo_postal=codigo_postal,
+                    notas_adicionales=notas_adicionales,
+                    productos=pago.productos,
+                    monto_total=pago.monto_total,
+                    estado='procesando',
+                    fecha_entrega_estimada=timezone.now().date() + timedelta(days=7)
+                )
             
             return redirect('mis_pedidos')
         
@@ -641,20 +668,87 @@ def mis_pedidos_view(request):
         cliente = UserClientes.objects.get(usernameCliente=request.session['usernameCliente'])
         pedidos = Pedido.objects.filter(cliente=cliente).order_by('-fecha_creacion')
         
-        # Parsear productos para cada pedido
-        for pedido in pedidos:
+        # Mapeo de categorías a modelos y campos
+        modelos_map = {
+            'mesas': {'modelo': Mesas, 'campo_imagen': 'imagen1', 'campo_nombre': 'nombre1'},
+            'mesa': {'modelo': Mesas, 'campo_imagen': 'imagen1', 'campo_nombre': 'nombre1'},
+            'sillas': {'modelo': Sillas, 'campo_imagen': 'imagen2', 'campo_nombre': 'nombre2'},
+            'silla': {'modelo': Sillas, 'campo_imagen': 'imagen2', 'campo_nombre': 'nombre2'},
+            'armarios': {'modelo': Armarios, 'campo_imagen': 'imagen3', 'campo_nombre': 'nombre3'},
+            'armario': {'modelo': Armarios, 'campo_imagen': 'imagen3', 'campo_nombre': 'nombre3'},
+            'cajoneras': {'modelo': Cajoneras, 'campo_imagen': 'imagen4', 'campo_nombre': 'nombre4'},
+            'cajonera': {'modelo': Cajoneras, 'campo_imagen': 'imagen4', 'campo_nombre': 'nombre4'},
+            'escritorios': {'modelo': Escritorios, 'campo_imagen': 'imagen5', 'campo_nombre': 'nombre5'},
+            'escritorio': {'modelo': Escritorios, 'campo_imagen': 'imagen5', 'campo_nombre': 'nombre5'},
+            'utensilios': {'modelo': Utensilios, 'campo_imagen': 'imagen6', 'campo_nombre': 'nombre6'},
+            'utensilio': {'modelo': Utensilios, 'campo_imagen': 'imagen6', 'campo_nombre': 'nombre6'},
+        }
+        
+        # Agregar numeración secuencial por usuario
+        pedidos_list = list(pedidos)
+        total_pedidos = len(pedidos_list)
+        for idx, pedido in enumerate(pedidos_list):
+            pedido.numero_secuencial = total_pedidos - idx
+        
+        # Parsear productos para cada pedido y obtener imágenes
+        for pedido in pedidos_list:
             try:
-                pedido.productos_parseados = json.loads(pedido.productos)
-            except:
+                productos_parseados = json.loads(pedido.productos)
+                
+                # Agregar imágenes a cada producto
+                for producto in productos_parseados:
+                    # Intentar obtener categoría de 'categoria' o 'tipo'
+                    categoria = (producto.get('categoria') or producto.get('tipo', '')).lower()
+                    producto_id = producto.get('id')
+                    
+                    print(f"DEBUG: Procesando producto ID={producto_id}, categoria='{categoria}'")
+                    
+                    # Obtener configuración del modelo
+                    config = modelos_map.get(categoria)
+                    
+                    if config and producto_id:
+                        try:
+                            modelo = config['modelo']
+                            item = modelo.objects.get(id=producto_id)
+                            
+                            # Obtener imagen
+                            campo_imagen = config['campo_imagen']
+                            if hasattr(item, campo_imagen):
+                                imagen_field = getattr(item, campo_imagen)
+                                if imagen_field:
+                                    producto['imagen'] = imagen_field.url
+                                else:
+                                    producto['imagen'] = None
+                            else:
+                                producto['imagen'] = None
+                        except modelo.DoesNotExist:
+                            producto['imagen'] = None
+                        except Exception as ex:
+                            producto['imagen'] = None
+                    else:
+                        producto['imagen'] = None
+                
+                # Serializar a JSON string para el template
+                pedido.productos_json = json.dumps(productos_parseados)
+                pedido.productos_parseados = productos_parseados
+            except Exception as e:
+                pedido.productos_json = '[]'
                 pedido.productos_parseados = []
+        
+        # Verificar si hay pedidos sin datos de envío
+        pedidos_sin_datos = []
+        for pedido in pedidos_list:
+            if not pedido.direccion or not pedido.telefono:
+                pedidos_sin_datos.append(pedido)
         
         context = {
             'pedidos': pedidos,
             'cliente': cliente,
-            'usuario': cliente  # Añadir para compatibilidad con el template
+            'usuario': cliente,  # Añadir para compatibilidad con el template
+            'pedidos_sin_datos': pedidos_sin_datos  # Pedidos que necesitan completar datos
         }
         
-        return render(request, 'core/mis_pedidos.html', context)
+        return render(request, 'core/mis_pedidos_nuevo.html', context)
         
     except UserClientes.DoesNotExist:
         return redirect('login')
@@ -712,6 +806,58 @@ def completar_datos_envio_view(request, pedido_id):
             return redirect('mis_pedidos')
     
     return redirect('mis_pedidos')
+
+def editar_ubicacion_pedido_view(request, pedido_id):
+    """Vista para editar la ubicación de entrega de un pedido específico"""
+    if 'usernameCliente' not in request.session:
+        return JsonResponse({'success': False, 'error': 'No autenticado'}, status=401)
+    
+    if request.method == 'POST':
+        try:
+            cliente = UserClientes.objects.get(usernameCliente=request.session['usernameCliente'])
+            pedido = Pedido.objects.get(id=pedido_id, cliente=cliente)
+            
+            # Obtener datos del formulario
+            nombre_completo = request.POST.get('nombre_completo')
+            telefono = request.POST.get('telefono')
+            direccion = request.POST.get('direccion')
+            ciudad = request.POST.get('ciudad')
+            departamento = request.POST.get('departamento')
+            codigo_postal = request.POST.get('codigo_postal', '')
+            
+            # Actualizar datos de ubicación del pedido
+            pedido.nombre_completo = nombre_completo
+            pedido.telefono = telefono
+            pedido.direccion = direccion
+            pedido.ciudad = ciudad
+            pedido.departamento = departamento
+            pedido.codigo_postal = codigo_postal
+            pedido.save()
+            
+            # Si el checkbox está marcado, también guardar en el cliente
+            guardar_direccion = request.POST.get('guardar_direccion') == 'on'
+            if guardar_direccion:
+                cliente.nombre_completo = nombre_completo
+                cliente.telefono = telefono
+                cliente.direccion = direccion
+                cliente.ciudad = ciudad
+                cliente.departamento = departamento
+                cliente.codigo_postal = codigo_postal
+                cliente.save()
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Ubicación actualizada correctamente'
+            })
+            
+        except UserClientes.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Cliente no encontrado'}, status=404)
+        except Pedido.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Pedido no encontrado'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    
+    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
 def get_cantidad_disponible_view(request):
     """Vista API para obtener la cantidad disponible de un producto"""

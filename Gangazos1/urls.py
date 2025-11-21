@@ -48,6 +48,7 @@ urlpatterns = [
     path('perfil/editar/', views.editar_perfil_view, name='editar_perfil'),
     # URLs para gestión de comentarios por empresa
     path('empresa/comentarios/', views.empresa_comentarios_view, name='empresa_comentarios'),
+    path('obtener-comentarios-cliente/<int:cliente_id>/', views.obtener_comentarios_cliente_view, name='obtener_comentarios_cliente'),
     path('empresa/comentarios/aprobar/<int:comentario_id>/', views.aprobar_comentario_view, name='aprobar_comentario'),
     path('empresa/comentarios/rechazar/<int:comentario_id>/', views.rechazar_comentario_view, name='rechazar_comentario'),
     # URLs para pedidos
@@ -55,6 +56,7 @@ urlpatterns = [
     path('mis-pedidos/', views.mis_pedidos_view, name='mis_pedidos'),
     path('pedido/<int:pedido_id>/', views.detalle_pedido_view, name='detalle_pedido'),
     path('pedido/<int:pedido_id>/completar-datos/', views.completar_datos_envio_view, name='completar_datos_envio'),
+    path('editar-ubicacion-pedido/<int:pedido_id>/', views.editar_ubicacion_pedido_view, name='editar_ubicacion_pedido'),
     # API para obtener cantidad disponible de productos
     path('api/producto/cantidad-disponible/', views.get_cantidad_disponible_view, name='api_cantidad_disponible'),
     # Incluir URLs de core (APIs de chat)
