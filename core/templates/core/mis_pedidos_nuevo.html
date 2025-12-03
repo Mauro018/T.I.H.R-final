@@ -13,7 +13,7 @@
 </head>
 <body>
 <!-- Sidebar Navigation -->
-<aside class="sidebar">
+<div class="sidebar">
     <div class="sidebar-user-info">
         <a href="{% url 'perfilUsuario' %}" class="user-avatar-link">
             {% if cliente.foto_perfil %}
@@ -48,7 +48,7 @@
 
     <button onclick="aplicarFiltros()">Aplicar filtros</button>
   </div>
-</aside>
+</div>
 
 <!-- CONTENIDO PRINCIPAL -->
 <div class="main-content-wrapper">
@@ -636,6 +636,7 @@ function aplicarFiltros() {
 </script>
 
 <script src="{% static 'core/javascript/Carrito.js' %}"></script>
+<script src="{% static 'core/javascript/sidebar-toggle.js' %}"></script>
 {% include 'core/modal_notificaciones.html' %}
 {% include 'core/floating_buttons.html' %}
 </body>
