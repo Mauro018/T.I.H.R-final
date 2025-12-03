@@ -138,6 +138,7 @@ header {
     width: calc(100% + 80px);
     padding-left: calc(40px + 3rem);
     padding-right: calc(40px + 3rem);
+    border-radius: 0;
 }
 
 header::before {
@@ -161,10 +162,15 @@ header h1 {
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
     text-align: center;
+    width: 100%;
+    line-height: 1.4;
+    gap: 15px;
 }
 
 header h1 img {
     border-radius: 40%;
+    margin: 0;
+    vertical-align: middle;
 }
 
 /* New style for the logo image inside the h1 */

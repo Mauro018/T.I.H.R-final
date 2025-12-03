@@ -145,66 +145,72 @@
             <h2>Productos Disponibles</h2>
         </div>
         <div class="productos-disponibles-grid">
+            {% if mesa_destacada %}
             <div class="producto-card">
-                <img src="{% static 'core/img/Mesa.jpg' %}" alt="Mesa de Centro Roble">
+                <img src="{{ mesa_destacada.imagen1.url }}" alt="{{ mesa_destacada.nombre1 }}">
                 <div class="producto-info">
-                    <h3>Mesa de Centro Roble</h3>
+                    <h3>{{ mesa_destacada.nombre1 }}</h3>
                     <div class="producto-precio">
-                        <span class="precio-original">$450.000</span>
-                        <span class="precio-oferta">$320.000</span>
+                        <span class="precio-oferta">${{ mesa_destacada.precio1|floatformat:0 }}</span>
                     </div>
                 </div>
             </div>
+            {% endif %}
+            {% if silla_destacada %}
             <div class="producto-card">
-                <img src="{% static 'core/img/Sillas.jpg' %}" alt="Silla Artesanal">
+                <img src="{{ silla_destacada.imagen2.url }}" alt="{{ silla_destacada.nombre2 }}">
                 <div class="producto-info">
-                    <h3>Silla Artesanal</h3>
+                    <h3>{{ silla_destacada.nombre2 }}</h3>
                     <div class="producto-precio">
-                        <span class="precio-original">$180.000</span>
-                        <span class="precio-oferta">$120.000</span>
+                        <span class="precio-oferta">${{ silla_destacada.precio2|floatformat:0 }}</span>
                     </div>
                 </div>
             </div>
+            {% endif %}
+            {% if armario_destacado %}
             <div class="producto-card">
-                <img src="{% static 'core/img/Armario.jpg' %}" alt="Estantería Flotante">
+                <img src="{{ armario_destacado.imagen3.url }}" alt="{{ armario_destacado.nombre3 }}">
                 <div class="producto-info">
-                    <h3>Estantería Flotante</h3>
+                    <h3>{{ armario_destacado.nombre3 }}</h3>
                     <div class="producto-precio">
-                        <span class="precio-original">$280.000</span>
-                        <span class="precio-oferta">$190.000</span>
+                        <span class="precio-oferta">${{ armario_destacado.precio3|floatformat:0 }}</span>
                     </div>
                 </div>
             </div>
+            {% endif %}
+            {% if escritorio_destacado %}
             <div class="producto-card">
-                <img src="{% static 'core/img/Mesa.jpg' %}" alt="Escritorio Moderno">
+                <img src="{{ escritorio_destacado.imagen5.url }}" alt="{{ escritorio_destacado.nombre5 }}">
                 <div class="producto-info">
-                    <h3>Escritorio Moderno</h3>
+                    <h3>{{ escritorio_destacado.nombre5 }}</h3>
                     <div class="producto-precio">
-                        <span class="precio-original">$520.000</span>
-                        <span class="precio-oferta">$380.000</span>
+                        <span class="precio-oferta">${{ escritorio_destacado.precio5|floatformat:0 }}</span>
                     </div>
                 </div>
             </div>
+            {% endif %}
+            {% if silla_destacada %}
             <div class="producto-card">
-                <img src="{% static 'core/img/Sillas.jpg' %}" alt="Sillas Comedor">
+                <img src="{{ silla_destacada.imagen2.url }}" alt="{{ silla_destacada.nombre2 }}">
                 <div class="producto-info">
-                    <h3>Sillas Comedor</h3>
+                    <h3>{{ silla_destacada.nombre2 }}</h3>
                     <div class="producto-precio">
-                        <span class="precio-original">$350.000</span>
-                        <span class="precio-oferta">$245.000</span>
+                        <span class="precio-oferta">${{ silla_destacada.precio2|floatformat:0 }}</span>
                     </div>
                 </div>
             </div>
+            {% endif %}
+            {% if cajonera_destacada %}
             <div class="producto-card">
-                <img src="{% static 'core/img/Armario.jpg' %}" alt="Cajonera Vintage">
+                <img src="{{ cajonera_destacada.imagen4.url }}" alt="{{ cajonera_destacada.nombre4 }}">
                 <div class="producto-info">
-                    <h3>Cajonera Vintage</h3>
+                    <h3>{{ cajonera_destacada.nombre4 }}</h3>
                     <div class="producto-precio">
-                        <span class="precio-original">$420.000</span>
-                        <span class="precio-oferta">$295.000</span>
+                        <span class="precio-oferta">${{ cajonera_destacada.precio4|floatformat:0 }}</span>
                     </div>
                 </div>
             </div>
+            {% endif %}
         </div>
     </section>
     <br>

@@ -50,12 +50,13 @@
                                 <th>Descripción</th>
                                 <th>Precio</th>
                                 <th>Cantidad Disponible</th>
+                                <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for mesa in mesas %}
-                            <tr>
+                            <tr class="{% if not mesa.is_active %}producto-inactivo{% endif %}">
                                 <td>{{ mesa.id }}</td>
                                 <td>{{ mesa.nombre1 }}</td>
                                 <td><span class="descripcion-cell">{{ mesa.descripcion1|truncatewords:10 }}</span></td>
@@ -66,13 +67,26 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn-editar" onclick="editarInventario('mesa', {{ mesa.id }}, {{ mesa.cantidad_disponible }}, '{{ mesa.nombre1 }}')">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
+                                    {% if mesa.is_active %}
+                                        <span class="badge-activo">Activo</span>
+                                    {% else %}
+                                        <span class="badge-inactivo">Inhabilitado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if mesa.is_active %}
+                                        <button class="btn-editar" onclick="editarInventario('mesa', {{ mesa.id }}, {{ mesa.cantidad_disponible }}, '{{ mesa.nombre1 }}')">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    {% else %}
+                                        <button class="btn-editar" disabled style="opacity: 0.5; cursor: not-allowed;">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="6" class="no-datos">No hay mesas registradas</td></tr>
+                            <tr><td colspan="7" class="no-datos">No hay mesas registradas</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -94,12 +108,13 @@
                                 <th>Descripción</th>
                                 <th>Precio</th>
                                 <th>Cantidad Disponible</th>
+                                <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for silla in sillas %}
-                            <tr>
+                            <tr class="{% if not silla.is_active %}producto-inactivo{% endif %}">
                                 <td>{{ silla.id }}</td>
                                 <td>{{ silla.nombre2 }}</td>
                                 <td><span class="descripcion-cell">{{ silla.descripcion2|truncatewords:10 }}</span></td>
@@ -110,13 +125,26 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn-editar" onclick="editarInventario('silla', {{ silla.id }}, {{ silla.cantidad_disponible }}, '{{ silla.nombre2 }}')">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
+                                    {% if silla.is_active %}
+                                        <span class="badge-activo">Activo</span>
+                                    {% else %}
+                                        <span class="badge-inactivo">Inhabilitado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if silla.is_active %}
+                                        <button class="btn-editar" onclick="editarInventario('silla', {{ silla.id }}, {{ silla.cantidad_disponible }}, '{{ silla.nombre2 }}')">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    {% else %}
+                                        <button class="btn-editar" disabled style="opacity: 0.5; cursor: not-allowed;">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="6" class="no-datos">No hay sillas registradas</td></tr>
+                            <tr><td colspan="7" class="no-datos">No hay sillas registradas</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -138,12 +166,13 @@
                                 <th>Descripción</th>
                                 <th>Precio</th>
                                 <th>Cantidad Disponible</th>
+                                <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for armario in armarios %}
-                            <tr>
+                            <tr class="{% if not armario.is_active %}producto-inactivo{% endif %}">
                                 <td>{{ armario.id }}</td>
                                 <td>{{ armario.nombre3 }}</td>
                                 <td><span class="descripcion-cell">{{ armario.descripcion3|truncatewords:10 }}</span></td>
@@ -154,13 +183,26 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn-editar" onclick="editarInventario('armario', {{ armario.id }}, {{ armario.cantidad_disponible }}, '{{ armario.nombre3 }}')">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
+                                    {% if armario.is_active %}
+                                        <span class="badge-activo">Activo</span>
+                                    {% else %}
+                                        <span class="badge-inactivo">Inhabilitado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if armario.is_active %}
+                                        <button class="btn-editar" onclick="editarInventario('armario', {{ armario.id }}, {{ armario.cantidad_disponible }}, '{{ armario.nombre3 }}')">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    {% else %}
+                                        <button class="btn-editar" disabled style="opacity: 0.5; cursor: not-allowed;">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="6" class="no-datos">No hay armarios registrados</td></tr>
+                            <tr><td colspan="7" class="no-datos">No hay armarios registrados</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -182,12 +224,13 @@
                                 <th>Descripción</th>
                                 <th>Precio</th>
                                 <th>Cantidad Disponible</th>
+                                <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for cajonera in cajoneras %}
-                            <tr>
+                            <tr class="{% if not cajonera.is_active %}producto-inactivo{% endif %}">
                                 <td>{{ cajonera.id }}</td>
                                 <td>{{ cajonera.nombre4 }}</td>
                                 <td><span class="descripcion-cell">{{ cajonera.descripcion4|truncatewords:10 }}</span></td>
@@ -198,13 +241,26 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn-editar" onclick="editarInventario('cajonera', {{ cajonera.id }}, {{ cajonera.cantidad_disponible }}, '{{ cajonera.nombre4 }}')">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
+                                    {% if cajonera.is_active %}
+                                        <span class="badge-activo">Activo</span>
+                                    {% else %}
+                                        <span class="badge-inactivo">Inhabilitado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if cajonera.is_active %}
+                                        <button class="btn-editar" onclick="editarInventario('cajonera', {{ cajonera.id }}, {{ cajonera.cantidad_disponible }}, '{{ cajonera.nombre4 }}')">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    {% else %}
+                                        <button class="btn-editar" disabled style="opacity: 0.5; cursor: not-allowed;">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="6" class="no-datos">No hay cajoneras registradas</td></tr>
+                            <tr><td colspan="7" class="no-datos">No hay cajoneras registradas</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -226,12 +282,13 @@
                                 <th>Descripción</th>
                                 <th>Precio</th>
                                 <th>Cantidad Disponible</th>
+                                <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for escritorio in escritorios %}
-                            <tr>
+                            <tr class="{% if not escritorio.is_active %}producto-inactivo{% endif %}">
                                 <td>{{ escritorio.id }}</td>
                                 <td>{{ escritorio.nombre5 }}</td>
                                 <td><span class="descripcion-cell">{{ escritorio.descripcion5|truncatewords:10 }}</span></td>
@@ -242,13 +299,26 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn-editar" onclick="editarInventario('escritorio', {{ escritorio.id }}, {{ escritorio.cantidad_disponible }}, '{{ escritorio.nombre5 }}')">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
+                                    {% if escritorio.is_active %}
+                                        <span class="badge-activo">Activo</span>
+                                    {% else %}
+                                        <span class="badge-inactivo">Inhabilitado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if escritorio.is_active %}
+                                        <button class="btn-editar" onclick="editarInventario('escritorio', {{ escritorio.id }}, {{ escritorio.cantidad_disponible }}, '{{ escritorio.nombre5 }}')">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    {% else %}
+                                        <button class="btn-editar" disabled style="opacity: 0.5; cursor: not-allowed;">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="6" class="no-datos">No hay escritorios registrados</td></tr>
+                            <tr><td colspan="7" class="no-datos">No hay escritorios registrados</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -270,12 +340,13 @@
                                 <th>Descripción</th>
                                 <th>Precio</th>
                                 <th>Cantidad Disponible</th>
+                                <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for utensilio in utensilios %}
-                            <tr>
+                            <tr class="{% if not utensilio.is_active %}producto-inactivo{% endif %}">
                                 <td>{{ utensilio.id }}</td>
                                 <td>{{ utensilio.nombre6 }}</td>
                                 <td><span class="descripcion-cell">{{ utensilio.descripcion6|truncatewords:10 }}</span></td>
@@ -286,13 +357,26 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn-editar" onclick="editarInventario('utensilio', {{ utensilio.id }}, {{ utensilio.cantidad_disponible }}, '{{ utensilio.nombre6 }}')">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
+                                    {% if utensilio.is_active %}
+                                        <span class="badge-activo">Activo</span>
+                                    {% else %}
+                                        <span class="badge-inactivo">Inhabilitado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if utensilio.is_active %}
+                                        <button class="btn-editar" onclick="editarInventario('utensilio', {{ utensilio.id }}, {{ utensilio.cantidad_disponible }}, '{{ utensilio.nombre6 }}')">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    {% else %}
+                                        <button class="btn-editar" disabled style="opacity: 0.5; cursor: not-allowed;">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="6" class="no-datos">No hay utensilios registrados</td></tr>
+                            <tr><td colspan="7" class="no-datos">No hay utensilios registrados</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>

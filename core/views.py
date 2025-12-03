@@ -36,8 +36,22 @@ def home(request):
         )
     ).order_by('orden_estado', '-fecha_aprobacion', '-fecha_creacion')[:10]
     
+    # Obtener un producto activo de cada categoría para mostrar en el landing
+    mesa_destacada = Mesas.objects.filter(is_active=True).first()
+    silla_destacada = Sillas.objects.filter(is_active=True).first()
+    armario_destacado = Armarios.objects.filter(is_active=True).first()
+    cajonera_destacada = Cajoneras.objects.filter(is_active=True).first()
+    escritorio_destacado = Escritorios.objects.filter(is_active=True).first()
+    utensilio_destacado = Utensilios.objects.filter(is_active=True).first()
+    
     context = {
         'comentarios': comentarios,
+        'mesa_destacada': mesa_destacada,
+        'silla_destacada': silla_destacada,
+        'armario_destacado': armario_destacado,
+        'cajonera_destacada': cajonera_destacada,
+        'escritorio_destacado': escritorio_destacado,
+        'utensilio_destacado': utensilio_destacado,
     }
     return render(request, "core/home.html", context)
 

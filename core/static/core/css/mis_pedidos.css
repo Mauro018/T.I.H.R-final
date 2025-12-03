@@ -46,10 +46,15 @@ body .main-content-wrapper header {
     justify-content: center;
     align-items: center;
     text-align: center;
+    width: 100%;
+    line-height: 1.2;
+    gap: 15px;
 }
 
 .main-content-wrapper header h1 img {
     border-radius: 40%;
+    margin: 0;
+    vertical-align: middle;
 }
 
 .main-content-wrapper header .subtitulo {
