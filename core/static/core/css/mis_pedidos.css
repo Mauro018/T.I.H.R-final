@@ -1,15 +1,16 @@
 /* Estilos para la página de Mis Pedidos */
 
 /* El contenedor principal debe tener el mismo fondo que las otras páginas */
-.main-content-wrapper {
+body .main-content-wrapper {
     flex: 1;
-    margin-left: 250px;
+    margin-left: 270px !important;
+    padding: 20px 40px !important;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-.main-content-wrapper header {
+body .main-content-wrapper header {
     background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: #ffffff;
     padding: 2rem 3rem;
@@ -21,6 +22,7 @@
     padding-right: calc(40px + 3rem);
     position: relative;
     overflow: hidden;
+    border-radius: 0 !important;
 }
 
 .main-content-wrapper header::before {

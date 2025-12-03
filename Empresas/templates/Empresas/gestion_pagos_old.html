@@ -65,7 +65,7 @@
                                 <div class="pago-header">
                                     <div class="pago-info">
                                         <h3>{{ pago.cliente.usernameCliente }}</h3>
-                                        <span class="pago-fecha">{{ pago.fecha_creacion|date:"d/m/Y H:i" }}</span>
+                                        <span class="pago-fecha">{{ pago.fecha_creacion|date:"d/m/Y" }}</span>
                                         <span class="pago-fecha">Email: {{ pago.cliente.email }}</span>
                                     </div>
                                     <div class="pago-monto">
@@ -121,8 +121,8 @@
                                 <div class="pago-header">
                                     <div class="pago-info">
                                         <h3>{{ pago.cliente.usernameCliente }}</h3>
-                                        <span class="pago-fecha">Realizado: {{ pago.fecha_creacion|date:"d/m/Y H:i" }}</span>
-                                        <span class="pago-fecha">Confirmado: {{ pago.fecha_confirmacion|date:"d/m/Y H:i" }}</span>
+                                        <span class="pago-fecha">Realizado: {{ pago.fecha_creacion|date:"d/m/Y" }}</span>
+                                        <span class="pago-fecha">Confirmado: {{ pago.fecha_confirmacion|date:"d/m/Y" }}</span>
                                     </div>
                                     <div class="pago-monto">
                                         ${{ pago.monto_total }}
@@ -175,7 +175,7 @@
                                 <div class="pago-header">
                                     <div class="pago-info">
                                         <h3>{{ pago.cliente.usernameCliente }}</h3>
-                                        <span class="pago-fecha">{{ pago.fecha_creacion|date:"d/m/Y H:i" }}</span>
+                                        <span class="pago-fecha">{{ pago.fecha_creacion|date:"d/m/Y" }}</span>
                                     </div>
                                     <div class="pago-monto">
                                         ${{ pago.monto_total }}

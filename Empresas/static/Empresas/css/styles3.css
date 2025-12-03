@@ -481,8 +481,8 @@ tbody tr:hover {
 }
 
 .idea-card .estado.en-proceso {
-    background-color: #cce5ff;
-    color: #004085;
+    background-color: #f5e6d3;
+    color: #7A3E0E;
 }
 
 .idea-card .estado.completada {
@@ -1103,7 +1103,7 @@ td:last-child {
 }
 
 .stat-icon.usuarios {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #A0662F 0%, #7A3E0E 100%);
 }
 
 .stat-icon.productos {
@@ -1313,6 +1313,45 @@ td:last-child {
     overflow-x: auto;
 }
 
+.productos-tabla table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.productos-tabla thead {
+    background: linear-gradient(135deg, #6B4E3D, #4A3428);
+    color: white;
+}
+
+.productos-tabla th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.productos-tabla td {
+    padding: 1rem;
+    border-bottom: 1px solid #e0e6ec;
+    vertical-align: middle;
+}
+
+.productos-tabla tbody tr:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.2s ease;
+}
+
+.descripcion-cell {
+    display: block;
+    max-width: 300px;
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .stock-badge {
     padding: 0.375rem 0.75rem;
     border-radius: 20px;
@@ -1340,7 +1379,7 @@ td:last-child {
 }
 
 .btn-editar {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #A0662F 0%, #7A3E0E 100%);
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -1353,7 +1392,7 @@ td:last-child {
 
 .btn-editar:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 12px rgba(160, 102, 47, 0.4);
 }
 
 .no-datos {

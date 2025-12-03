@@ -42,7 +42,7 @@
 }
 
 .notif-modal-header {
-    background: linear-gradient(135deg, #a8c0ff 0%, #c3b5e8 100%);
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: white;
     padding: 20px;
     border-radius: 15px 15px 0 0;
@@ -89,6 +89,7 @@
     margin: 0;
     font-size: 1.3rem;
     font-weight: 600;
+    color: white;
 }
 
 .notif-close {
@@ -132,12 +133,12 @@
 .conversacion-item:hover {
     background: #e9ecef;
     transform: translateX(5px);
-    border-left-color: #a8c0ff;
+    border-left-color: #A0662F;
 }
 
 .conversacion-item.no-leido {
-    background: #e3f2fd;
-    border-left-color: #2196F3;
+    background: #f5e6d3;
+    border-left-color: #A0662F;
 }
 
 .conversacion-item.no-leido::after {
@@ -148,7 +149,7 @@
     transform: translateY(-50%);
     width: 12px;
     height: 12px;
-    background: #2196F3;
+    background: #A0662F;
     border-radius: 50%;
     animation: pulse 2s infinite;
 }
@@ -171,7 +172,7 @@
     font-size: 0.75rem;
     padding: 3px 8px;
     border-radius: 12px;
-    background: #28a745;
+    background: #A0662F;
     color: white;
 }
 
@@ -214,7 +215,7 @@
 }
 
 .chat-header {
-    background: linear-gradient(135deg, #a8c0ff 0%, #c3b5e8 100%);
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: white;
     padding: 12px 15px;
     display: flex;
@@ -287,8 +288,8 @@
 }
 
 .mensaje.empresa .mensaje-bubble {
-    background: linear-gradient(135deg, #a8c0ff 0%, #c3b5e8 100%);
-    color: #2c3e50;
+    background: linear-gradient(135deg, #C9A882, #A0662F);
+    color: white;
     border-radius: 15px 15px 15px 5px;
 }
 
@@ -317,12 +318,12 @@
 }
 
 .mensaje.empresa .mensaje-autor {
-    color: #2c3e50;
+    color: white;
     font-weight: 700;
 }
 
 .mensaje.cliente .mensaje-autor {
-    color: #a8c0ff;
+    color: #A0662F;
 }
 
 .mensaje-texto {
@@ -416,12 +417,12 @@
 
 .chat-input:focus {
     outline: none;
-    border-color: #a8c0ff;
-    box-shadow: 0 0 0 3px rgba(168, 192, 255, 0.2);
+    border-color: #A0662F;
+    box-shadow: 0 0 0 3px rgba(160, 102, 47, 0.2);
 }
 
 .chat-send-btn {
-    background: linear-gradient(135deg, #a8c0ff 0%, #c3b5e8 100%);
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: white;
     border: none;
     width: 40px;
@@ -438,7 +439,7 @@
 
 .chat-send-btn:hover {
     transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(168, 192, 255, 0.5);
+    box-shadow: 0 4px 12px rgba(160, 102, 47, 0.5);
 }
 
 .chat-send-btn:disabled {

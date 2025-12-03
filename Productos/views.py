@@ -11,7 +11,7 @@ def carpinteria(request):
         except UserClientes.DoesNotExist:
             pass
     
-    armarios = Armarios.objects.all()
+    armarios = Armarios.objects.filter(is_active=True)
     context = {
         'armarios': armarios,
         'usuario': usuario
@@ -28,7 +28,7 @@ def marroquineria(request):
         except UserClientes.DoesNotExist:
             pass
     
-    escritorios = Escritorios.objects.all()
+    escritorios = Escritorios.objects.filter(is_active=True)
     context = {
         'escritorios': escritorios,
         'usuario': usuario
@@ -45,7 +45,7 @@ def tapiceria(request):
         except UserClientes.DoesNotExist:
             pass
     
-    utensilios = Utensilios.objects.all()
+    utensilios = Utensilios.objects.filter(is_active=True)
     context = {
         'utensilios': utensilios,
         'usuario': usuario
@@ -62,7 +62,7 @@ def vidrieria(request):
         except UserClientes.DoesNotExist:
             pass
     
-    sillas = Sillas.objects.all()
+    sillas = Sillas.objects.filter(is_active=True)
     context = {
         'sillas': sillas,
         'usuario': usuario
@@ -79,7 +79,7 @@ def metaleria(request):
         except UserClientes.DoesNotExist:
             pass
     
-    cajoneras = Cajoneras.objects.all()
+    cajoneras = Cajoneras.objects.filter(is_active=True)
     context = {
         'cajoneras': cajoneras,
         'usuario': usuario
@@ -96,7 +96,7 @@ def ceramica(request):
         except UserClientes.DoesNotExist:
             pass
     
-    mesas = Mesas.objects.all()
+    mesas = Mesas.objects.filter(is_active=True)
     context = {
         'mesas': mesas,
         'usuario': usuario

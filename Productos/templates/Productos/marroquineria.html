@@ -22,7 +22,6 @@
         </a>
         <span class="username-display">{{ usuario.usernameCliente }}</span>
     </div>
-    <h2 class="h2-side">Menú</h2>
     <ul>
         <li><a href="{% url 'productos' %}">Ofertas</a></li>
         <li><a href="{% url 'idea' %}">Crear Idea</a></li>
@@ -30,10 +29,9 @@
         <li><a href="{% url 'contact' %}">Contáctenos</a></li>
         <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
         <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
-    </ul>  <!-- FILTROS -->
+    </ul>  
+    <!-- FILTROS -->
   <div class="filtros">
-    <h3>Filtrar productos</h3>
-
     <h2 for="categoria" class="h2-side">Categoría:</h2>
     <select id="categoria">
         <option value="">Elegir Categoria</option> 
@@ -54,9 +52,8 @@
   <header>
     <h1 class="div" style="text-align: center;">
       <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="75" height="75">
-      ¡Gangazos!
+      Tu Idea Hecha Realidad
     </h1>
-    <p class="subtitulo">Descuento especial por tiempo limitado.</p>
   </header>
 
 <section>

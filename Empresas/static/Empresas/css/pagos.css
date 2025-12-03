@@ -1,6 +1,6 @@
 /* Estilos para Gestión de Pagos */
 .page-title {
-    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    background: linear-gradient(135deg, #7A3E0E 0%, #A0662F 100%);
     color: white;
     padding: 30px;
     border-radius: 12px;
@@ -32,12 +32,12 @@
 }
 
 .tab-button:hover {
-    color: #3b82f6;
+    color: #A0662F;
 }
 
 .tab-button.active {
-    color: #1e3a8a;
-    border-bottom-color: #3b82f6;
+    color: #7A3E0E;
+    border-bottom-color: #A0662F;
 }
 
 .tab-content {
@@ -62,7 +62,7 @@
 }
 
 .tabla-pagos thead {
-    background: #1e3a8a;
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: white;
 }
 
@@ -94,7 +94,7 @@
 
 .btn-ver-pagos {
     padding: 8px 16px;
-    background: #3b82f6;
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: white;
     border: none;
     border-radius: 6px;
@@ -105,14 +105,13 @@
 }
 
 .btn-ver-pagos:hover {
-    background: #2563eb;
     transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 6px rgba(160, 102, 47, 0.4);
 }
 
 .btn-ver-comentarios {
     padding: 8px 16px;
-    background: #8b5cf6;
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: white;
     border: none;
     border-radius: 6px;
@@ -123,18 +122,18 @@
 }
 
 .btn-ver-comentarios:hover {
-    background: #7c3aed;
     transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 4px 6px rgba(160, 102, 47, 0.4);
 }
 
 .btn-ver-detalles {
-    background: #3b82f6;
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: white;
 }
 
 .btn-ver-detalles:hover {
-    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(160, 102, 47, 0.4);
 }
 
 .btn-confirmar {
@@ -156,12 +155,13 @@
 }
 
 .btn-chat {
-    background: #8b5cf6;
+    background: linear-gradient(135deg, #C9A882, #A0662F);
     color: white;
 }
 
 .btn-chat:hover {
-    background: #7c3aed;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(160, 102, 47, 0.4);
 }
 
 /* Modal Styles */
@@ -188,13 +188,19 @@
 }
 
 .modal-header {
-    background: #1e3a8a;
+    background: linear-gradient(135deg, #6B4E3D, #4A3428);
     color: white;
     padding: 20px;
     border-radius: 8px 8px 0 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.modal-header h2,
+.modal-header h3 {
+    color: white;
+    margin: 0;
 }
 
 .modal-body {
@@ -237,13 +243,13 @@
 }
 
 .modal-tab:hover {
-    color: #3b82f6;
+    color: #A0662F;
     background: #f9fafb;
 }
 
 .modal-tab.active {
-    color: #1e3a8a;
-    border-bottom-color: #3b82f6;
+    color: #7A3E0E;
+    border-bottom-color: #A0662F;
     background: transparent;
 }
 
@@ -280,12 +286,12 @@
 }
 
 .detalle-tab:hover {
-    color: #3b82f6;
+    color: #A0662F;
 }
 
 .detalle-tab.active {
-    color: #1e3a8a;
-    border-bottom-color: #3b82f6;
+    color: #7A3E0E;
+    border-bottom-color: #A0662F;
 }
 
 .detalle-content {
@@ -397,7 +403,7 @@
 }
 
 .chat-message.empresa .message-bubble {
-    background: #3b82f6;
+    background: linear-gradient(135deg, #C9A882, #A0662F);
     color: white;
 }
 
@@ -447,7 +453,7 @@
 
 .chat-input-container button {
     padding: 10px 20px;
-    background: #3b82f6;
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: white;
     border: none;
     border-radius: 6px;
@@ -456,7 +462,8 @@
 }
 
 .chat-input-container button:hover {
-    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(160, 102, 47, 0.4);
 }
 
 .file-input-label {
@@ -513,7 +520,7 @@
 .pedido-header h3 {
     margin: 0;
     font-size: 1.25rem;
-    color: #1e3a8a;
+    color: #7A3E0E;
     font-weight: 700;
 }
 
@@ -567,7 +574,7 @@
 }
 
 .btn-ver-detalles-pedido {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    background: linear-gradient(135deg, #A0662F 0%, #7A3E0E 100%);
     color: white;
     padding: 8px 16px;
     border: none;
@@ -576,10 +583,10 @@
     font-weight: 600;
     font-size: 0.875rem;
     transition: all 0.3s;
-    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 2px 4px rgba(160, 102, 47, 0.2);
 }
 
 .btn-ver-detalles-pedido:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 4px 12px rgba(160, 102, 47, 0.4);
 }

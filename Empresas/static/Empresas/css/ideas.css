@@ -14,7 +14,7 @@
 }
 
 .tabla-usuarios thead {
-    background: #1e3a8a;
+    background: linear-gradient(135deg, #6B4E3D, #4A3428);
     color: white;
 }
 
@@ -35,7 +35,7 @@
 
 .btn-ver-ideas {
     padding: 8px 16px;
-    background: #3b82f6;
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: white;
     border: none;
     border-radius: 6px;
@@ -45,7 +45,8 @@
 }
 
 .btn-ver-ideas:hover {
-    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(160, 102, 47, 0.4);
 }
 
 /* Modal Styles */
@@ -74,13 +75,19 @@
 }
 
 .modal-header {
-    background: #1e3a8a;
+    background: linear-gradient(135deg, #6B4E3D, #4A3428);
     color: white;
     padding: 20px;
     border-radius: 8px 8px 0 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.modal-header h2,
+.modal-header h3 {
+    color: white;
+    margin: 0;
 }
 
 .modal-body {
@@ -118,7 +125,7 @@
 
 .idea-header h3 {
     margin: 0;
-    color: #1e3a8a;
+    color: #7A3E0E;
 }
 
 .badge-estado {
@@ -134,8 +141,8 @@
 }
 
 .badge-en_proceso {
-    background: #dbeafe;
-    color: #1e3a8a;
+    background: #f5e6d3;
+    color: #7A3E0E;
 }
 
 .badge-completada {
@@ -200,21 +207,23 @@
 }
 
 .btn-completar {
-    background: #3b82f6;
+    background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: white;
 }
 
 .btn-completar:hover {
-    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(160, 102, 47, 0.4);
 }
 
 .btn-finalizar {
-    background: #8b5cf6;
+    background: linear-gradient(135deg, #C9A882, #A0662F);
     color: white;
 }
 
 .btn-finalizar:hover {
-    background: #7c3aed;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(160, 102, 47, 0.4);
 }
 
 .btn-ver-imagen, .btn-ver-3d {
@@ -227,21 +236,23 @@
 }
 
 .btn-contactar {
-    background: #06b6d4;
+    background: linear-gradient(135deg, #C9A882, #A0662F);
     color: white;
 }
 
 .btn-contactar:hover {
-    background: #0891b2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(160, 102, 47, 0.3);
 }
 
 .btn-solicitar-permiso {
-    background: #8b5cf6;
+    background: linear-gradient(135deg, #C9A882, #A0662F);
     color: white;
 }
 
 .btn-solicitar-permiso:hover {
-    background: #7c3aed;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(160, 102, 47, 0.4);
 }
 
 .btn-publicar {
@@ -273,7 +284,7 @@
     display: block;
     font-weight: 600;
     margin-bottom: 8px;
-    color: #1e3a8a;
+    color: #7A3E0E;
 }
 
 .form-group textarea {

@@ -57,13 +57,13 @@ def productos(request):
         except UserClientes.DoesNotExist:
             pass
     
-    # Obtener todos los productos de la base de datos (límite de 10 para el carrusel)
-    mesas = Mesas.objects.all()[:10]
-    sillas = Sillas.objects.all()[:10]
-    armarios = Armarios.objects.all()[:10]
-    cajoneras = Cajoneras.objects.all()[:10]
-    escritorios = Escritorios.objects.all()[:10]
-    utensilios = Utensilios.objects.all()[:10]
+    # Obtener solo productos activos de la base de datos (límite de 10 para el carrusel)
+    mesas = Mesas.objects.filter(is_active=True)[:10]
+    sillas = Sillas.objects.filter(is_active=True)[:10]
+    armarios = Armarios.objects.filter(is_active=True)[:10]
+    cajoneras = Cajoneras.objects.filter(is_active=True)[:10]
+    escritorios = Escritorios.objects.filter(is_active=True)[:10]
+    utensilios = Utensilios.objects.filter(is_active=True)[:10]
     
     context = {
         'usuario': usuario,
@@ -465,8 +465,8 @@ def obtener_comentarios_cliente_view(request, cliente_id):
                 'id': comentario.id,
                 'contenido': comentario.contenido,
                 'estado': comentario.estado,
-                'fecha_creacion': comentario.fecha_creacion.strftime('%d/%m/%Y %H:%M'),
-                'fecha_aprobacion': comentario.fecha_aprobacion.strftime('%d/%m/%Y %H:%M') if comentario.fecha_aprobacion else None,
+                'fecha_creacion': comentario.fecha_creacion.strftime('%d/%m/%Y'),
+                'fecha_aprobacion': comentario.fecha_aprobacion.strftime('%d/%m/%Y') if comentario.fecha_aprobacion else None,
             })
         
         return JsonResponse({

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'core/css/carrito.css' %}">
     <link rel="stylesheet" href="{% static 'Empresas/css/pedidos.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/mis_pedidos.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -23,11 +24,10 @@
         </a>
         <span class="username-display">{{ cliente.usernameCliente }}</span>
     </div>
-    <h2 class="h2-side">Menú</h2>
     <ul>
         <li><a href="{% url 'productos' %}">Ofertas</a></li>
         <li><a href="{% url 'idea' %}">Crear Idea</a></li>
-        <li><a href="{% url 'mis_pedidos' %}" style="background-color: #7A3E0E; color: white;">Mis Pedidos</a></li>
+        <li><a href="{% url 'mis_pedidos' %}">Mis Pedidos</a></li>
         <li><a href="{% url 'contact' %}">Contáctenos</a></li>
         <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
         <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
@@ -35,29 +35,29 @@
 
     <!-- FILTROS -->
     <div class="filtros">
-        <h3>Filtrar productos</h3>
-        <h2 for="categoria" class="h2-side">Categoría:</h2>
-        <select id="categoria">
-            <option value="">Elegir Categoria</option> 
-            <option value="carpinteria">Armarios</option>
-            <option value="marroquineria">Escritorios</option>
-            <option value="vidrieria">Sillas</option>
-            <option value="metaleria">Cajoneras</option>
-            <option value="ceramica">Mesas</option>
-            <option value="tapiceria">Utensilios</option>
-        </select>
-    </div>
+    <h2 for="categoria" class="h2-side">Categoría:</h2>
+    <select id="categoria">
+        <option value="">Elegir Categoria</option> 
+        <option value="carpinteria">Armarios</option>
+        <option value="marroquineria">Escritorios</option>
+        <option value="vidrieria">Sillas</option>
+        <option value="metaleria">Cajoneras</option>
+        <option value="ceramica">Mesas</option>
+        <option value="tapiceria">Utensilios</option>
+    </select>
+
+    <button onclick="aplicarFiltros()">Aplicar filtros</button>
+  </div>
 </aside>
 
 <!-- CONTENIDO PRINCIPAL -->
 <div class="main-content-wrapper">
-    <header>
-        <h1>
-            <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="75" height="75">
-            Mis Pedidos
-        </h1>
-        <p class="subtitulo">Sigue el estado de tus compras en tiempo real</p>
-    </header>
+  <header>
+    <h1 class="div" style="text-align: center;">
+      <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="75" height="75">
+      Tu Idea Hecha Realidad
+    </h1>
+  </header>
 
     {% if pedidos_sin_datos %}
         <div style="background: linear-gradient(135deg, #A0662F, #7A3E0E); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
@@ -90,7 +90,7 @@
                     {% for pedido in pedidos %}
                     <tr>
                         <td><strong>#{{ pedido.numero_secuencial }}</strong></td>
-                        <td>{{ pedido.fecha_creacion|date:"d/m/Y H:i" }}</td>
+                        <td>{{ pedido.fecha_creacion|date:"d/m/Y" }}</td>
                         <td>
                             <span class="badge-estado badge-{{ pedido.estado }}">
                                 {{ pedido.get_estado_display }}
@@ -366,7 +366,7 @@ const pedidosData = {
         numeroSecuencial: {{ pedido.numero_secuencial }},
         productos: {{ pedido.productos_json|safe }},
         estado: "{{ pedido.get_estado_display }}",
-        fecha: "{{ pedido.fecha_creacion|date:'d/m/Y H:i' }}",
+        fecha: "{{ pedido.fecha_creacion|date:'d/m/Y' }}",
         total: "{{ pedido.monto_total }}",
         nombre: "{{ pedido.nombre_completo|default:'' }}",
         telefono: "{{ pedido.telefono|default:'' }}",
@@ -618,6 +618,21 @@ window.onclick = function(event) {
         cerrarModalCompletarDatos();
     }
 }
+
+function aplicarFiltros() {
+        const categoria = document.getElementById('categoria').value;
+        console.log('Aplicando filtros y redirigiendo...');
+        console.log('Categoría seleccionada:', categoria);
+
+        if (categoria) {
+            const urlRedireccion = '/' + categoria + '/';
+            
+            console.log('Redirigiendo a:', urlRedireccion);
+            window.location.href = urlRedireccion;
+        } else {
+            window.location.href = '/productos/'; 
+        }
+    }
 </script>
 
 <script src="{% static 'core/javascript/Carrito.js' %}"></script>

@@ -63,7 +63,7 @@
                                             {{ pedido.get_estado_display }}
                                         </span>
                                     </td>
-                                    <td>{{ pedido.fecha_creacion|date:"d/m/Y H:i" }}</td>
+                                    <td>{{ pedido.fecha_creacion|date:"d/m/Y" }}</td>
                                     <td>
                                         <button class="button" onclick="verDetallePedido({{ pedido.id }})">
                                             Ver Detalles

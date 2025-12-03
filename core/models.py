@@ -14,6 +14,7 @@ class Mesas(models.Model):
     precio1 = models.DecimalField(max_digits=10, decimal_places=2)
     imagen1 = models.ImageField(upload_to='uploads/productos/')
     cantidad_disponible = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
     
 class Sillas(models.Model):
     nombre2 = models.CharField(max_length=100)
@@ -21,6 +22,7 @@ class Sillas(models.Model):
     precio2 = models.DecimalField(max_digits=10, decimal_places=2)
     imagen2 = models.ImageField(upload_to='uploads/productos/')
     cantidad_disponible = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
     
 class Armarios(models.Model):
     nombre3 = models.CharField(max_length=100)
@@ -28,6 +30,7 @@ class Armarios(models.Model):
     precio3 = models.DecimalField(max_digits=10, decimal_places=2)
     imagen3 = models.ImageField(upload_to='uploads/productos/')
     cantidad_disponible = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
     
 class Cajoneras(models.Model):
     nombre4 = models.CharField(max_length=100)
@@ -35,6 +38,7 @@ class Cajoneras(models.Model):
     precio4 = models.DecimalField(max_digits=10, decimal_places=2)
     imagen4 = models.ImageField(upload_to='uploads/productos/')
     cantidad_disponible = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
     
 class Escritorios(models.Model):
     nombre5 = models.CharField(max_length=100)
@@ -42,6 +46,7 @@ class Escritorios(models.Model):
     precio5 = models.DecimalField(max_digits=10, decimal_places=2)
     imagen5 = models.ImageField(upload_to='uploads/productos/')
     cantidad_disponible = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
     
 class Utensilios(models.Model):
     nombre6 = models.CharField(max_length=100)
@@ -49,6 +54,7 @@ class Utensilios(models.Model):
     precio6 = models.DecimalField(max_digits=10, decimal_places=2)
     imagen6 = models.ImageField(upload_to='uploads/productos/')
     cantidad_disponible = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
 
 class UserClientes(models.Model):
     usernameCliente = models.CharField(max_length=100, unique=True)
@@ -157,7 +163,7 @@ class Comentario(models.Model):
         ordering = ['-fecha_creacion']
     
     def __str__(self):
-        return f"Comentario de {self.usuario.usernameCliente} - {self.fecha_creacion.strftime('%d/%m/%Y %H:%M')}"
+        return f"Comentario de {self.usuario.usernameCliente} - {self.fecha_creacion.strftime('%d/%m/%Y')}"
 
 class Pago(models.Model):
     ESTADO_CHOICES = [

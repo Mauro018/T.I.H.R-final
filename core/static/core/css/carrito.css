@@ -15,6 +15,7 @@
     padding-right: calc(40px + 3rem);
     position: relative;
     overflow: hidden;
+    border-radius: 0;
 }
 
 .main-content-wrapper header::before {

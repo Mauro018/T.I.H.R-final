@@ -47,6 +47,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
+                                <th>Descripción</th>
                                 <th>Precio</th>
                                 <th>Cantidad Disponible</th>
                                 <th>Acciones</th>
@@ -57,6 +58,7 @@
                             <tr>
                                 <td>{{ mesa.id }}</td>
                                 <td>{{ mesa.nombre1 }}</td>
+                                <td><span class="descripcion-cell">{{ mesa.descripcion1|truncatewords:10 }}</span></td>
                                 <td>${{ mesa.precio1 }}</td>
                                 <td>
                                     <span class="stock-badge {% if mesa.cantidad_disponible == 0 %}sin-stock{% elif mesa.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
@@ -70,7 +72,7 @@
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="5" class="no-datos">No hay mesas registradas</td></tr>
+                            <tr><td colspan="6" class="no-datos">No hay mesas registradas</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -89,6 +91,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
+                                <th>Descripción</th>
                                 <th>Precio</th>
                                 <th>Cantidad Disponible</th>
                                 <th>Acciones</th>
@@ -99,6 +102,7 @@
                             <tr>
                                 <td>{{ silla.id }}</td>
                                 <td>{{ silla.nombre2 }}</td>
+                                <td><span class="descripcion-cell">{{ silla.descripcion2|truncatewords:10 }}</span></td>
                                 <td>${{ silla.precio2 }}</td>
                                 <td>
                                     <span class="stock-badge {% if silla.cantidad_disponible == 0 %}sin-stock{% elif silla.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
@@ -112,7 +116,7 @@
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="5" class="no-datos">No hay sillas registradas</td></tr>
+                            <tr><td colspan="6" class="no-datos">No hay sillas registradas</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -131,6 +135,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
+                                <th>Descripción</th>
                                 <th>Precio</th>
                                 <th>Cantidad Disponible</th>
                                 <th>Acciones</th>
@@ -141,6 +146,7 @@
                             <tr>
                                 <td>{{ armario.id }}</td>
                                 <td>{{ armario.nombre3 }}</td>
+                                <td><span class="descripcion-cell">{{ armario.descripcion3|truncatewords:10 }}</span></td>
                                 <td>${{ armario.precio3 }}</td>
                                 <td>
                                     <span class="stock-badge {% if armario.cantidad_disponible == 0 %}sin-stock{% elif armario.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
@@ -154,7 +160,7 @@
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="5" class="no-datos">No hay armarios registrados</td></tr>
+                            <tr><td colspan="6" class="no-datos">No hay armarios registrados</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -173,6 +179,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
+                                <th>Descripción</th>
                                 <th>Precio</th>
                                 <th>Cantidad Disponible</th>
                                 <th>Acciones</th>
@@ -183,6 +190,7 @@
                             <tr>
                                 <td>{{ cajonera.id }}</td>
                                 <td>{{ cajonera.nombre4 }}</td>
+                                <td><span class="descripcion-cell">{{ cajonera.descripcion4|truncatewords:10 }}</span></td>
                                 <td>${{ cajonera.precio4 }}</td>
                                 <td>
                                     <span class="stock-badge {% if cajonera.cantidad_disponible == 0 %}sin-stock{% elif cajonera.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
@@ -196,7 +204,7 @@
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="5" class="no-datos">No hay cajoneras registradas</td></tr>
+                            <tr><td colspan="6" class="no-datos">No hay cajoneras registradas</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -215,6 +223,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
+                                <th>Descripción</th>
                                 <th>Precio</th>
                                 <th>Cantidad Disponible</th>
                                 <th>Acciones</th>
@@ -225,6 +234,7 @@
                             <tr>
                                 <td>{{ escritorio.id }}</td>
                                 <td>{{ escritorio.nombre5 }}</td>
+                                <td><span class="descripcion-cell">{{ escritorio.descripcion5|truncatewords:10 }}</span></td>
                                 <td>${{ escritorio.precio5 }}</td>
                                 <td>
                                     <span class="stock-badge {% if escritorio.cantidad_disponible == 0 %}sin-stock{% elif escritorio.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
@@ -238,7 +248,7 @@
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="5" class="no-datos">No hay escritorios registrados</td></tr>
+                            <tr><td colspan="6" class="no-datos">No hay escritorios registrados</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -257,6 +267,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
+                                <th>Descripción</th>
                                 <th>Precio</th>
                                 <th>Cantidad Disponible</th>
                                 <th>Acciones</th>
@@ -267,6 +278,7 @@
                             <tr>
                                 <td>{{ utensilio.id }}</td>
                                 <td>{{ utensilio.nombre6 }}</td>
+                                <td><span class="descripcion-cell">{{ utensilio.descripcion6|truncatewords:10 }}</span></td>
                                 <td>${{ utensilio.precio6 }}</td>
                                 <td>
                                     <span class="stock-badge {% if utensilio.cantidad_disponible == 0 %}sin-stock{% elif utensilio.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
@@ -280,7 +292,7 @@
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="5" class="no-datos">No hay utensilios registrados</td></tr>
+                            <tr><td colspan="6" class="no-datos">No hay utensilios registrados</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>

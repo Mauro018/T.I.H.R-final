@@ -126,8 +126,8 @@
 }
 
 .idea-card.en-proceso .estado {
-    background-color: #cce5ff;
-    color: #004085;
+    background-color: #f5e6d3;
+    color: #7A3E0E;
 }
 
 .idea-card.completada .estado {

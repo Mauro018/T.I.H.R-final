@@ -201,7 +201,7 @@ def editar_producto_view2(request, categoria, producto_id):
     return render(request, 'Empresas/editar_producto2.html', context)
 
 def eliminar_producto_view2(request, categoria, producto_id):
-    # Eliminar el producto según la categoría
+    # Cambiar estado de activo/inactivo del producto según la categoría
     try:
         if categoria == 'mesas':
             producto = Mesas.objects.get(id=producto_id)
@@ -218,10 +218,16 @@ def eliminar_producto_view2(request, categoria, producto_id):
         else:
             return redirect('GestiProductos')
         
-        producto.delete()
-        messages.success(request, 'Producto eliminado exitosamente')
+        # Cambiar el estado en lugar de eliminar
+        producto.is_active = not producto.is_active
+        producto.save()
+        
+        if producto.is_active:
+            messages.success(request, 'Producto habilitado exitosamente')
+        else:
+            messages.success(request, 'Producto inhabilitado exitosamente')
     except:
-        messages.error(request, 'Error al eliminar el producto')
+        messages.error(request, 'Error al cambiar el estado del producto')
     
     return redirect('GestiProductos')
 
@@ -412,7 +418,7 @@ def obtener_pedidos_cliente_view(request, cliente_id):
                 'monto_total': float(pedido.monto_total),
                 'cantidad_productos': cantidad_productos,
                 'productos': productos_parseados,
-                'fecha_creacion': pedido.fecha_creacion.strftime('%d/%m/%Y %H:%M'),
+                'fecha_creacion': pedido.fecha_creacion.strftime('%d/%m/%Y'),
                 'numero_seguimiento': pedido.numero_seguimiento or '',
                 'empresa_envio': pedido.empresa_envio or '',
                 'direccion': pedido.direccion or 'No especificada',
@@ -525,7 +531,7 @@ def obtener_pagos_cliente_view(request, cliente_id):
                 'monto_total': float(pago.monto_total),
                 'cantidad_productos': cantidad_productos,
                 'productos': productos_parseados,
-                'fecha_creacion': pago.fecha_creacion.strftime('%d/%m/%Y %H:%M'),
+                'fecha_creacion': pago.fecha_creacion.strftime('%d/%m/%Y'),
                 'comprobante_url': pago.comprobante.url if pago.comprobante else '',
                 'notas_empresa': pago.notas_empresa or '',
             })
@@ -1049,7 +1055,7 @@ def obtener_mensajes_pago_view(request, pago_id):
                 'remitente_nombre': mensaje.remitente_nombre,
                 'mensaje': mensaje.mensaje,
                 'imagen': mensaje.imagen.url if mensaje.imagen else None,
-                'fecha_envio': mensaje.fecha_envio.strftime('%d/%m/%Y %H:%M'),
+                'fecha_envio': mensaje.fecha_envio.strftime('%d/%m/%Y'),
                 'leido': mensaje.leido
             })
         
@@ -1123,7 +1129,7 @@ def obtener_ideas_usuario_view(request, usuario_id):
                 'titulo': idea.titulo,
                 'descripcion': idea.descripcion,
                 'estado': idea.estado,
-                'fecha_creacion': idea.fecha_creacion.strftime('%d/%m/%Y %H:%M'),
+                'fecha_creacion': idea.fecha_creacion.strftime('%d/%m/%Y'),
                 'tiene_imagen': bool(idea.imagen),
                 'tiene_modelo_3d': bool(idea.modelo_3d),
                 'empresa_asignada': idea.empresa_asignada.usernameEmpresa if idea.empresa_asignada else None,

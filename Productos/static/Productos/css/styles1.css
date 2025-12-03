@@ -1,11 +1,9 @@
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f2f5; /* Light grey background for overall page */
+    background-color: #f5f5f5;
     color: #333;
-    display: flex;
-    flex-direction: column;
     min-height: 100vh;
 }
 
@@ -15,12 +13,12 @@ header {
     padding: 2rem 3rem;
     text-align: center;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    margin: -20px -20px 30px -20px;
+    margin: -40px -60px 30px -60px;
     position: relative;
     overflow: hidden;
-    width: calc(100% + 40px);
-    padding-left: calc(20px + 3rem);
-    padding-right: calc(20px + 3rem);
+    width: calc(100% + 120px);
+    padding-left: calc(60px + 3rem);
+    padding-right: calc(60px + 3rem);
 }
 
 header::before {
@@ -133,10 +131,10 @@ main {
 footer {
     background-color: #7A3E0E;
     padding: 2rem 3rem;
-    margin: 2rem -20px -20px -20px;
-    width: calc(100% + 40px);
-    padding-left: calc(20px + 3rem);
-    padding-right: calc(20px + 3rem);
+    margin: 2rem -60px -40px -60px;
+    width: calc(100% + 120px);
+    padding-left: calc(60px + 3rem);
+    padding-right: calc(60px + 3rem);
     color: #ffffff;
 }
 
@@ -397,12 +395,7 @@ header .hearder-content {
     width: 100%;
     margin-bottom: 20px;
 }
-body {
-    font-family: Arial, sans-serif; /* This conflicts with 'Inter', keeping 'Inter' from the first body rule */
-    margin: 20px; /* This conflicts with margin:0, padding:0, keeping 0 from the first body rule */
-    background-color: #f4f4f4; /* This conflicts, keeping #f0f2f5 */
-    color: #333;
-}
+/* Body duplicado eliminado - se usa el body principal con Inter */
 .contenedor-articulos {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -745,7 +738,7 @@ input, textarea {
 }
 
 .sidebar ul li a:hover {
-    background-color: #6B8E23;
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .filtros label {
@@ -791,8 +784,12 @@ input, textarea {
 }
 
 .main-content-wrapper {
-    margin-left: 270px;
-    padding: 20px;
+    margin-left: 290px;
+    padding: 20px 40px;
+    width: calc(100% - 290px);
+    max-width: 1400px;
+    margin-right: auto;
+    box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
@@ -810,16 +807,7 @@ input, textarea {
     box-sizing: border-box;
 }
 
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #1085c9 0%, #f0f3f8 100%);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
+/* Estilos de login movidos - no se usan en páginas de categorías */
 
 .login-container {
     background: white; /* Fondo blanco */
@@ -923,9 +911,9 @@ h1 {
 }
 
 .message.success {
-    background: rgba(40, 167, 69, 0.1);
-    border: 1px solid rgba(40, 167, 69, 0.3);
-    color: #28a745;
+    background: rgba(160, 102, 47, 0.1);
+    border: 1px solid rgba(160, 102, 47, 0.3);
+    color: #A0662F;
 }
 
 .back-link-container {
@@ -956,32 +944,11 @@ h1 {
 }
 
 .seccion-at {
-    /* Fondo Transparente Inicial */
-    background-color: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(5px);
-
     /* Estilos Base */
     padding: 30px;
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
     text-align: center;
     color: #333;
-    
-    /* Animación (Transición) */
-    transition: 
-        background-color 0.4s ease-out,
-        box-shadow 0.4s ease-out,
-        transform 0.4s ease-out;
-}
-
-/* Estado al pasar el mouse (HOVER) */
-.seccion-at:hover {
-    /* Sombra más marcada */
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 123, 255, 0.5);
-    
-    /* Efecto de elevación y zoom */
-    transform: translateY(-2px) scale(1.01);
 }
 
 /* Badge del carrito */

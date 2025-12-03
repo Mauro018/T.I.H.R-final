@@ -22,7 +22,6 @@
         </a>
         <span class="username-display">{{ usuario.usernameCliente }}</span>
     </div>
-  <h2 class="h2-side">Menú</h2>
   <ul>
     <li><a href="{% url 'productos' %}">Ofertas</a></li>
     <li><a href="{% url 'idea' %}">Crear Idea</a></li>
@@ -34,8 +33,6 @@
 
   <!-- FILTROS -->
   <div class="filtros">
-    <h3>Filtrar productos</h3>
-
     <h2 for="categoria" class="h2-side">Categoría:</h2>
     <select id="categoria">
         <option value="">Elegir Categoria</option> 
@@ -148,7 +145,7 @@
                       </div>
                       <div class="usuario-info">
                         <h4>{{ idea.autor }}</h4>
-                        <span class="idea-fecha">{{ idea.fecha_creacion|date:"d/m/Y H:i" }}</span>
+                        <span class="idea-fecha">{{ idea.fecha_creacion|date:"d/m/Y" }}</span>
                       </div>
                     </div>
                   </div>

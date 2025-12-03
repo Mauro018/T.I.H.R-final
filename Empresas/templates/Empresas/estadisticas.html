@@ -8,21 +8,9 @@
     <link rel="stylesheet" href="{% static 'Empresas/css/styles3.css' %}?v=5">
     <link rel="stylesheet" href="{% static 'Empresas/css/estadisticas.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <!-- DEBUG: Ver valores en consola -->
-    <script>
-        console.log("=== VALORES DEL CONTEXTO ===");
-        console.log("total_productos:", "{{ total_productos }}");
-        console.log("total_mesas:", "{{ total_mesas }}");
-        console.log("total_sillas:", "{{ total_sillas }}");
-        console.log("pedidos_procesando:", "{{ pedidos_procesando }}");
-        console.log("pedidos_enviado:", "{{ pedidos_enviado }}");
-        console.log("pedidos_entregado:", "{{ pedidos_entregado }}");
-        console.log("pagos_pendientes:", "{{ pagos_pendientes }}");
-        console.log("pagos_confirmados:", "{{ pagos_confirmados }}");
-        console.log("pagos_rechazados:", "{{ pagos_rechazados }}");
-    </script>
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside>
@@ -46,45 +34,57 @@
         <!-- Main Content -->
         <main>
             <header>
-                <h1>Estadísticas del Negocio</h1>
+                <h1><i class="fas fa-chart-line"></i> Estadísticas del Negocio</h1>
+                <button class="btn-refresh" onclick="actualizarEstadisticas()">
+                    <i class="fas fa-sync-alt"></i> Actualizar
+                </button>
             </header>
 
             <!-- Tarjetas de Estadísticas Principales -->
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card" data-animate="fade-in">
                     <div class="stat-icon usuarios">
                         <i class="fas fa-users"></i>
                     </div>
                     <div class="stat-content">
                         <h3>Usuarios Totales</h3>
-                        <p class="stat-number">{{ total_usuarios }}</p>
+                        <p class="stat-number" data-count="{{ total_usuarios }}">0</p>
                         <p class="stat-label">{{ usuarios_activos }} activos</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill usuarios-fill" style="width: {{ usuarios_activos|default:0 }}{{ total_usuarios|default:1 }}%"></div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card" data-animate="fade-in" style="animation-delay: 0.1s">
                     <div class="stat-icon productos">
                         <i class="fas fa-box"></i>
                     </div>
                     <div class="stat-content">
                         <h3>Productos</h3>
-                        <p class="stat-number">{{ total_productos }}</p>
+                        <p class="stat-number" data-count="{{ total_productos }}">0</p>
                         <p class="stat-label">{{ total_inventario }} unidades en total</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill productos-fill" style="width: 100%"></div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card" data-animate="fade-in" style="animation-delay: 0.2s">
                     <div class="stat-icon pedidos">
                         <i class="fas fa-shopping-cart"></i>
                     </div>
                     <div class="stat-content">
                         <h3>Pedidos Totales</h3>
-                        <p class="stat-number">{{ total_pedidos }}</p>
+                        <p class="stat-number" data-count="{{ total_pedidos }}">0</p>
                         <p class="stat-label">{{ pedidos_entregado }} entregados</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill pedidos-fill" style="width: {% widthratio pedidos_entregado total_pedidos|default:1 100 %}%"></div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card" data-animate="fade-in" style="animation-delay: 0.3s">
                     <div class="stat-icon ingresos">
                         <i class="fas fa-dollar-sign"></i>
                     </div>
@@ -92,87 +92,141 @@
                         <h3>Ingresos Totales</h3>
                         <p class="stat-number">${{ ingresos_totales|floatformat:2 }}</p>
                         <p class="stat-label">pagos confirmados</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill ingresos-fill" style="width: 100%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Productos por Categoría -->
-            <div class="stats-section">
+            <div class="stats-section" data-animate="slide-up">
                 <h2><i class="fas fa-layer-group"></i> Productos por Categoría</h2>
+                <div class="chart-container">
+                    <canvas id="categoriasChart"></canvas>
+                </div>
                 <div class="productos-categoria-grid">
-                    <div class="categoria-item">
+                    <div class="categoria-item" data-animate="zoom-in" style="animation-delay: 0.1s">
                         <div class="categoria-icon"><i class="fas fa-table"></i></div>
                         <p class="categoria-nombre">Mesas</p>
-                        <p class="categoria-cantidad">{{ total_mesas }} productos</p>
+                        <p class="categoria-cantidad" data-count="{{ total_mesas }}">0</p>
                         <p class="stat-label">{{ inventario_mesas }} unidades</p>
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" style="width: {% widthratio inventario_mesas total_inventario|default:1 100 %}%"></div>
+                        </div>
                     </div>
-                    <div class="categoria-item">
+                    <div class="categoria-item" data-animate="zoom-in" style="animation-delay: 0.2s">
                         <div class="categoria-icon"><i class="fas fa-chair"></i></div>
                         <p class="categoria-nombre">Sillas</p>
-                        <p class="categoria-cantidad">{{ total_sillas }} productos</p>
+                        <p class="categoria-cantidad" data-count="{{ total_sillas }}">0</p>
                         <p class="stat-label">{{ inventario_sillas }} unidades</p>
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" style="width: {% widthratio inventario_sillas total_inventario|default:1 100 %}%"></div>
+                        </div>
                     </div>
-                    <div class="categoria-item">
+                    <div class="categoria-item" data-animate="zoom-in" style="animation-delay: 0.3s">
                         <div class="categoria-icon"><i class="fas fa-door-closed"></i></div>
                         <p class="categoria-nombre">Armarios</p>
-                        <p class="categoria-cantidad">{{ total_armarios }} productos</p>
+                        <p class="categoria-cantidad" data-count="{{ total_armarios }}">0</p>
                         <p class="stat-label">{{ inventario_armarios }} unidades</p>
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" style="width: {% widthratio inventario_armarios total_inventario|default:1 100 %}%"></div>
+                        </div>
                     </div>
-                    <div class="categoria-item">
+                    <div class="categoria-item" data-animate="zoom-in" style="animation-delay: 0.4s">
                         <div class="categoria-icon"><i class="fas fa-archive"></i></div>
                         <p class="categoria-nombre">Cajoneras</p>
-                        <p class="categoria-cantidad">{{ total_cajoneras }} productos</p>
+                        <p class="categoria-cantidad" data-count="{{ total_cajoneras }}">0</p>
                         <p class="stat-label">{{ inventario_cajoneras }} unidades</p>
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" style="width: {% widthratio inventario_cajoneras total_inventario|default:1 100 %}%"></div>
+                        </div>
                     </div>
-                    <div class="categoria-item">
+                    <div class="categoria-item" data-animate="zoom-in" style="animation-delay: 0.5s">
                         <div class="categoria-icon"><i class="fas fa-desk"></i></div>
                         <p class="categoria-nombre">Escritorios</p>
-                        <p class="categoria-cantidad">{{ total_escritorios }} productos</p>
+                        <p class="categoria-cantidad" data-count="{{ total_escritorios }}">0</p>
                         <p class="stat-label">{{ inventario_escritorios }} unidades</p>
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" style="width: {% widthratio inventario_escritorios total_inventario|default:1 100 %}%"></div>
+                        </div>
                     </div>
-                    <div class="categoria-item">
+                    <div class="categoria-item" data-animate="zoom-in" style="animation-delay: 0.6s">
                         <div class="categoria-icon"><i class="fas fa-utensils"></i></div>
                         <p class="categoria-nombre">Utensilios</p>
-                        <p class="categoria-cantidad">{{ total_utensilios }} productos</p>
+                        <p class="categoria-cantidad" data-count="{{ total_utensilios }}">0</p>
                         <p class="stat-label">{{ inventario_utensilios }} unidades</p>
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" style="width: {% widthratio inventario_utensilios total_inventario|default:1 100 %}%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Estado de Pedidos -->
-            <div class="stats-section">
+            <div class="stats-section" data-animate="slide-up" style="animation-delay: 0.2s">
                 <h2><i class="fas fa-truck"></i> Estado de Pedidos</h2>
+                <div class="chart-container-small">
+                    <canvas id="pedidosChart"></canvas>
+                </div>
                 <div class="estados-grid">
-                    <div class="estado-item procesando">
-                        <p class="estado-numero">{{ pedidos_procesando }}</p>
+                    <div class="estado-item procesando" data-animate="bounce-in">
+                        <i class="fas fa-spinner fa-pulse"></i>
+                        <p class="estado-numero" data-count="{{ pedidos_procesando }}">0</p>
                         <p class="estado-label">Procesando</p>
+                        <div class="estado-bar">
+                            <div class="estado-bar-fill procesando-fill" style="width: {% widthratio pedidos_procesando total_pedidos|default:1 100 %}%"></div>
+                        </div>
                     </div>
-                    <div class="estado-item enviado">
-                        <p class="estado-numero">{{ pedidos_enviado }}</p>
+                    <div class="estado-item enviado" data-animate="bounce-in" style="animation-delay: 0.1s">
+                        <i class="fas fa-truck-loading"></i>
+                        <p class="estado-numero" data-count="{{ pedidos_enviado }}">0</p>
                         <p class="estado-label">Enviado</p>
+                        <div class="estado-bar">
+                            <div class="estado-bar-fill enviado-fill" style="width: {% widthratio pedidos_enviado total_pedidos|default:1 100 %}%"></div>
+                        </div>
                     </div>
-                    <div class="estado-item entregado">
-                        <p class="estado-numero">{{ pedidos_entregado }}</p>
+                    <div class="estado-item entregado" data-animate="bounce-in" style="animation-delay: 0.2s">
+                        <i class="fas fa-check-circle"></i>
+                        <p class="estado-numero" data-count="{{ pedidos_entregado }}">0</p>
                         <p class="estado-label">Entregado</p>
+                        <div class="estado-bar">
+                            <div class="estado-bar-fill entregado-fill" style="width: {% widthratio pedidos_entregado total_pedidos|default:1 100 %}%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Estado de Pagos -->
-            <div class="stats-section">
+            <div class="stats-section" data-animate="slide-up" style="animation-delay: 0.3s">
                 <h2><i class="fas fa-money-bill-wave"></i> Estado de Pagos</h2>
+                <div class="chart-container-small">
+                    <canvas id="pagosChart"></canvas>
+                </div>
                 <div class="estados-grid">
-                    <div class="estado-item pendiente">
-                        <p class="estado-numero">{{ pagos_pendientes }}</p>
+                    <div class="estado-item pendiente" data-animate="bounce-in">
+                        <i class="fas fa-clock"></i>
+                        <p class="estado-numero" data-count="{{ pagos_pendientes }}">0</p>
                         <p class="estado-label">Pendiente</p>
+                        <div class="estado-bar">
+                            <div class="estado-bar-fill pendiente-fill" style="width: {% widthratio pagos_pendientes pagos_pendientes|add:pagos_confirmados|add:pagos_rechazados|default:1 100 %}%"></div>
+                        </div>
                     </div>
-                    <div class="estado-item confirmado">
-                        <p class="estado-numero">{{ pagos_confirmados }}</p>
+                    <div class="estado-item confirmado" data-animate="bounce-in" style="animation-delay: 0.1s">
+                        <i class="fas fa-check-double"></i>
+                        <p class="estado-numero" data-count="{{ pagos_confirmados }}">0</p>
                         <p class="estado-label">Confirmado</p>
+                        <div class="estado-bar">
+                            <div class="estado-bar-fill confirmado-fill" style="width: {% widthratio pagos_confirmados pagos_pendientes|add:pagos_confirmados|add:pagos_rechazados|default:1 100 %}%"></div>
+                        </div>
                     </div>
-                    <div class="estado-item rechazado">
-                        <p class="estado-numero">{{ pagos_rechazados }}</p>
+                    <div class="estado-item rechazado" data-animate="bounce-in" style="animation-delay: 0.2s">
+                        <i class="fas fa-times-circle"></i>
+                        <p class="estado-numero" data-count="{{ pagos_rechazados }}">0</p>
                         <p class="estado-label">Rechazado</p>
+                        <div class="estado-bar">
+                            <div class="estado-bar-fill rechazado-fill" style="width: {% widthratio pagos_rechazados pagos_pendientes|add:pagos_confirmados|add:pagos_rechazados|default:1 100 %}%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -193,6 +247,178 @@
 {% include 'core/modal_notificaciones.html' %}
 
 <script>
+// Animación de contador
+function animateCounter(element) {
+    const target = parseInt(element.getAttribute('data-count'));
+    const duration = 2000;
+    const increment = target / (duration / 16);
+    let current = 0;
+    
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            element.textContent = target;
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(current);
+        }
+    }, 16);
+}
+
+// Inicializar gráficos
+function inicializarGraficos() {
+    // Gráfico de categorías
+    const ctxCategorias = document.getElementById('categoriasChart').getContext('2d');
+    new Chart(ctxCategorias, {
+        type: 'doughnut',
+        data: {
+            labels: ['Mesas', 'Sillas', 'Armarios', 'Cajoneras', 'Escritorios', 'Utensilios'],
+            datasets: [{
+                data: [
+                    {{ total_mesas|default:0 }},
+                    {{ total_sillas|default:0 }},
+                    {{ total_armarios|default:0 }},
+                    {{ total_cajoneras|default:0 }},
+                    {{ total_escritorios|default:0 }},
+                    {{ total_utensilios|default:0 }}
+                ],
+                backgroundColor: [
+                    '#A0662F',
+                    '#7A3E0E',
+                    '#6B4E3D',
+                    '#C9A882',
+                    '#8B5A3C',
+                    '#D4A574'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        font: { size: 12 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.parsed + ' productos';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Gráfico de pedidos
+    const ctxPedidos = document.getElementById('pedidosChart').getContext('2d');
+    new Chart(ctxPedidos, {
+        type: 'bar',
+        data: {
+            labels: ['Procesando', 'Enviado', 'Entregado'],
+            datasets: [{
+                label: 'Pedidos',
+                data: [
+                    {{ pedidos_procesando|default:0 }},
+                    {{ pedidos_enviado|default:0 }},
+                    {{ pedidos_entregado|default:0 }}
+                ],
+                backgroundColor: [
+                    '#FFA500',
+                    '#4169E1',
+                    '#32CD32'
+                ],
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1 }
+                }
+            }
+        }
+    });
+
+    // Gráfico de pagos
+    const ctxPagos = document.getElementById('pagosChart').getContext('2d');
+    new Chart(ctxPagos, {
+        type: 'pie',
+        data: {
+            labels: ['Pendiente', 'Confirmado', 'Rechazado'],
+            datasets: [{
+                data: [
+                    {{ pagos_pendientes|default:0 }},
+                    {{ pagos_confirmados|default:0 }},
+                    {{ pagos_rechazados|default:0 }}
+                ],
+                backgroundColor: [
+                    '#FFA500',
+                    '#32CD32',
+                    '#DC3545'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        font: { size: 12 }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Función para actualizar estadísticas
+function actualizarEstadisticas() {
+    const btn = document.querySelector('.btn-refresh i');
+    btn.classList.add('fa-spin');
+    
+    setTimeout(() => {
+        location.reload();
+    }, 500);
+}
+
+// Inicializar cuando cargue la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Animar contadores
+    document.querySelectorAll('[data-count]').forEach(animateCounter);
+    
+    // Inicializar gráficos
+    inicializarGraficos();
+    
+    // Observer para animaciones
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animated');
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+});
+
 // Actualizar notificaciones cada 30 segundos para empresa
 function actualizarNotificacionesEmpresa() {
     fetch('/api/conversaciones/')

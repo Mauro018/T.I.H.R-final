@@ -48,23 +48,35 @@
                             <th>Nombre del Producto</th>
                             <th>Descripción</th>
                             <th>Precio</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for armario in armarios %}
-                        <tr>
+                        <tr class="{% if not armario.is_active %}producto-inactivo{% endif %}">
                             <td>{{ armario.nombre3 }}</td>
                             <td>{{ armario.descripcion3 }}</td>
                             <td>${{ armario.precio3 }}</td>
                             <td>
-                                <a href="{% url 'editar_producto2' 'armarios' armario.id %}" class="button" style="background-color: #007BFF; color: white;">Editar</a>
-                                <a href="{% url 'eliminar_producto2' 'armarios' armario.id %}" class="button" style="background-color: #dc3545; color: white;" onclick="return confirm('¿Estás seguro de eliminar este producto?')">Eliminar</a>
+                                {% if armario.is_active %}
+                                    <span class="badge-activo">Activo</span>
+                                {% else %}
+                                    <span class="badge-inactivo">Inhabilitado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'editar_producto2' 'armarios' armario.id %}" class="button" style="background-color: #A0662F; color: white;">Editar</a>
+                                {% if armario.is_active %}
+                                    <a href="{% url 'eliminar_producto2' 'armarios' armario.id %}" class="button" style="background-color: #dc3545; color: white;" onclick="return confirm('¿Estás seguro de inhabilitar este producto?')">Inhabilitar</a>
+                                {% else %}
+                                    <a href="{% url 'eliminar_producto2' 'armarios' armario.id %}" class="button" style="background-color: #28a745; color: white;" onclick="return confirm('¿Estás seguro de habilitar este producto?')">Habilitar</a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="no-products">No hay armarios registrados</td>
+                            <td colspan="5" class="no-products">No hay armarios registrados</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -85,23 +97,35 @@
                             <th>Nombre del Producto</th>
                             <th>Descripción</th>
                             <th>Precio</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for mesa in mesas %}
-                        <tr>
+                        <tr class="{% if not mesa.is_active %}producto-inactivo{% endif %}">
                             <td>{{ mesa.nombre1 }}</td>
                             <td>{{ mesa.descripcion1 }}</td>
                             <td>${{ mesa.precio1 }}</td>
                             <td>
-                                <a href="{% url 'editar_producto2' 'mesas' mesa.id %}" class="button" style="background-color: #007BFF; color: white;">Editar</a>
-                                <a href="{% url 'eliminar_producto2' 'mesas' mesa.id %}" class="button" style="background-color: #dc3545; color: white;" onclick="return confirm('¿Estás seguro de eliminar este producto?')">Eliminar</a>
+                                {% if mesa.is_active %}
+                                    <span class="badge-activo">Activo</span>
+                                {% else %}
+                                    <span class="badge-inactivo">Inhabilitado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'editar_producto2' 'mesas' mesa.id %}" class="button" style="background-color: #A0662F; color: white;">Editar</a>
+                                {% if mesa.is_active %}
+                                    <a href="{% url 'eliminar_producto2' 'mesas' mesa.id %}" class="button" style="background-color: #dc3545; color: white;" onclick="return confirm('¿Estás seguro de inhabilitar este producto?')">Inhabilitar</a>
+                                {% else %}
+                                    <a href="{% url 'eliminar_producto2' 'mesas' mesa.id %}" class="button" style="background-color: #28a745; color: white;" onclick="return confirm('¿Estás seguro de habilitar este producto?')">Habilitar</a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="no-products">No hay mesas registradas</td>
+                            <td colspan="5" class="no-products">No hay mesas registradas</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -122,23 +146,35 @@
                             <th>Nombre del Producto</th>
                             <th>Descripción</th>
                             <th>Precio</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for silla in sillas %}
-                        <tr>
+                        <tr class="{% if not silla.is_active %}producto-inactivo{% endif %}">
                             <td>{{ silla.nombre2 }}</td>
                             <td>{{ silla.descripcion2 }}</td>
                             <td>${{ silla.precio2 }}</td>
                             <td>
-                                <a href="{% url 'editar_producto2' 'sillas' silla.id %}" class="button" style="background-color: #007BFF; color: white;">Editar</a>
-                                <a href="{% url 'eliminar_producto2' 'sillas' silla.id %}" class="button" style="background-color: #dc3545; color: white;" onclick="return confirm('¿Estás seguro de eliminar este producto?')">Eliminar</a>
+                                {% if silla.is_active %}
+                                    <span class="badge-activo">Activo</span>
+                                {% else %}
+                                    <span class="badge-inactivo">Inhabilitado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'editar_producto2' 'sillas' silla.id %}" class="button" style="background-color: #A0662F; color: white;">Editar</a>
+                                {% if silla.is_active %}
+                                    <a href="{% url 'eliminar_producto2' 'sillas' silla.id %}" class="button" style="background-color: #dc3545; color: white;" onclick="return confirm('¿Estás seguro de inhabilitar este producto?')">Inhabilitar</a>
+                                {% else %}
+                                    <a href="{% url 'eliminar_producto2' 'sillas' silla.id %}" class="button" style="background-color: #28a745; color: white;" onclick="return confirm('¿Estás seguro de habilitar este producto?')">Habilitar</a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="no-products">No hay sillas registradas</td>
+                            <td colspan="5" class="no-products">No hay sillas registradas</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -159,23 +195,35 @@
                             <th>Nombre del Producto</th>
                             <th>Descripción</th>
                             <th>Precio</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for cajonera in cajoneras %}
-                        <tr>
+                        <tr class="{% if not cajonera.is_active %}producto-inactivo{% endif %}">
                             <td>{{ cajonera.nombre4 }}</td>
                             <td>{{ cajonera.descripcion4 }}</td>
                             <td>${{ cajonera.precio4 }}</td>
                             <td>
-                                <a href="{% url 'editar_producto2' 'cajoneras' cajonera.id %}" class="button" style="background-color: #007BFF; color: white;">Editar</a>
-                                <a href="{% url 'eliminar_producto2' 'cajoneras' cajonera.id %}" class="button" style="background-color: #dc3545; color: white;" onclick="return confirm('¿Estás seguro de eliminar este producto?')">Eliminar</a>
+                                {% if cajonera.is_active %}
+                                    <span class="badge-activo">Activo</span>
+                                {% else %}
+                                    <span class="badge-inactivo">Inhabilitado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'editar_producto2' 'cajoneras' cajonera.id %}" class="button" style="background-color: #A0662F; color: white;">Editar</a>
+                                {% if cajonera.is_active %}
+                                    <a href="{% url 'eliminar_producto2' 'cajoneras' cajonera.id %}" class="button" style="background-color: #dc3545; color: white;" onclick="return confirm('¿Estás seguro de inhabilitar este producto?')">Inhabilitar</a>
+                                {% else %}
+                                    <a href="{% url 'eliminar_producto2' 'cajoneras' cajonera.id %}" class="button" style="background-color: #28a745; color: white;" onclick="return confirm('¿Estás seguro de habilitar este producto?')">Habilitar</a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="no-products">No hay cajoneras registradas</td>
+                            <td colspan="5" class="no-products">No hay cajoneras registradas</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -196,23 +244,35 @@
                             <th>Nombre del Producto</th>
                             <th>Descripción</th>
                             <th>Precio</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for escritorio in escritorios %}
-                        <tr>
+                        <tr class="{% if not escritorio.is_active %}producto-inactivo{% endif %}">
                             <td>{{ escritorio.nombre5 }}</td>
                             <td>{{ escritorio.descripcion5 }}</td>
                             <td>${{ escritorio.precio5 }}</td>
                             <td>
-                                <a href="{% url 'editar_producto2' 'escritorios' escritorio.id %}" class="button" style="background-color: #007BFF; color: white;">Editar</a>
-                                <a href="{% url 'eliminar_producto2' 'escritorios' escritorio.id %}" class="button" style="background-color: #dc3545; color: white;" onclick="return confirm('¿Estás seguro de eliminar este producto?')">Eliminar</a>
+                                {% if escritorio.is_active %}
+                                    <span class="badge-activo">Activo</span>
+                                {% else %}
+                                    <span class="badge-inactivo">Inhabilitado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'editar_producto2' 'escritorios' escritorio.id %}" class="button" style="background-color: #A0662F; color: white;">Editar</a>
+                                {% if escritorio.is_active %}
+                                    <a href="{% url 'eliminar_producto2' 'escritorios' escritorio.id %}" class="button" style="background-color: #dc3545; color: white;" onclick="return confirm('¿Estás seguro de inhabilitar este producto?')">Inhabilitar</a>
+                                {% else %}
+                                    <a href="{% url 'eliminar_producto2' 'escritorios' escritorio.id %}" class="button" style="background-color: #28a745; color: white;" onclick="return confirm('¿Estás seguro de habilitar este producto?')">Habilitar</a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="no-products">No hay escritorios registrados</td>
+                            <td colspan="5" class="no-products">No hay escritorios registrados</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -233,23 +293,35 @@
                             <th>Nombre del Producto</th>
                             <th>Descripción</th>
                             <th>Precio</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for utensilio in utensilios %}
-                        <tr>
+                        <tr class="{% if not utensilio.is_active %}producto-inactivo{% endif %}">
                             <td>{{ utensilio.nombre6 }}</td>
                             <td>{{ utensilio.descripcion6 }}</td>
                             <td>${{ utensilio.precio6 }}</td>
                             <td>
-                                <a href="{% url 'editar_producto2' 'utensilios' utensilio.id %}" class="button" style="background-color: #007BFF; color: white;">Editar</a>
-                                <a href="{% url 'eliminar_producto2' 'utensilios' utensilio.id %}" class="button" style="background-color: #dc3545; color: white;" onclick="return confirm('¿Estás seguro de eliminar este producto?')">Eliminar</a>
+                                {% if utensilio.is_active %}
+                                    <span class="badge-activo">Activo</span>
+                                {% else %}
+                                    <span class="badge-inactivo">Inhabilitado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'editar_producto2' 'utensilios' utensilio.id %}" class="button" style="background-color: #A0662F; color: white;">Editar</a>
+                                {% if utensilio.is_active %}
+                                    <a href="{% url 'eliminar_producto2' 'utensilios' utensilio.id %}" class="button" style="background-color: #dc3545; color: white;" onclick="return confirm('¿Estás seguro de inhabilitar este producto?')">Inhabilitar</a>
+                                {% else %}
+                                    <a href="{% url 'eliminar_producto2' 'utensilios' utensilio.id %}" class="button" style="background-color: #28a745; color: white;" onclick="return confirm('¿Estás seguro de habilitar este producto?')">Habilitar</a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="no-products">No hay utensilios registrados</td>
+                            <td colspan="5" class="no-products">No hay utensilios registrados</td>
                         </tr>
                         {% endfor %}
                     </tbody>
