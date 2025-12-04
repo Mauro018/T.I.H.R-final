@@ -508,3 +508,316 @@ textarea.form-control {
         grid-template-columns: 1fr;
     }
 }
+
+/* ============================================
+   MEDIA QUERIES RESPONSIVAS ADICIONALES
+   ============================================ */
+
+/* Tablets */
+@media screen and (max-width: 1366px) and (min-width: 768px) {
+    .pedidos-container {
+        max-width: 100%;
+        padding: 18px 15px;
+    }
+
+    .pedido-card {
+        padding: 22px;
+    }
+
+    .pedido-info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Móviles */
+@media screen and (max-width: 767px) {
+    body .main-content-wrapper {
+        margin-left: 0 !important;
+        padding: 15px 10px !important;
+    }
+
+    body .main-content-wrapper header {
+        margin: 0 !important;
+        width: 100% !important;
+        padding: 1.5rem 1rem !important;
+    }
+
+    .main-content-wrapper header h1 {
+        font-size: 2rem;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .main-content-wrapper footer {
+        margin: 1.5rem 0 0 0 !important;
+        width: 100% !important;
+        padding: 1.5rem 1rem !important;
+    }
+
+    .pedidos-container {
+        max-width: 100%;
+        padding: 15px 10px;
+    }
+
+    .pedidos-grid {
+        gap: 20px;
+    }
+
+    .pedido-card {
+        padding: 20px 15px;
+        border-radius: 12px;
+    }
+
+    .pedido-header-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 18px;
+        padding-bottom: 12px;
+    }
+
+    .pedido-numero {
+        font-size: 1.1rem;
+        text-align: center;
+        width: 100%;
+    }
+
+    .pedido-fecha {
+        font-size: 0.9rem;
+        text-align: center;
+        width: 100%;
+    }
+
+    .pedido-estado {
+        padding: 6px 14px;
+        font-size: 0.85rem;
+        text-align: center;
+        width: 100%;
+    }
+
+    .pedido-info-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .info-item {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .pedido-productos {
+        padding: 12px;
+    }
+
+    .pedido-productos h3 {
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .producto-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 5px;
+        padding: 10px 0;
+    }
+
+    .pedido-total {
+        padding: 12px;
+        font-size: 1.3rem;
+    }
+
+    .pedido-seguimiento {
+        padding: 12px;
+    }
+
+    .pedido-seguimiento p {
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    .timeline {
+        padding: 15px;
+    }
+
+    .timeline-item {
+        margin-bottom: 12px;
+    }
+
+    .timeline-icon {
+        width: 28px;
+        height: 28px;
+        margin-right: 12px;
+    }
+
+    .timeline-content h4 {
+        font-size: 0.95rem;
+    }
+
+    .timeline-content p {
+        font-size: 0.85rem;
+    }
+
+    .btn-ver-detalles {
+        width: 100%;
+        text-align: center;
+        padding: 12px 18px;
+        font-size: 0.95rem;
+    }
+
+    .no-pedidos {
+        padding: 40px 15px;
+    }
+
+    .no-pedidos i {
+        font-size: 3rem;
+    }
+
+    .no-pedidos h2 {
+        font-size: 1.5rem;
+    }
+
+    /* Formulario de envío */
+    .formulario-envio {
+        padding: 20px 15px;
+    }
+
+    .alerta-pendiente {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .form-datos-envio {
+        padding: 15px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+    }
+
+    .form-control {
+        padding: 11px 13px;
+        font-size: 15px;
+    }
+
+    .btn-guardar-datos {
+        width: 100%;
+        justify-content: center;
+        padding: 13px 25px;
+        font-size: 0.95rem;
+    }
+
+    .pedido-notas {
+        padding: 12px;
+        text-align: center;
+    }
+}
+
+/* Móviles pequeños */
+@media screen and (max-width: 480px) {
+    body .main-content-wrapper header h1 {
+        font-size: 1.6rem;
+    }
+
+    .pedidos-container {
+        padding: 12px 8px;
+    }
+
+    .pedido-card {
+        padding: 18px 12px;
+    }
+
+    .pedido-numero {
+        font-size: 1rem;
+    }
+
+    .pedido-estado {
+        font-size: 0.8rem;
+        padding: 5px 12px;
+    }
+
+    .pedido-total {
+        font-size: 1.2rem;
+        padding: 10px;
+    }
+
+    .timeline-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .timeline-content h4 {
+        font-size: 0.9rem;
+    }
+
+    .no-pedidos i {
+        font-size: 2.5rem;
+    }
+
+    .no-pedidos h2 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Pantallas grandes */
+@media screen and (min-width: 1367px) {
+    .pedidos-container {
+        max-width: 1400px;
+    }
+}
+
+/* Orientación horizontal */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+    .pedido-card {
+        padding: 18px;
+    }
+
+    .pedidos-grid {
+        gap: 20px;
+    }
+}
+
+/* Dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+    .btn-ver-detalles,
+    .btn-guardar-datos,
+    .form-control {
+        min-height: 48px;
+    }
+}
+
+/* ============================================
+   ESPACIO ADICIONAL Y MEJORAS VISUALES
+   ============================================ */
+
+/* Espacio en el header para mejor visualización */
+.main-content-wrapper header {
+    margin-bottom: 40px !important;
+}
+
+.tabla-pedidos {
+    margin-top: 20px;
+}
+
+.pedidos-container {
+    padding-top: 10px;
+}
+
+/* Responsive para espaciado */
+@media screen and (max-width: 767px) {
+    .main-content-wrapper header {
+        margin-bottom: 25px !important;
+    }
+    
+    .tabla-pedidos {
+        margin-top: 15px;
+    }
+    
+    .pedidos-container {
+        padding-top: 5px;
+    }
+}

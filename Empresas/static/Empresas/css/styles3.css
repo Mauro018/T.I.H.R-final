@@ -1038,6 +1038,387 @@ td:last-child {
     background: #5a6268;
 }
 
+/* ============================================
+   MEDIA QUERIES PARA RESPONSIVIDAD COMPLETA
+   ============================================ */
+
+/* Móviles pequeños (menos de 576px) */
+@media (max-width: 575px) {
+    /* Sidebar oculto por defecto en móvil */
+    aside {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: 80%;
+        max-width: 280px;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+    }
+    
+    aside.show {
+        left: 0;
+    }
+    
+    /* Main content ocupa todo el ancho */
+    main {
+        margin-left: 0;
+        width: 100%;
+        padding: 1.5rem 1rem;
+    }
+    
+    /* Header */
+    main header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding-bottom: 1rem;
+    }
+    
+    main h1 {
+        font-size: 1.75rem;
+    }
+    
+    /* Grid containers */
+    .grid-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .productos-categoria-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    
+    .estados-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Cards */
+    .card {
+        padding: 1.5rem;
+    }
+    
+    .card h3 {
+        font-size: 1.25rem;
+    }
+    
+    /* Table */
+    .table-container {
+        overflow-x: auto;
+        padding: 1rem;
+    }
+    
+    table {
+        font-size: 0.85rem;
+        min-width: 600px;
+    }
+    
+    th, td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .descripcion-cell {
+        max-width: 200px;
+        font-size: 0.8rem;
+    }
+    
+    /* Stats cards */
+    .stat-card {
+        padding: 1rem;
+        flex-direction: row;
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .stat-content .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    /* Pagos grid */
+    .pagos-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .pago-card {
+        padding: 20px;
+    }
+    
+    .pago-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .pago-monto {
+        font-size: 1.25rem;
+        padding: 12px;
+    }
+    
+    .pago-actions {
+        flex-direction: column;
+    }
+    
+    /* Ideas grid */
+    .ideas-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .idea-card {
+        padding: 1.25rem;
+    }
+    
+    /* Tabs */
+    .tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+    
+    .tab-btn {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+    
+    /* Modal */
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+        padding: 20px;
+    }
+    
+    .modal-actions {
+        flex-direction: column;
+    }
+    
+    /* Forms */
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-cancelar,
+    .btn-guardar {
+        width: 100%;
+    }
+    
+    /* Seccion artículos */
+    .seccion-at {
+        padding: 20px 15px;
+    }
+    
+    .contenedor-articulos {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
+    
+    /* Botón agregar producto */
+    .add-product-button {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}
+
+/* Tablets (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    aside {
+        width: 200px;
+        min-width: 200px;
+        max-width: 200px;
+        padding: 1.25rem 0.75rem;
+    }
+    
+    aside h2 {
+        font-size: 1.35rem;
+    }
+    
+    main {
+        margin-left: 200px;
+        width: calc(100% - 200px);
+        padding: 2rem 1.5rem;
+    }
+    
+    main h1 {
+        font-size: 1.9rem;
+    }
+    
+    .grid-container {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.75rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    
+    .pagos-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .ideas-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+    
+    .contenedor-articulos {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+}
+
+/* Tablets grandes (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    aside {
+        width: 220px;
+        min-width: 220px;
+        max-width: 220px;
+    }
+    
+    main {
+        margin-left: 220px;
+        width: calc(100% - 220px);
+        padding: 2.25rem 2rem;
+    }
+    
+    main h1 {
+        font-size: 2rem;
+    }
+    
+    .grid-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    
+    .pagos-grid {
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    }
+    
+    .ideas-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+    
+    .table-container {
+        padding: 1.75rem;
+    }
+}
+
+/* Escritorio pequeño (992px - 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .grid-container {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+    
+    .pagos-grid {
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    }
+}
+
+/* Escritorio grande (1200px+) */
+@media (min-width: 1200px) {
+    main {
+        max-width: 1600px;
+    }
+    
+    .grid-container {
+        max-width: 1400px;
+    }
+    
+    .stats-grid {
+        max-width: 1400px;
+    }
+}
+
+/* Orientación horizontal en tablets */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    aside {
+        width: 200px;
+        min-width: 200px;
+        max-width: 200px;
+    }
+    
+    main {
+        margin-left: 200px;
+        width: calc(100% - 200px);
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+}
+
+/* Orientación horizontal en móviles */
+@media (max-width: 767px) and (orientation: landscape) {
+    main {
+        padding: 1.5rem 1rem;
+    }
+    
+    main h1 {
+        font-size: 1.5rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    .pago-card {
+        padding: 15px;
+    }
+}
+
+/* Dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+    aside nav ul li a,
+    .button,
+    .btn,
+    .tab-btn {
+        min-height: 44px; /* Tamaño mínimo táctil */
+        display: flex;
+        align-items: center;
+    }
+    
+    .card button {
+        min-height: 44px;
+    }
+}
+
+/* Print styles */
+@media print {
+    aside,
+    .logout-button,
+    button,
+    .btn,
+    .add-product-button,
+    .pago-actions,
+    .idea-actions,
+    .btn-editar,
+    .action-links {
+        display: none !important;
+    }
+    
+    main {
+        margin: 0;
+        width: 100%;
+        padding: 0;
+    }
+    
+    .card,
+    .pago-card,
+    .idea-card {
+        box-shadow: none;
+        border: 1px solid #000;
+        page-break-inside: avoid;
+    }
+    
+    * {
+        color: #000 !important;
+        background: #fff !important;
+    }
+}
+
 @media (max-width: 768px) {
     .pagos-grid {
         grid-template-columns: 1fr;
@@ -1484,30 +1865,4 @@ td:last-child {
     .estados-grid {
         grid-template-columns: 1fr;
     }
-}
-
-/* Estilos para productos inactivos en inventario */
-.producto-inactivo {
-    opacity: 0.6;
-    background-color: #f8f9fa;
-}
-
-.badge-activo {
-    background-color: #28a745;
-    color: white;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    display: inline-block;
-}
-
-.badge-inactivo {
-    background-color: #dc3545;
-    color: white;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    display: inline-block;
 }

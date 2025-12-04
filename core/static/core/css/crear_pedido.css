@@ -140,3 +140,189 @@
         padding: 20px;
     }
 }
+
+/* ============================================
+   MEDIA QUERIES RESPONSIVAS ADICIONALES
+   ============================================ */
+
+/* Tablets */
+@media screen and (max-width: 1366px) and (min-width: 768px) {
+    .pedido-container {
+        max-width: 100%;
+        margin: 30px auto;
+        padding: 25px;
+    }
+
+    .pedido-header h1 {
+        font-size: 2rem;
+    }
+
+    .pedido-header p {
+        font-size: 1rem;
+    }
+}
+
+/* Móviles */
+@media screen and (max-width: 767px) {
+    .pedido-container {
+        max-width: 100%;
+        margin: 15px auto;
+        padding: 20px 15px;
+        border-radius: 12px;
+    }
+
+    .pedido-header {
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    .pedido-header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+    }
+
+    .pedido-header p {
+        font-size: 1rem;
+    }
+
+    .form-section {
+        margin-bottom: 25px;
+    }
+
+    .form-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 11px 13px;
+        font-size: 15px;
+        border-radius: 8px;
+    }
+
+    .form-group textarea {
+        min-height: 90px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .resumen-pedido {
+        padding: 20px 15px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+    }
+
+    .resumen-pedido h2 {
+        font-size: 1.3rem;
+        margin-bottom: 18px;
+        text-align: center;
+    }
+
+    .producto-resumen {
+        padding: 10px 0;
+        font-size: 0.95rem;
+    }
+
+    .producto-resumen:last-child {
+        font-size: 1.1rem;
+        margin-top: 12px;
+        padding-top: 12px;
+    }
+
+    .btn-submit {
+        padding: 16px 25px;
+        font-size: 1.1rem;
+        border-radius: 10px;
+    }
+}
+
+/* Móviles pequeños */
+@media screen and (max-width: 480px) {
+    .pedido-container {
+        margin: 10px auto;
+        padding: 18px 12px;
+    }
+
+    .pedido-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .pedido-header p {
+        font-size: 0.95rem;
+    }
+
+    .form-section h2 {
+        font-size: 1.2rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    .resumen-pedido {
+        padding: 18px 12px;
+    }
+
+    .resumen-pedido h2 {
+        font-size: 1.2rem;
+    }
+
+    .producto-resumen {
+        font-size: 0.9rem;
+    }
+
+    .btn-submit {
+        padding: 15px 20px;
+        font-size: 1rem;
+    }
+}
+
+/* Pantallas grandes */
+@media screen and (min-width: 1367px) {
+    .pedido-container {
+        max-width: 1000px;
+    }
+}
+
+/* Orientación horizontal */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+    .pedido-container {
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .pedido-header {
+        margin-bottom: 20px;
+    }
+
+    .pedido-header h1 {
+        font-size: 1.8rem;
+    }
+}
+
+/* Dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+    .form-group input,
+    .form-group select,
+    .btn-submit {
+        min-height: 48px;
+    }
+}

@@ -1,0 +1,891 @@
+/* ============================================
+   ESTILOS RESPONSIVOS GLOBALES
+   Aplicable a todas las páginas excepto home y reglas
+   ============================================ */
+
+/* Botón toggle del sidebar - solo visible en dispositivos móviles y tablets */
+.sidebar-toggle {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.95);
+    color: #A0662F;
+    border: 2px solid rgba(160, 102, 47, 0.3);
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    font-size: 22px;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.sidebar-toggle:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: #A0662F;
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-toggle:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+/* Overlay oscuro cuando el sidebar está abierto en móvil */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* ============================================
+   MEDIA QUERIES PARA PANTALLAS GRANDES (>1366px)
+   ============================================ */
+
+@media screen and (min-width: 1367px) {
+    /* Ocultar botón toggle en pantallas grandes */
+    .sidebar-toggle {
+        display: none !important;
+    }
+
+    /* Sidebar visible estáticamente */
+    .sidebar {
+        transform: translateX(0);
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+
+    /* Main content con margen para el sidebar */
+    .main-content-wrapper {
+        margin-left: 250px;
+        width: calc(100% - 250px);
+    }
+
+    /* Overlay no necesario en desktop */
+    .sidebar-overlay {
+        display: none !important;
+    }
+}
+
+/* ============================================
+   MEDIA QUERIES PARA TABLETS Y MÓVILES (<1366px)
+   ============================================ */
+
+@media screen and (max-width: 1366px) {
+    /* Prevenir scroll horizontal */
+    html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+        width: 100%;
+    }
+
+    /* Mostrar botón toggle */
+    .sidebar-toggle {
+        display: flex;
+    }
+
+    /* Sidebar oculto por defecto */
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        box-shadow: none;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-bottom: 40px;
+        box-sizing: border-box;
+    }
+
+    /* Sidebar visible cuando tiene clase active */
+    .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Main content ocupa todo el ancho */
+    .main-content-wrapper {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 0 15px 20px 15px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+
+    /* Ajustar header y footer */
+    header {
+        margin: 0 !important;
+        width: 100% !important;
+        padding: 1.5rem 1rem 1.5rem 70px !important;
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    footer {
+        margin: 2rem 0 0 0 !important;
+        width: 100% !important;
+        padding: 2rem 2rem !important;
+        box-sizing: border-box;
+    }
+
+    /* Contenido centrado */
+    main {
+        padding: 1.5rem;
+        box-sizing: border-box;
+    }
+
+    .contenedor-articulos {
+        justify-content: center;
+        padding: 15px 0;
+        margin: 0 auto;
+        max-width: 100%;
+    }
+
+    /* Centrar elementos */
+    .main-content-wrapper > * {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* ============================================
+   MEDIA QUERIES PARA TABLETS (768px - 1366px)
+   ============================================ */
+
+@media screen and (min-width: 768px) and (max-width: 1366px) {
+    /* Artículos en 2 columnas */
+    .contenedor-articulos {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        max-width: 100%;
+    }
+
+    /* Header ajustado */
+    header h1 {
+        font-size: 2.2rem;
+    }
+
+    header .subtitulo {
+        font-size: 1.1rem;
+    }
+
+    /* Navegación adaptada */
+    nav ul {
+        gap: 0.3rem;
+    }
+
+    nav ul li a {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    /* Footer en 2 columnas */
+    .footer-content {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .footer-section {
+        flex: 1 1 45%;
+        min-width: 200px;
+    }
+
+    /* Carrusel adaptado */
+    .carousel-hero-item {
+        height: 280px;
+    }
+
+    .carousel-hero-caption h2 {
+        font-size: 2rem;
+    }
+
+    /* Benefits en 2 columnas */
+    .benefits-grid {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .benefit-card {
+        flex: 1 1 calc(50% - 1rem);
+        max-width: 400px;
+    }
+}
+
+/* ============================================
+   MEDIA QUERIES PARA MÓVILES (<768px)
+   ============================================ */
+
+@media screen and (max-width: 767px) {
+    /* Prevenir scroll horizontal */
+    html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+        width: 100%;
+    }
+
+    /* Botón toggle más grande para móviles */
+    .sidebar-toggle {
+        left: 12px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+    /* Sidebar en móviles */
+    .sidebar {
+        width: 280px;
+        max-width: 85vw;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-bottom: 40px;
+        box-sizing: border-box;
+    }
+
+    /* Main content ajustado */
+    .main-content-wrapper {
+        padding: 0 10px 10px 10px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+
+    /* Header responsive */
+    header {
+        padding: 1.2rem 0.8rem 1.2rem 60px !important;
+        box-sizing: border-box;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100vw;
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    header h1 {
+        font-size: 1.6rem;
+        flex-direction: row;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .header-logo {
+        width: 35px;
+        height: 35px;
+        margin-right: 5px;
+    }
+
+    header .subtitulo {
+        font-size: 1rem;
+    }
+
+    /* Navegación en móviles */
+    nav {
+        width: 100%;
+        padding: 0.5rem 0;
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0 0.5rem;
+    }
+
+    nav ul li {
+        width: 100%;
+    }
+
+    nav ul li a {
+        width: 100%;
+        text-align: center;
+        padding: 0.7rem;
+    }
+
+    nav ul li.right-aligned-button:first-of-type {
+        margin-left: 0;
+    }
+
+    /* Artículos en 1 columna centrados */
+    .contenedor-articulos {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 10px;
+        max-width: 100%;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+
+    .articulo {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .articulo img {
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .articulo-boton,
+    .btn,
+    button {
+        width: 100%;
+        padding: 12px 15px;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+
+    /* Footer responsive */
+    footer {
+        padding: 1.5rem 1rem !important;
+        margin: 1.5rem 0 0 0 !important;
+        box-sizing: border-box;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 0;
+    }
+
+    .footer-section {
+        text-align: center;
+        min-width: 100%;
+    }
+
+    .footer-info {
+        justify-content: center;
+    }
+
+    .social-container {
+        justify-content: center;
+    }
+
+    /* Carrusel en móviles */
+    .carousel-hero-item {
+        height: 220px;
+    }
+
+    .carousel-hero-caption {
+        padding: 2rem 1rem;
+    }
+
+    .carousel-hero-caption h2 {
+        font-size: 1.5rem;
+    }
+
+    .carousel-hero-caption p {
+        font-size: 0.95rem;
+    }
+
+    .carousel-hero-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+    /* Benefits en 1 columna */
+    .benefits-grid {
+        flex-direction: column;
+        padding: 1.5rem 1rem;
+        gap: 1.5rem;
+    }
+
+    .benefit-card {
+        max-width: 100%;
+        padding: 2rem 1.5rem;
+    }
+
+    .benefit-icon {
+        font-size: 3rem;
+    }
+
+    .benefit-card h3 {
+        font-size: 1.3rem;
+    }
+
+    /* Content columns en 1 columna */
+    .content-columns {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+
+    .content-column {
+        max-width: 100%;
+        padding: 1rem;
+    }
+
+    /* Modales responsive */
+    .modal-contenido,
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 15px;
+    }
+
+    .modal-product-image {
+        max-height: 200px;
+    }
+
+    /* Botones */
+    button {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    /* Landing navbar responsive */
+    .landing-nav-container {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .landing-nav-logo span {
+        font-size: 1.8rem;
+    }
+
+    .landing-nav-menu {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .landing-nav-menu li {
+        width: 100%;
+    }
+
+    .landing-nav-menu a {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Contacto form responsive */
+    .contacto-fila-container {
+        padding: 15px;
+    }
+
+    .contacto-tarjeta-estilo {
+        padding: 30px 20px;
+    }
+
+    .formulario-cuerpo input[type="text"],
+    .formulario-cuerpo input[type="email"],
+    .formulario-cuerpo textarea {
+        font-size: 16px; /* Prevenir zoom en iOS */
+    }
+
+    /* Comentarios responsive */
+    .comentarios-container {
+        padding: 15px;
+    }
+
+    .comentario-card {
+        padding: 15px;
+    }
+
+    .usuario-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    .nuevo-comentario-section {
+        padding: 20px 15px;
+    }
+
+    /* Perfil responsive */
+    .perfil-container {
+        padding: 15px;
+    }
+
+    .perfil-header-card {
+        padding: 25px 15px;
+    }
+
+    .perfil-foto,
+    .perfil-foto-placeholder {
+        width: 120px;
+        height: 120px;
+    }
+
+    .perfil-foto-placeholder {
+        font-size: 48px;
+    }
+
+    .perfil-nombre {
+        font-size: 24px;
+    }
+
+    .info-cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .articulos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .perfil-card {
+        padding: 25px 15px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+/* ============================================
+   MEDIA QUERIES PARA MÓVILES PEQUEÑOS (<480px)
+   ============================================ */
+
+@media screen and (max-width: 480px) {
+    /* Prevenir scroll horizontal */
+    html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+        width: 100%;
+    }
+
+    .sidebar-toggle {
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+        left: 10px;
+    }
+
+    .sidebar {
+        width: 260px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-bottom: 40px;
+        box-sizing: border-box;
+    }
+
+    .main-content-wrapper {
+        padding: 0 5px 5px 5px;
+        overflow-x: hidden;
+        max-width: 100vw;
+        box-sizing: border-box;
+    }
+
+    header {
+        padding: 1rem 0.5rem 1rem 55px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        max-width: 100vw;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    header h1 {
+        font-size: 1.3rem;
+    }
+
+    .header-logo {
+        width: 30px;
+        height: 30px;
+    }
+
+    header .subtitulo {
+        font-size: 0.9rem;
+    }
+
+    .contenedor-articulos {
+        padding: 5px 0;
+        gap: 10px;
+    }
+
+    .articulo {
+        margin: 0 auto;
+        max-width: 100%;
+    }
+
+    .articulo img {
+        height: 200px;
+    }
+
+    .contenido-articulo {
+        padding: 10px;
+    }
+
+    .contenido-articulo h3 {
+        font-size: 1.1rem;
+    }
+
+    .articulo-precio {
+        font-size: 1rem;
+    }
+
+    .articulo-boton {
+        padding: 10px 12px;
+        font-size: 0.95rem;
+    }
+
+    footer {
+        padding: 1rem 0.5rem !important;
+    }
+
+    .carousel-hero-item {
+        height: 180px;
+    }
+
+    .carousel-hero-caption h2 {
+        font-size: 1.3rem;
+    }
+
+    .carousel-hero-caption p {
+        font-size: 0.85rem;
+    }
+
+    .benefit-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .benefit-icon {
+        font-size: 2.5rem;
+    }
+
+    .benefit-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .modal-contenido,
+    .modal-content {
+        width: 98%;
+        padding: 10px;
+    }
+
+    #toggle-sidebar {
+        height: 40px;
+        font-size: 18px;
+        top: 10px;
+        left: 10px;
+    }
+
+    .sidebar {
+        width: 260px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-bottom: 40px;
+        box-sizing: border-box;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    header .subtitulo {
+        font-size: 0.9rem;
+    }
+
+    .contenedor-articulos {
+        max-width: 100%;
+        padding: 10px 5px;
+    }
+
+    .articulo img {
+        height: 200px;
+    }
+
+    .carousel-hero-item {
+        height: 180px;
+    }
+
+    .carousel-hero-caption h2 {
+        font-size: 1.2rem;
+    }
+
+    .carousel-hero-caption p {
+        font-size: 0.85rem;
+    }
+
+    .benefit-icon {
+        font-size: 2.5rem;
+    }
+
+    .benefit-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .benefit-card p {
+        font-size: 0.95rem;
+    }
+}
+
+/* ============================================
+   MEDIA QUERIES PARA PANTALLAS GRANDES (>1366px)
+   ============================================ */
+
+@media screen and (min-width: 1367px) {
+    /* Ocultar botón toggle */
+    .sidebar-toggle {
+        display: none;
+    }
+
+    /* Sidebar siempre visible */
+    .sidebar {
+        transform: translateX(0);
+    }
+
+    /* Main content con margen para sidebar */
+    .main-content-wrapper {
+        margin-left: 270px;
+        width: calc(100% - 270px);
+    }
+
+    /* Contenedor de artículos optimizado */
+    .contenedor-articulos {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        max-width: 1400px;
+    }
+
+    /* Header y footer optimizados */
+    header,
+    footer {
+        max-width: 100%;
+    }
+
+    /* Benefits en 3 columnas */
+    .benefits-grid {
+        max-width: 1400px;
+    }
+
+    /* Content columns optimizado */
+    .content-columns {
+        max-width: 1400px;
+    }
+}
+
+/* ============================================
+   ESTILOS PARA ORIENTACIÓN HORIZONTAL EN MÓVILES
+   ============================================ */
+
+@media screen and (max-height: 600px) and (orientation: landscape) {
+    .sidebar {
+        padding: 10px;
+        padding-bottom: 30px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-sizing: border-box;
+    }
+
+    .sidebar ul li {
+        margin: 5px 0;
+    }
+
+    .sidebar ul li a {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+
+    header {
+        padding: 1rem !important;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .carousel-hero-item {
+        height: 200px;
+    }
+}
+
+/* ============================================
+   UTILIDADES RESPONSIVAS
+   ============================================ */
+
+/* Textos centrados en móvil */
+@media screen and (max-width: 767px) {
+    .contenido-articulo h3,
+    .contenido-articulo p,
+    .articulo-precio {
+        text-align: center;
+    }
+
+    h1, h2, h3 {
+        text-align: center;
+    }
+
+    p {
+        text-align: center;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* Prevenir scroll horizontal */
+@media screen and (max-width: 1366px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    * {
+        max-width: 100%;
+    }
+}
+
+/* Mejorar tap targets en dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+    .sidebar ul li a {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+
+    button,
+    .btn,
+    .articulo-boton {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    nav ul li a {
+        min-height: 44px;
+    }
+}
+
+/* Animaciones reducidas para usuarios que prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .sidebar {
+        transition: none;
+    }
+
+    .sidebar-overlay {
+        transition: none;
+    }
+}

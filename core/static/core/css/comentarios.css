@@ -177,3 +177,140 @@
     color: #721c24;
     border-left: 4px solid #dc3545;
 }
+
+/* ============================================
+   MEDIA QUERIES RESPONSIVAS PARA COMENTARIOS
+   ============================================ */
+
+/* Tablets */
+@media screen and (max-width: 1366px) and (min-width: 768px) {
+    .comentarios-container {
+        max-width: 100%;
+        padding: 20px 15px;
+    }
+
+    .comentario-card {
+        padding: 18px;
+    }
+
+    .nuevo-comentario-section {
+        padding: 22px;
+    }
+}
+
+/* Móviles */
+@media screen and (max-width: 767px) {
+    .comentarios-container {
+        max-width: 100%;
+        padding: 15px 10px;
+    }
+
+    .comentario-card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .comentario-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .comentario-usuario {
+        width: 100%;
+    }
+
+    .usuario-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    .usuario-info h4 {
+        font-size: 15px;
+    }
+
+    .comentario-fecha {
+        font-size: 11px;
+    }
+
+    .comentario-contenido {
+        font-size: 14px;
+        text-align: left;
+    }
+
+    .comentario-acciones {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .nuevo-comentario-section {
+        padding: 20px 15px;
+        border-radius: 8px;
+    }
+
+    .nuevo-comentario-section h3 {
+        font-size: 18px;
+        text-align: center;
+    }
+
+    .form-control {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .no-comentarios {
+        padding: 30px 15px;
+        font-size: 15px;
+    }
+}
+
+/* Móviles pequeños */
+@media screen and (max-width: 480px) {
+    .comentarios-container {
+        padding: 10px 5px;
+    }
+
+    .comentario-card {
+        padding: 12px;
+    }
+
+    .usuario-avatar {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+
+    .usuario-info h4 {
+        font-size: 14px;
+    }
+
+    .comentario-contenido {
+        font-size: 13px;
+    }
+
+    .btn-eliminar {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .nuevo-comentario-section {
+        padding: 15px 10px;
+    }
+
+    .nuevo-comentario-section h3 {
+        font-size: 16px;
+    }
+}
+
+/* Pantallas grandes */
+@media screen and (min-width: 1367px) {
+    .comentarios-container {
+        max-width: 1000px;
+    }
+}

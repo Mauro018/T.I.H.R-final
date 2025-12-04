@@ -7,6 +7,7 @@
     <title>{% block title %} {% endblock %} | ¡Oferta Exclusiva!</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/responsive.css' %}">
 </head>
 <body>
 <!-- BARRA LATERAL (MENÚ + FILTROS) -->
@@ -32,7 +33,7 @@
 
   <!-- FILTROS -->
   <div class="filtros">
-    <h2 for="categoria" class="h2-side">Categoría:</h2>
+    <h2 class="h2-side">Categoría:</h2>
     <select id="categoria">
         <option value="">Elegir Categoria</option> 
         <option value="carpinteria">Armarios</option>
@@ -50,10 +51,11 @@
 <!-- CONTENIDO PRINCIPAL -->
 <div class="main-content-wrapper">
   <header>
-    <h1 class="div" style="text-align: center;">
-      <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="75" height="75">
+    <h1>
+      <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" class="header-logo">
       Tu Idea Hecha Realidad
     </h1>
+    <p class="subtitulo">Ofertas Exclusivas</p>
   </header>
 
     <section>
@@ -805,6 +807,7 @@
 </script>
 
 <script src="{% static 'core/javascript/Carrito.js' %}"></script>
+<script src="{% static 'core/javascript/sidebar-toggle.js' %}"></script>
 
 {% include 'core/floating_buttons.html' %}
 {% include 'core/modal_notificaciones.html' %}

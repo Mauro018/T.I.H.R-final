@@ -161,3 +161,96 @@ h1 {
 .form-group {
     margin-bottom: 20px;
 }
+
+/* ============================================
+   MEDIA QUERIES PARA RESPONSIVIDAD
+   ============================================ */
+
+/* Móviles pequeños (menos de 576px) */
+@media (max-width: 575px) {
+    body {
+        padding: 10px;
+    }
+    
+    .login-container {
+        padding: 25px 20px;
+        max-width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    
+    .input-group input {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+    
+    .btn {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .register-link {
+        font-size: 13px;
+    }
+    
+    .message {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}
+
+/* Tablets (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .login-container {
+        max-width: 450px;
+        padding: 35px;
+    }
+}
+
+/* Tablets grandes y escritorio pequeño (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .login-container {
+        max-width: 500px;
+    }
+}
+
+/* Orientación horizontal en dispositivos móviles */
+@media (max-height: 600px) and (orientation: landscape) {
+    body {
+        padding: 10px;
+    }
+    
+    .login-container {
+        padding: 20px;
+        margin-bottom: 10px;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .input-group {
+        margin-bottom: 15px;
+    }
+    
+    .btn {
+        margin-top: 15px;
+    }
+}
+
+/* Pantallas táctiles */
+@media (hover: none) and (pointer: coarse) {
+    .btn {
+        min-height: 48px; /* Tamaño táctil recomendado */
+    }
+    
+    .input-group input {
+        min-height: 48px;
+    }
+}
+

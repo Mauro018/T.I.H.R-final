@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carrito de Compras | Tu Idea Hecha Realidad</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
-  <link rel="stylesheet" href="{% static 'core/css/carrito.css' %}">
+    <title>Carrito de Compras | Tu Idea Hecha Realidad</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/carrito.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/responsive.css' %}">
 </head>
 <body>
 {% csrf_token %}
@@ -355,12 +356,14 @@
     function openPaymentModal() {
         paymentModal.style.display = 'block';
         document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+        document.body.classList.add('modal-open'); // Clase para ocultar botones flotantes
     }
 
     // Cerrar modal de pago
     function closePaymentModal() {
         paymentModal.style.display = 'none';
         document.body.style.overflow = 'auto';
+        document.body.classList.remove('modal-open'); // Remover clase
         // Resetear selecciones
         paymentOptionButtons.forEach(btn => btn.classList.remove('active'));
         qrDisplays.forEach(display => display.classList.remove('active'));
@@ -556,6 +559,7 @@
     }
 </script>
 
+<script src="{% static 'core/javascript/sidebar-toggle.js' %}"></script>
 {% include 'core/floating_buttons.html' %}
 {% include 'core/modal_notificaciones.html' %}
 </body>

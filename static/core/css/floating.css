@@ -1,7 +1,7 @@
 #floating-buttons-wrapper {
   position: fixed;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 10000;
 }
 
 .floating-btn {
@@ -31,6 +31,7 @@
   position: fixed;
   top: 16px;
   right: 16px;
+  z-index: 10001;
 }
 
 .floating-notif {
@@ -38,6 +39,7 @@
   bottom: 16px;
   right: 16px;
   background: #ff5722;
+  z-index: 10001;
 }
 
 .fb-badge {

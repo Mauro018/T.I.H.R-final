@@ -186,6 +186,7 @@
     margin: 5px 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -597,5 +598,260 @@
     
     .permiso-botones {
         flex-direction: column;
+    }
+}
+
+/* ============================================
+   MEDIA QUERIES RESPONSIVAS ADICIONALES
+   ============================================ */
+
+/* Tablets */
+@media screen and (max-width: 1366px) and (min-width: 768px) {
+    .notif-modal-content {
+        width: 450px;
+        max-height: 500px;
+    }
+
+    .conversaciones-lista {
+        max-height: 430px;
+    }
+
+    .chat-mensajes {
+        max-height: 300px;
+    }
+}
+
+/* Móviles */
+@media screen and (max-width: 767px) {
+    .notif-modal-content {
+        right: 5px;
+        left: 5px;
+        top: 50px;
+        width: auto;
+        max-height: calc(100vh - 60px);
+        border-radius: 12px;
+    }
+
+    .notif-modal-header {
+        padding: 15px;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .notif-modal-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .notif-close {
+        width: 30px;
+        height: 30px;
+        font-size: 20px;
+    }
+
+    .conversaciones-lista {
+        max-height: calc(100vh - 150px);
+        padding: 8px;
+    }
+
+    .conversacion-item {
+        padding: 12px;
+        margin-bottom: 8px;
+    }
+
+    .conversacion-titulo {
+        font-size: 0.9rem;
+    }
+
+    .conversacion-estado {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+    }
+
+    .conversacion-ultimo-mensaje {
+        font-size: 0.85rem;
+    }
+
+    .conversacion-fecha {
+        font-size: 0.75rem;
+    }
+
+    .chat-container {
+        max-height: calc(100vh - 110px);
+    }
+
+    .chat-header {
+        padding: 10px 12px;
+    }
+
+    .chat-back-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+    }
+
+    .chat-info h4 {
+        font-size: 0.95rem;
+    }
+
+    .chat-info p {
+        font-size: 0.75rem;
+    }
+
+    .chat-mensajes {
+        max-height: calc(100vh - 280px);
+        padding: 12px;
+    }
+
+    .mensaje-bubble {
+        max-width: 80%;
+        padding: 10px 13px;
+    }
+
+    .mensaje-autor {
+        font-size: 0.75rem;
+    }
+
+    .mensaje-texto {
+        font-size: 0.9rem;
+    }
+
+    .mensaje-fecha {
+        font-size: 0.65rem;
+    }
+
+    .mensaje-permiso {
+        padding: 12px !important;
+    }
+
+    .permiso-icono {
+        font-size: 1.5rem !important;
+    }
+
+    .permiso-texto {
+        font-size: 0.9rem;
+    }
+
+    .btn-otorgar-permiso {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    .chat-input-container {
+        padding: 8px 10px;
+    }
+
+    .chat-input {
+        padding: 9px 12px;
+        font-size: 0.9rem;
+        border-radius: 18px;
+    }
+
+    .chat-send-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    .chat-file-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .permiso-botones {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .btn-aceptar-permiso,
+    .btn-rechazar-permiso {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    .no-conversaciones {
+        padding: 40px 15px;
+    }
+
+    .no-conversaciones-icono {
+        font-size: 3rem;
+    }
+
+    .no-conversaciones p {
+        font-size: 1rem;
+    }
+}
+
+/* Móviles pequeños */
+@media screen and (max-width: 480px) {
+    .notif-modal-content {
+        top: 40px;
+        max-height: calc(100vh - 50px);
+    }
+
+    .notif-modal-header h3 {
+        font-size: 1rem;
+    }
+
+    .conversacion-item {
+        padding: 10px;
+    }
+
+    .conversacion-titulo {
+        font-size: 0.85rem;
+    }
+
+    .conversacion-ultimo-mensaje {
+        font-size: 0.8rem;
+    }
+
+    .chat-mensajes {
+        padding: 10px;
+    }
+
+    .mensaje-bubble {
+        max-width: 85%;
+        padding: 9px 12px;
+        font-size: 0.85rem;
+    }
+
+    .no-conversaciones-icono {
+        font-size: 2.5rem;
+    }
+
+    .no-conversaciones p {
+        font-size: 0.95rem;
+    }
+}
+
+/* Orientación horizontal */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+    .notif-modal-content {
+        max-height: calc(100vh - 40px);
+        top: 20px;
+    }
+
+    .conversaciones-lista {
+        max-height: calc(100vh - 120px);
+    }
+
+    .chat-container {
+        max-height: calc(100vh - 80px);
+    }
+
+    .chat-mensajes {
+        max-height: calc(100vh - 180px);
+    }
+}
+
+/* Dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+    .conversacion-item,
+    .chat-back-btn,
+    .chat-send-btn,
+    .chat-file-btn,
+    .btn-otorgar-permiso,
+    .btn-aceptar-permiso,
+    .btn-rechazar-permiso {
+        min-height: 44px;
     }
 }
