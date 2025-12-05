@@ -43,7 +43,9 @@
                     </div>
                     <div class="form-group">
                         <label for="telefono">Teléfono <span class="required">*</span></label>
-                        <input type="tel" id="telefono" name="telefono" value="{{ cliente.telefono|default:'' }}" required placeholder="Ej: 3001234567">
+                        <input type="tel" id="telefono" name="telefono" value="{{ cliente.telefono|default:'' }}" required placeholder="Ej: 3001234567" 
+                               pattern="[0-9]{7,15}" title="Solo números, entre 7 y 15 dígitos"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                     </div>
                 </div>
             </div>
@@ -68,7 +70,9 @@
 
                 <div class="form-group">
                     <label for="codigo_postal">Código Postal (Opcional)</label>
-                    <input type="text" id="codigo_postal" name="codigo_postal" value="{{ cliente.codigo_postal|default:'' }}" placeholder="Ej: 110111">
+                    <input type="text" id="codigo_postal" name="codigo_postal" value="{{ cliente.codigo_postal|default:'' }}" placeholder="Ej: 110111"
+                           pattern="[0-9]{0,10}" title="Solo números"
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                 </div>
                 
                 <div class="form-group" style="margin-top: 20px;">

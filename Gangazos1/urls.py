@@ -31,6 +31,7 @@ urlpatterns = [
     path('contactenos/',views.contactenos,name='contactenos'),
     path('productos/',views.productos,name='productos'),
     path('registro/',views.registro,name='registro'),
+    path('verificar-codigo/',views.verificar_codigo,name='verificar_codigo'),
     path('login/',views.Login_view,name='login'),
     path('loginEmpresa/',views.LoginEmpresa_view,name='loginEmpresa'),
     path('logout/',views.Logout_view,name='logout'),

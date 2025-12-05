@@ -150,6 +150,7 @@
                 <img src="{{ mesa_destacada.imagen1.url }}" alt="{{ mesa_destacada.nombre1 }}">
                 <div class="producto-info">
                     <h3>{{ mesa_destacada.nombre1 }}</h3>
+                    <p class="producto-descripcion">{{ mesa_destacada.descripcion1|truncatewords:15 }}</p>
                     <div class="producto-precio">
                         <span class="precio-oferta">${{ mesa_destacada.precio1|floatformat:0 }}</span>
                     </div>
@@ -161,6 +162,7 @@
                 <img src="{{ silla_destacada.imagen2.url }}" alt="{{ silla_destacada.nombre2 }}">
                 <div class="producto-info">
                     <h3>{{ silla_destacada.nombre2 }}</h3>
+                    <p class="producto-descripcion">{{ silla_destacada.descripcion2|truncatewords:15 }}</p>
                     <div class="producto-precio">
                         <span class="precio-oferta">${{ silla_destacada.precio2|floatformat:0 }}</span>
                     </div>
@@ -172,6 +174,7 @@
                 <img src="{{ armario_destacado.imagen3.url }}" alt="{{ armario_destacado.nombre3 }}">
                 <div class="producto-info">
                     <h3>{{ armario_destacado.nombre3 }}</h3>
+                    <p class="producto-descripcion">{{ armario_destacado.descripcion3|truncatewords:15 }}</p>
                     <div class="producto-precio">
                         <span class="precio-oferta">${{ armario_destacado.precio3|floatformat:0 }}</span>
                     </div>
@@ -183,19 +186,21 @@
                 <img src="{{ escritorio_destacado.imagen5.url }}" alt="{{ escritorio_destacado.nombre5 }}">
                 <div class="producto-info">
                     <h3>{{ escritorio_destacado.nombre5 }}</h3>
+                    <p class="producto-descripcion">{{ escritorio_destacado.descripcion5|truncatewords:15 }}</p>
                     <div class="producto-precio">
                         <span class="precio-oferta">${{ escritorio_destacado.precio5|floatformat:0 }}</span>
                     </div>
                 </div>
             </div>
             {% endif %}
-            {% if silla_destacada %}
+            {% if utensilio_destacado %}
             <div class="producto-card">
-                <img src="{{ silla_destacada.imagen2.url }}" alt="{{ silla_destacada.nombre2 }}">
+                <img src="{{ utensilio_destacado.imagen6.url }}" alt="{{ utensilio_destacado.nombre6 }}">
                 <div class="producto-info">
-                    <h3>{{ silla_destacada.nombre2 }}</h3>
+                    <h3>{{ utensilio_destacado.nombre6 }}</h3>
+                    <p class="producto-descripcion">{{ utensilio_destacado.descripcion6|truncatewords:15 }}</p>
                     <div class="producto-precio">
-                        <span class="precio-oferta">${{ silla_destacada.precio2|floatformat:0 }}</span>
+                        <span class="precio-oferta">${{ utensilio_destacado.precio6|floatformat:0 }}</span>
                     </div>
                 </div>
             </div>
@@ -205,6 +210,7 @@
                 <img src="{{ cajonera_destacada.imagen4.url }}" alt="{{ cajonera_destacada.nombre4 }}">
                 <div class="producto-info">
                     <h3>{{ cajonera_destacada.nombre4 }}</h3>
+                    <p class="producto-descripcion">{{ cajonera_destacada.descripcion4|truncatewords:15 }}</p>
                     <div class="producto-precio">
                         <span class="precio-oferta">${{ cajonera_destacada.precio4|floatformat:0 }}</span>
                     </div>

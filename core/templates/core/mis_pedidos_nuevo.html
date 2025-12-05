@@ -13,6 +13,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+
+<!-- Overlay para cerrar sidebar en móvil -->
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
 <!-- Sidebar Navigation -->
 <aside class="sidebar">
     <div class="sidebar-user-info">
@@ -54,6 +58,7 @@
 <!-- CONTENIDO PRINCIPAL -->
 <div class="main-content-wrapper">
   <header>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     <h1 class="div" style="text-align: center;">
       <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="75" height="75">
       Tu Idea Hecha Realidad

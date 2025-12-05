@@ -164,15 +164,100 @@ def Home3_view(request):
     return render(request, 'core/home3.html', {'usuario': usuario})
 
 def registro(request):
-    if request.method =="POST":
+    if request.method == "POST":
         form = AgregarForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login')
+            # Generar código de verificación de 4 dígitos
+            import random
+            codigo_verificacion = str(random.randint(1000, 9999))
+            
+            # Guardar temporalmente los datos en la sesión
+            request.session['registro_temp'] = {
+                'usernameCliente': form.cleaned_data['usernameCliente'],
+                'email': form.cleaned_data['email'],
+                'passwordCliente': form.cleaned_data['passwordCliente'],
+                'codigo_verificacion': codigo_verificacion
+            }
+            
+            # Enviar código por correo con formato HTML
+            from django.core.mail import send_mail
+            from django.conf import settings
+            
+            email_subject = 'Código de Verificación - TIHR Gangazos'
+            email_message = f'''
+¡Hola {form.cleaned_data['usernameCliente']}!
+
+Gracias por registrarte en TIHR Gangazos - Tu Idea Hecha Realidad.
+
+Tu código de verificación es:
+
+    {codigo_verificacion}
+
+Por favor, ingresa este código en la página de verificación para completar tu registro.
+
+Este código expirará en 10 minutos por seguridad.
+
+Si no solicitaste este registro, puedes ignorar este correo.
+
+---
+Atentamente,
+El equipo de TIHR Gangazos
+Tu Idea Hecha Realidad
+            '''
+            
+            try:
+                send_mail(
+                    email_subject,
+                    email_message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [form.cleaned_data['email']],
+                    fail_silently=False,
+                )
+                
+                from django.contrib import messages
+                messages.success(request, f'Se ha enviado un código de verificación a {form.cleaned_data["email"]}. Por favor, revisa tu bandeja de entrada.')
+                return redirect('verificar_codigo')
+            
+            except Exception as e:
+                from django.contrib import messages
+                messages.error(request, f'Error al enviar el código: {str(e)}. Por favor, verifica que tu correo electrónico sea válido.')
     else:
         form = AgregarForm()
-    context={'form':form}
-    return render(request,'core/registro.html', context)
+    context = {'form': form}
+    return render(request, 'core/registro.html', context)
+
+def verificar_codigo(request):
+    if 'registro_temp' not in request.session:
+        from django.contrib import messages
+        messages.error(request, 'No hay un registro pendiente de verificación')
+        return redirect('registro')
+    
+    if request.method == 'POST':
+        codigo_ingresado = request.POST.get('codigo')
+        registro_temp = request.session.get('registro_temp')
+        
+        if codigo_ingresado == registro_temp['codigo_verificacion']:
+            # Crear el usuario
+            nuevo_usuario = UserClientes(
+                usernameCliente=registro_temp['usernameCliente'],
+                email=registro_temp['email'],
+                passwordCliente=registro_temp['passwordCliente']
+            )
+            nuevo_usuario.save()
+            
+            # Limpiar la sesión
+            del request.session['registro_temp']
+            
+            from django.contrib import messages
+            messages.success(request, '¡Registro exitoso! Ahora puedes iniciar sesión')
+            return redirect('login')
+        else:
+            from django.contrib import messages
+            messages.error(request, 'Código incorrecto. Por favor, intenta de nuevo.')
+    
+    return render(request, 'core/verificar_codigo.html', {
+        'email': request.session.get('registro_temp', {}).get('email')
+    })
 
 def productos2(request):
     return render(request,"core/productos2.html")

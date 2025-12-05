@@ -3,23 +3,24 @@
 /* El contenedor principal debe tener el mismo fondo que las otras páginas */
 body .main-content-wrapper {
     flex: 1;
-    margin-left: 270px !important;
-    padding: 20px 40px !important;
+    margin-left: 0 !important;
+    padding: 0 20px 20px 20px !important;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    width: 100% !important;
+    transition: margin-left 0.3s ease;
 }
 
 body .main-content-wrapper header {
     background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: #ffffff;
-    padding: 2rem 3rem;
+    padding: 1rem 1.5rem;
+    padding-left: 65px;
     text-align: center;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    margin: -20px -40px 30px -40px;
-    width: calc(100% + 80px);
-    padding-left: calc(40px + 3rem);
-    padding-right: calc(40px + 3rem);
+    margin: 0 -20px 30px -20px;
+    width: calc(100% + 40px);
     position: relative;
     overflow: hidden;
     border-radius: 0 !important;
@@ -39,8 +40,8 @@ body .main-content-wrapper header {
 .main-content-wrapper header h1 {
     margin: 0;
     color: #ffffff;
-    font-size: 2.8rem;
-    font-weight: 800;
+    font-size: 2rem;
+    font-weight: 700;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
@@ -48,7 +49,7 @@ body .main-content-wrapper header {
     text-align: center;
     width: 100%;
     line-height: 1.2;
-    gap: 15px;
+    gap: 12px;
 }
 
 .main-content-wrapper header h1 img {
@@ -68,12 +69,10 @@ body .main-content-wrapper header {
 
 .main-content-wrapper footer {
     background-color: #7A3E0E;
-    padding: 2rem 3rem;
+    padding: 2rem 2rem;
     text-align: center;
-    margin: 2rem -40px -20px -40px;
-    width: calc(100% + 80px);
-    padding-left: calc(40px + 3rem);
-    padding-right: calc(40px + 3rem);
+    margin: 2rem -20px 0 -20px;
+    width: calc(100% + 40px);
 }
 
 .main-content-wrapper footer p {
@@ -539,7 +538,9 @@ textarea.form-control {
     body .main-content-wrapper header {
         margin: 0 !important;
         width: 100% !important;
-        padding: 1.5rem 1rem !important;
+        padding: 0.9rem 1rem !important;
+        padding-left: 60px !important;
+        position: relative;
     }
 
     .main-content-wrapper header h1 {
@@ -719,6 +720,11 @@ textarea.form-control {
 
 /* Móviles pequeños */
 @media screen and (max-width: 480px) {
+    body .main-content-wrapper header {
+        padding: 0.8rem 0.8rem !important;
+        padding-left: 55px !important;
+    }
+
     body .main-content-wrapper header h1 {
         font-size: 1.6rem;
     }

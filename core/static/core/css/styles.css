@@ -129,15 +129,14 @@ body.landing-page .main-content-wrapper {
 header {
     background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: #ffffff;
-    padding: 2rem 3rem;
+    padding: 1rem 1.5rem;
+    padding-left: 65px;
     text-align: center;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     margin: 0 -40px 30px -40px;
     position: relative;
     overflow: hidden;
     width: calc(100% + 80px);
-    padding-left: calc(40px + 3rem);
-    padding-right: calc(40px + 3rem);
 }
 
 header::before {
@@ -169,12 +168,12 @@ header h1 img {
 
 /* New style for the logo image inside the h1 */
 .header-logo {
-    width: 50px; /* Size of the logo */
-    height: 50px;
-    margin-right: 15px; /* Space between logo and text */
-    border-radius: 50%; /* Make it round if desired */
-    box-shadow: 0 0 10px rgba(0,0,0,0.2); /* Subtle shadow for the logo */
-    object-fit: cover; /* Ensures the image covers the area without distortion */
+    width: 45px;
+    height: 45px;
+    margin-right: 10px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    object-fit: cover;
 }
 
 header .subtitulo { /* Using the class directly for better specificity */
@@ -251,11 +250,9 @@ main {
 
 footer {
     background-color: #7A3E0E;
-    padding: 2rem 3rem;
-    margin: 2rem -40px -20px -40px;
-    width: calc(100% + 80px);
-    padding-left: calc(40px + 3rem);
-    padding-right: calc(40px + 3rem);
+    padding: 2rem 2rem;
+    margin: 2rem -20px 0 -20px;
+    width: calc(100% + 40px);
     color: #ffffff;
 }
 
@@ -676,8 +673,16 @@ input, textarea {
     padding-bottom: 40px;
     overflow-y: auto;
     overflow-x: hidden;
-    z-index: 1000;
+    z-index: 1001;
     box-sizing: border-box;
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
+}
+
+/* Estado activo del sidebar (visible en móviles) */
+.sidebar.active {
+    transform: translateX(0) !important;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.4);
 }
 
 /* Estilo para la información del usuario en la sidebar */
@@ -797,28 +802,25 @@ input, textarea {
 }
 
 .main-content-wrapper {
-    margin-left: 270px;
-    padding: 0 40px 20px 40px;
-    width: calc(100% - 270px);
-    max-width: 1400px;
-    margin-right: auto;
+    margin-left: 0;
+    padding: 0 20px 20px 20px;
+    width: 100%;
     box-sizing: border-box;
     min-height: 100vh;
     background-color: #f5f5f5;
+    transition: margin-left 0.3s ease;
 }
 
 header {
     background: linear-gradient(135deg, #A0662F, #7A3E0E);
     color: #ffffff;
-    padding: 2rem 3rem;
+    padding: 2rem 2rem;
     text-align: center;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    margin: 0 -40px 30px -40px;
+    margin: 0 -20px 30px -20px;
     position: relative;
     overflow: hidden;
-    width: calc(100% + 80px);
-    padding-left: calc(40px + 3rem);
-    padding-right: calc(40px + 3rem);
+    width: calc(100% + 40px);
     border-radius: 0;
 }
 

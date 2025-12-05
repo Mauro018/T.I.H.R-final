@@ -275,6 +275,7 @@
             min-height: 100vh;
         }
         
+        /* Comentado para usar el estilo estándar del header
         header {
             background: linear-gradient(135deg, #A0662F 0%, #7A3E0E 100%);
             color: white;
@@ -292,6 +293,7 @@
             justify-content: center;
             gap: 15px;
         }
+        */
         
         .subtitulo {
             margin: 10px 0 0 0;

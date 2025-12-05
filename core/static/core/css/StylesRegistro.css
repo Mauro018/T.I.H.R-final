@@ -16,7 +16,7 @@ body {
 }
 
 body.landing-page {
-    padding-top: 90px;
+    padding: 0;
 }
 
 .container {
@@ -24,7 +24,7 @@ body.landing-page {
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-bottom: 20px;
+    min-height: 100vh;
 }
 
 /* Caja principal en blanco */

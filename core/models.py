@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.core.validators import RegexValidator
 
 class User(models.Model):
     username = models.CharField(max_length=100, unique=True)
@@ -59,7 +60,7 @@ class Utensilios(models.Model):
 class UserClientes(models.Model):
     usernameCliente = models.CharField(max_length=100, unique=True)
     passwordCliente = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100, blank=True)
     is_active = models.BooleanField(default=True)
     last_modified = models.DateTimeField(auto_now=True)
     status_changed_at = models.DateTimeField(null=True, blank=True)
@@ -67,7 +68,7 @@ class UserClientes(models.Model):
     
     # Dirección predeterminada para envíos
     nombre_completo = models.CharField(max_length=200, blank=True, null=True)
-    telefono = models.CharField(max_length=20, blank=True, null=True)
+    telefono = models.CharField(max_length=20, blank=True, null=True, validators=[RegexValidator(r'^\d{7,15}$', 'Ingrese un número de teléfono válido (solo números, 7-15 dígitos)')])
     direccion = models.CharField(max_length=300, blank=True, null=True)
     ciudad = models.CharField(max_length=100, blank=True, null=True)
     departamento = models.CharField(max_length=100, blank=True, null=True)

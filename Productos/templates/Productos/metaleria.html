@@ -7,8 +7,12 @@
     <title>{% block title %} {% endblock %} | Tu Idea Hecha Realidad</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'Productos/css/styles1.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/responsive.css' %}">
 </head>
 <body>
+
+<!-- Overlay para cerrar sidebar en móvil -->
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
  
 <!-- BARRA LATERAL (MENÚ + FILTROS) -->
 <div class="sidebar">
@@ -51,6 +55,7 @@
 <!-- CONTENIDO PRINCIPAL -->
 <div class="main-content-wrapper">
   <header>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     <h1 class="div" style="text-align: center;">
       <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="75" height="75">
       Tu Idea Hecha Realidad
@@ -280,5 +285,6 @@
 <script src="{% static 'core/javascript/sidebar-toggle.js' %}"></script>
 
 {% include 'core/floating_buttons.html' %}
+{% include 'core/modal_notificaciones.html' %}
 </body>
 </html>

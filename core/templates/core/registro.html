@@ -25,28 +25,46 @@
                 </div>
             {% endif %}
 
+            {% if form.errors %}
+                <div class="messages">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <div class="alert alert-error" style="background-color: #f8d7da; color: #721c24; padding: 12px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #dc3545;">
+                                <strong>{% if field == 'usernameCliente' %}Nombre de usuario{% elif field == 'email' %}Correo{% else %}{{ field }}{% endif %}:</strong> {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <div class="input-group">
                 <input type="text"
                        name="usernameCliente"
                        placeholder="Crear nombre de usuario"
                        required
+                       pattern="[a-zA-Z0-9_]+"
+                       title="Solo letras, números y guiones bajos"
                        value="{{ request.POST.usernameCliente|default:'' }}">
             </div>
 
             <div class="input-group">
                 <input type="email"
                        name="email"
-                       placeholder="Email"
+                       placeholder="Email (solo Gmail)"
                        required
+                       pattern="[a-zA-Z0-9._%+-]+@gmail\.com$"
+                       title="Solo se permiten correos de Gmail"
                        value="{{ request.POST.email|default:'' }}">
             </div>
 
             <div class="input-group">
                 <input type="password"
                        name="passwordCliente"
-                       placeholder="Contraseña"
+                       placeholder="Contraseña (mínimo 8 caracteres)"
                        required
-                       id="password">
+                       minlength="8"
+                       id="password"
+                       title="La contraseña debe tener al menos 8 caracteres">
             </div>
 
             <button type="submit" class="btn" id="submitBtn">

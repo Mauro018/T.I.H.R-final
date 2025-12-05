@@ -1,4 +1,5 @@
 /* Estilos para Gestión de Pagos */
+/* Comentado para usar el estilo estándar del header
 .page-title {
     background: linear-gradient(135deg, #7A3E0E 0%, #A0662F 100%);
     color: white;
@@ -12,6 +13,7 @@
     margin: 0;
     font-size: 2rem;
 }
+*/
 
 .tabs-container {
     display: flex;

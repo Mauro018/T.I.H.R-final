@@ -33,7 +33,7 @@ body {
     top: 50%;
     left: 15px;
     transform: translateY(-50%);
-    z-index: 1002;
+    z-index: 10;
     background: rgba(255, 255, 255, 0.95);
     color: #A0662F;
     border: 2px solid rgba(160, 102, 47, 0.3);
@@ -65,7 +65,7 @@ body {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    z-index: 999;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -80,36 +80,10 @@ body {
    ============================================ */
 
 @media screen and (min-width: 1921px) {
-    .sidebar-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .sidebar {
-        z-index: 1001;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-
-    .sidebar.active {
-        transform: translateX(0);
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .sidebar-overlay {
-        display: none;
-    }
-
-    .sidebar-overlay.active {
-        display: block;
-    }
-
     .main-content-wrapper {
         max-width: 2400px;
-        margin-left: 0 !important;
+        margin-left: 250px;
         margin-right: auto;
-        width: 100% !important;
     }
 
     header h1 {
@@ -138,38 +112,25 @@ body {
 
 @media screen and (min-width: 1367px) and (max-width: 1920px) {
     .sidebar-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: none !important;
     }
 
     .sidebar {
-        transform: translateX(-100%);
+        transform: translateX(0);
         position: fixed;
         top: 0;
         left: 0;
         width: 250px;
-        z-index: 1001;
-        transition: transform 0.3s ease;
-    }
-
-    .sidebar.active {
-        transform: translateX(0);
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
     }
 
     .main-content-wrapper {
-        margin-left: 0 !important;
-        width: 100% !important;
+        margin-left: 250px;
+        width: calc(100% - 250px);
         padding: 0 20px 20px 20px;
     }
 
     .sidebar-overlay {
-        display: none;
-    }
-
-    .sidebar-overlay.active {
-        display: block;
+        display: none !important;
     }
 
     .contenedor-articulos {
@@ -188,36 +149,19 @@ body {
 
 @media screen and (min-width: 1025px) and (max-width: 1366px) {
     .sidebar-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: none !important;
     }
 
     .sidebar {
         width: 250px;
-        transform: translateX(-100%);
-        position: fixed;
-        z-index: 1001;
-        transition: transform 0.3s ease;
-    }
-
-    .sidebar.active {
         transform: translateX(0);
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+        position: fixed;
     }
 
     .main-content-wrapper {
-        margin-left: 0 !important;
-        width: 100% !important;
+        margin-left: 250px;
+        width: calc(100% - 250px);
         padding: 0 20px 20px 20px;
-    }
-
-    .sidebar-overlay {
-        display: none;
-    }
-
-    .sidebar-overlay.active {
-        display: block;
     }
 
     .contenedor-articulos {
@@ -257,8 +201,6 @@ body {
 
     .sidebar-toggle {
         display: flex;
-        align-items: center;
-        justify-content: center;
     }
 
     .sidebar {
@@ -274,14 +216,6 @@ body {
         box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
     }
 
-    .sidebar-overlay {
-        display: none;
-    }
-
-    .sidebar-overlay.active {
-        display: block;
-    }
-
     .main-content-wrapper {
         margin-left: 0 !important;
         width: 100% !important;
@@ -291,9 +225,7 @@ body {
     header {
         margin: 0 -20px 30px -20px !important;
         width: calc(100% + 40px) !important;
-        padding: 1rem 1.5rem !important;
-        padding-left: 65px !important;
-        position: relative;
+        padding: 1.8rem 1.5rem 1.8rem 70px !important;
     }
 
     header h1 {
@@ -362,8 +294,6 @@ body {
 
     .sidebar-toggle {
         display: flex;
-        align-items: center;
-        justify-content: center;
         left: 12px;
         width: 42px;
         height: 42px;
@@ -378,15 +308,6 @@ body {
 
     .sidebar.active {
         transform: translateX(0);
-        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .sidebar-overlay {
-        display: none;
-    }
-
-    .sidebar-overlay.active {
-        display: block;
     }
 
     .main-content-wrapper {
@@ -398,9 +319,7 @@ body {
     header {
         margin: 0 -15px 20px -15px !important;
         width: calc(100% + 30px) !important;
-        padding: 0.9rem 1rem !important;
-        padding-left: 60px !important;
-        position: relative;
+        padding: 1.5rem 1rem 1.5rem 65px !important;
     }
 
     header h1 {
@@ -452,15 +371,15 @@ body {
         justify-content: center;
     }
 
-    /* Tabla pedidos responsive - scroll horizontal */
-    .tabla-pedidos {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+    /* Tabla pedidos en tarjetas */
+    .tabla-pedidos table {
+        display: none;
     }
 
-    .tabla-pedidos table {
-        min-width: 600px;
-        font-size: 0.9rem;
+    .tabla-pedidos {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
     }
 
     /* Navegaci\u00f3n adaptada */
@@ -501,8 +420,6 @@ body {
 
     .sidebar-toggle {
         display: flex;
-        align-items: center;
-        justify-content: center;
         left: 10px;
         width: 40px;
         height: 40px;
@@ -513,21 +430,10 @@ body {
         transform: translateX(-100%);
         width: 260px;
         max-width: 85vw;
-        z-index: 1001;
-        transition: transform 0.3s ease;
     }
 
     .sidebar.active {
         transform: translateX(0);
-        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .sidebar-overlay {
-        display: none;
-    }
-
-    .sidebar-overlay.active {
-        display: block;
     }
 
     .main-content-wrapper {
@@ -539,9 +445,7 @@ body {
     header {
         margin: 0 -12px 20px -12px !important;
         width: calc(100% + 24px) !important;
-        padding: 0.8rem 0.8rem !important;
-        padding-left: 55px !important;
-        position: relative;
+        padding: 1.2rem 0.8rem 1.2rem 58px !important;
     }
 
     header h1 {
@@ -626,15 +530,9 @@ body {
         margin-left: 0;
     }
 
-    /* Tabla de pedidos responsive */
-    .tabla-pedidos {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
+    /* Tabla de pedidos */
     .tabla-pedidos table {
-        min-width: 550px;
-        font-size: 0.85rem;
+        display: none;
     }
 
     /* Carousel */
@@ -682,8 +580,6 @@ body {
 
     .sidebar-toggle {
         display: flex;
-        align-items: center;
-        justify-content: center;
         left: 8px;
         width: 38px;
         height: 38px;
@@ -695,21 +591,10 @@ body {
         width: 240px;
         max-width: 90vw;
         padding: 15px;
-        z-index: 1001;
-        transition: transform 0.3s ease;
     }
 
     .sidebar.active {
         transform: translateX(0);
-        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .sidebar-overlay {
-        display: none;
-    }
-
-    .sidebar-overlay.active {
-        display: block;
     }
 
     .sidebar-user-info {
@@ -732,9 +617,7 @@ body {
     header {
         margin: 0 -10px 15px -10px !important;
         width: calc(100% + 20px) !important;
-        padding: 0.7rem 0.6rem !important;
-        padding-left: 50px !important;
-        position: relative;
+        padding: 1rem 0.6rem 1rem 52px !important;
     }
 
     header h1 {
@@ -821,21 +704,9 @@ body {
         font-size: 0.9rem;
     }
 
-    /* Tabla de pedidos responsive - scroll horizontal */
-    .tabla-pedidos {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
+    /* Tabla de pedidos - solo modo tarjeta */
     .tabla-pedidos table {
-        min-width: 500px;
-        font-size: 0.8rem;
-    }
-
-    .tabla-pedidos th,
-    .tabla-pedidos td {
-        padding: 8px 6px;
-        font-size: 0.8rem;
+        display: none;
     }
 
     /* Carousel muy compacto */

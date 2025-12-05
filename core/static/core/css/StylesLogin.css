@@ -16,7 +16,7 @@ body {
 }
 
 body.landing-page {
-    padding-top: 90px;
+    padding: 0;
 }
 
 .login-container {
@@ -28,7 +28,6 @@ body.landing-page {
     max-width: 400px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
 }
 
 h1 {

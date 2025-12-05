@@ -7,9 +7,13 @@
     <title>{% block title %} {% endblock %} | Tu Idea Hecha Realidad</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'Productos/css/styles1.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/responsive.css' %}">
 </head>
 <body>
- 
+
+<!-- Overlay para cerrar sidebar en móvil -->
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+  
 <!-- BARRA LATERAL (MENÚ + FILTROS) -->
 <div class="sidebar">
     <div class="sidebar-user-info">
@@ -29,7 +33,7 @@
         <li><a href="{% url 'contact' %}">Contáctenos</a></li>
         <li><a href="{% url 'comentarios' %}">Comentarios</a></li>
         <li><a href="{% url 'logout' %}" class="logout-button">Cerrar Sesión</a></li>
-    </ul>  
+    </ul>
     <!-- FILTROS -->
   <div class="filtros">
     <h2 for="categoria" class="h2-side">Categoría:</h2>
@@ -50,13 +54,12 @@
 <!-- CONTENIDO PRINCIPAL -->
 <div class="main-content-wrapper">
   <header>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     <h1 class="div" style="text-align: center;">
       <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" width="75" height="75">
       Tu Idea Hecha Realidad
     </h1>
-  </header>
-
-<section>
+  </header><section>
     <div>
         <h2>CARPINTERIA</h2>
         <section class="seccion-at">
@@ -284,5 +287,6 @@
 <script src="{% static 'core/javascript/sidebar-toggle.js' %}"></script>
 
 {% include 'core/floating_buttons.html' %}
+{% include 'core/modal_notificaciones.html' %}
 </body>
 </html>
