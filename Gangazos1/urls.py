@@ -23,12 +23,8 @@ from core import views
 urlpatterns = [
     path('',views.home,name='home'),
     path('', views.chatbot, name="chatbot"),
-    path('about/',views.about,name='about'),
-    path('portafolio/',views.portafolio,name='portafolio'),
     path('contact/',views.contact,name='contact'),
     path('reglas/',views.reglas,name='reglas'),
-    path('productos2/',views.productos2,name='productos2'),
-    path('contactenos/',views.contactenos,name='contactenos'),
     path('productos/',views.productos,name='productos'),
     path('registro/',views.registro,name='registro'),
     path('verificar-codigo/',views.verificar_codigo,name='verificar_codigo'),
@@ -42,6 +38,17 @@ urlpatterns = [
     path('procesar-pago/', views.procesar_pago, name='procesar_pago'),
     path('idea/', views.ideas_view, name='idea'),
     path('perfilUsuario/', views.perfilUsuario_view, name='perfilUsuario'),
+    # URLs para autenticación de dos factores (2FA)
+    path('activar-2fa/', views.activar_2fa_view, name='activar_2fa'),
+    path('mostrar-qr-2fa/', views.mostrar_qr_2fa_view, name='mostrar_qr_2fa'),
+    path('verificar-2fa-setup/', views.verificar_2fa_setup_view, name='verificar_2fa_setup'),
+    path('verificar-2fa-login/', views.verificar_2fa_login_view, name='verificar_2fa_login'),
+    path('desactivar-2fa/', views.desactivar_2fa_view, name='desactivar_2fa'),
+    # URLs para autenticación de dos factores (2FA) para EMPRESAS - OBLIGATORIO
+    path('configurar-2fa-empresa/', views.configurar_2fa_empresa_view, name='configurar_2fa_empresa'),
+    path('mostrar-qr-2fa-empresa/', views.mostrar_qr_2fa_empresa_view, name='mostrar_qr_2fa_empresa'),
+    path('verificar-2fa-setup-empresa/', views.verificar_2fa_setup_empresa_view, name='verificar_2fa_setup_empresa'),
+    path('verificar-2fa-login-empresa/', views.verificar_2fa_login_empresa_view, name='verificar_2fa_login_empresa'),
     # Incluir URLs de comentarios y perfil desde core
     path('comentarios/', views.comentarios_view, name='comentarios'),
     path('comentarios/crear/', views.crear_comentario_view, name='crear_comentario'),

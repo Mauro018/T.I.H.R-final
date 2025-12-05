@@ -20,7 +20,9 @@
             {% if usuario.foto_perfil %}
                 <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" width="50" height="50" style="border-radius: 50%; border: 2px solid #A0662F; object-fit: cover;">
             {% else %}
-                <img src="{% static 'core/img/Perfil.png' %}" alt="Logo" width="50" height="50" style="border-radius: 50%; border: 2px solid #A0662F;">
+                <div class="perfil-foto-placeholder" style="width: 50px; height: 50px; font-size: 24px; line-height: 50px;">
+                    {{ usuario.usernameCliente|first|upper }}
+                </div>
             {% endif %}
         </a>
         <span class="username-display">{{ usuario.usernameCliente }}</span>
@@ -83,9 +85,38 @@
                   </div>
               {% endif %}
           </div>
-          <h1 class="perfil-nombre">{{ usuario.usernameCliente }}</h1>
+          <h3 class="perfil-nombre" style="color: #ffffff;">{{ usuario.usernameCliente }}</h3>
           <p class="perfil-email">{{ usuario.email }}</p>
           <a href="{% url 'editar_perfil' %}" class="btn-editar-perfil">Editar Perfil</a>
+      </div>
+
+      <!-- Sección de Seguridad -->
+      <div class="perfil-header-card" style="margin-top: 20px;">
+          <h3 style="color: #ffffff; margin-bottom: 15px;">Seguridad de la Cuenta</h3>
+          
+          {% if usuario.two_factor_enabled %}
+              <div style="background: #d4edda; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #28a745;">
+                  <strong style="color: #155724;">Autenticación de dos factores activada</strong>
+                  <p style="color: #155724; margin: 5px 0 0 0; font-size: 14px;">Tu cuenta está protegida con 2FA</p>
+              </div>
+              
+              <form method="POST" action="{% url 'desactivar_2fa' %}" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que deseas desactivar la autenticación de dos factores? Esto reducirá la seguridad de tu cuenta.');">
+                  {% csrf_token %}
+                  <input type="hidden" name="passwordCliente" id="password-desactivar">
+                  <button type="button" class="btn-editar-perfil" style="background: #dc3545;" onclick="desactivar2FA()">
+                      Desactivar 2FA
+                  </button>
+              </form>
+          {% else %}
+              <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #ffc107;">
+                  <strong style="color: #856404;">Autenticación de dos factores desactivada</strong>
+                  <p style="color: #856404; margin: 5px 0 0 0; font-size: 14px;">Aumenta la seguridad de tu cuenta activando 2FA</p>
+              </div>
+              
+              <a href="{% url 'activar_2fa' %}" class="btn-editar-perfil" style="background: #28a745;">
+                  Activar 2FA
+              </a>
+          {% endif %}
       </div>
 
       <!-- Cards de información -->
@@ -166,6 +197,14 @@
             window.location.href = '/productos/'; 
         }
     }
+    
+  function desactivar2FA() {
+      const password = prompt('Por favor, ingresa tu contraseña para desactivar 2FA:');
+      if (password) {
+          document.getElementById('password-desactivar').value = password;
+          document.querySelector('form[action*="desactivar_2fa"]').submit();
+      }
+  }
 </script>
 <script src="{% static 'core/javascript/sidebar-toggle.js' %}"></script>
 {% include 'core/floating_buttons.html' %}

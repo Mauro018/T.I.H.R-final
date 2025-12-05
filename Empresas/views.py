@@ -764,6 +764,12 @@ def update_user(request):
             # Verificar si el nombre de usuario ya existe
             if UserEmpresa.objects.filter(usernameEmpresa=username).exclude(id=user_id).exists():
                 return JsonResponse({'success': False, 'error': 'El nombre de usuario ya está en uso'}, status=400)
+            
+            # Actualizar email de empresa también
+            email = request.POST.get('email')
+            if email:
+                user.email = email
+            
             user.usernameEmpresa = username
         else:
             return JsonResponse({'success': False, 'error': 'Tipo de usuario inválido'}, status=400)

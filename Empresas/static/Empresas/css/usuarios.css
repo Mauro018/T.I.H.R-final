@@ -81,3 +81,17 @@
 .action-links .enable-user {
     background-color: #28a745;
 }
+
+/* Estilos para usuarios inactivos */
+table tbody tr.usuario-inactivo {
+    background-color: #f5f5f5;
+    opacity: 0.6;
+}
+
+table tbody tr.usuario-inactivo td {
+    color: #999;
+}
+
+table tbody tr.usuario-inactivo:hover {
+    background-color: #ebebeb;
+}

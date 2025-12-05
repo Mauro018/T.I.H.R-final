@@ -1,26 +1,17 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .forms import LoginForm, AgregarForm, LoginFormEmpresa, IdeaForm
 from .models import UserClientes, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserEmpresa, Idea, Pago, Pedido, Comentario
 from .logic import obtener_respuesta
 import json
-
-html_base = """
-<h1>Gangazos</h1>
-<ul>
-    <li><a href="/">Inicio</a></li>
-    <li><a href="/about">Sobre los Gangazos</a></li>
-    <li><a href="/portafolio">Categorias en oferta</a></li>
-    <li><a href="/contact">Contactenos</a></li>
-    <li><a href="/productos">Productos</a></li>
-    <li><a href="/login">Iniciar sesión</a></li>
-    <li><a href="/logout">Cerrar sesión</a></li>
-</ul>
-"""
+import pyotp
+import qrcode
+from io import BytesIO
+import base64
 
 # Create your views here.
 def home(request):
@@ -54,12 +45,6 @@ def home(request):
         'utensilio_destacado': utensilio_destacado,
     }
     return render(request, "core/home.html", context)
-
-def about(request):
-    return render(request,"core/about.html")
-
-def portafolio(request):
-    return render(request,"core/portafolio.html")
 
 def productos(request):
     # Obtener el usuario de la sesión
@@ -110,13 +95,26 @@ def Login_view(request):
             passwordCliente = form.cleaned_data['passwordCliente']
             try:
                 user = UserClientes.objects.get(usernameCliente=usernameCliente, passwordCliente=passwordCliente)
-                # Guardar el usuario en la sesión
+                
+                # Verificar si el usuario está deshabilitado
+                if not user.is_active:
+                    error_message = "Tu cuenta ha sido inhabilitada. Contacta con la empresa por el correo: tuideahecharealidad01@gmail.com"
+                    return render(request, 'core/login.html', {'error_message': error_message, 'form': form})
+                
+                # Verificar si tiene 2FA habilitado
+                if user.two_factor_enabled:
+                    # Guardar temporalmente el username y redirigir a verificación 2FA
+                    request.session['username_2fa_temp'] = usernameCliente
+                    request.session.modified = True
+                    return redirect('verificar_2fa_login')
+                
+                # Login normal sin 2FA
                 request.session['usernameCliente'] = usernameCliente
                 request.session.modified = True
                 return redirect('productos')
             except UserClientes.DoesNotExist:
                 error_message = "Usuario o contraseña incorrectos"
-                return render(request, 'core/login.html', {'error_message': error_message})
+                return render(request, 'core/login.html', {'error_message': error_message, 'form': form})
     else:
         form = LoginForm()
     return render(request,'core/login.html', {'form': form})
@@ -129,11 +127,24 @@ def LoginEmpresa_view(request):
             passwordEmpresa = form.cleaned_data['passwordEmpresa']
             try:
                 userEmpresa = UserEmpresa.objects.get(usernameEmpresa=usernameEmpresa, passwordEmpresa=passwordEmpresa)
-                # Guardar información de la empresa en la sesión
-                request.session['usernameEmpresa'] = userEmpresa.usernameEmpresa
-                request.session['empresa_id'] = userEmpresa.id
+                
+                # Verificar si la empresa está deshabilitada
+                if not userEmpresa.is_active:
+                    error_message = "Tu cuenta ha sido inhabilitada. Contacta con la empresa por el correo: tuideahecharealidad01@gmail.com"
+                    return render(request, 'core/loginEmpresa.html', {'error_message': error_message, 'form': form})
+                
+                # Verificar si tiene 2FA configurado (OBLIGATORIO para empresas)
+                if not userEmpresa.two_factor_enabled:
+                    # Primera vez o sin 2FA configurado - forzar configuración
+                    request.session['empresa_2fa_setup'] = userEmpresa.usernameEmpresa
+                    request.session.modified = True
+                    return redirect('configurar_2fa_empresa')
+                
+                # Si tiene 2FA, redirigir a verificación
+                request.session['username_2fa_temp_empresa'] = usernameEmpresa
                 request.session.modified = True
-                return redirect('dashboardEmpresa')
+                return redirect('verificar_2fa_login_empresa')
+                
             except UserEmpresa.DoesNotExist:
                 error_message = "Usuario o contraseña incorrectos"
                 return render(request, 'core/loginEmpresa.html', {'error_message': error_message})
@@ -258,12 +269,6 @@ def verificar_codigo(request):
     return render(request, 'core/verificar_codigo.html', {
         'email': request.session.get('registro_temp', {}).get('email')
     })
-
-def productos2(request):
-    return render(request,"core/productos2.html")
-
-def contactenos(request):
-    return render(request,"core/contactenos.html")
 
 def reglas(request):
     return render(request,"core/reglas.html")
@@ -1106,3 +1111,378 @@ def revocar_permiso_publicacion(request, idea_id):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
+# ==================== VISTAS PARA AUTENTICACIÓN DE DOS FACTORES (2FA) ====================
+
+def activar_2fa_view(request):
+    """Vista para activar la autenticación de dos factores"""
+    username = request.session.get('usernameCliente')
+    if not username:
+        return redirect('login')
+    
+    try:
+        usuario = UserClientes.objects.get(usernameCliente=username)
+        
+        if request.method == 'POST':
+            email = request.POST.get('email')
+            password = request.POST.get('passwordCliente')
+            
+            # Validar que el email coincida con el de la base de datos
+            if email != usuario.email:
+                messages.error(request, 'El correo electrónico no coincide con el registrado')
+                return render(request, 'core/activar_2fa.html', {'usuario': usuario})
+            
+            # Validar la contraseña
+            if password != usuario.passwordCliente:
+                messages.error(request, 'La contraseña es incorrecta')
+                return render(request, 'core/activar_2fa.html', {'usuario': usuario})
+            
+            # Generar el secreto para 2FA
+            if not usuario.two_factor_secret:
+                secret = pyotp.random_base32()
+                usuario.two_factor_secret = secret
+                usuario.save()
+            
+            # Guardar en sesión que se está configurando 2FA
+            request.session['configurando_2fa'] = True
+            request.session.modified = True
+            
+            return redirect('mostrar_qr_2fa')
+        
+        context = {
+            'usuario': usuario,
+        }
+        return render(request, 'core/activar_2fa.html', context)
+        
+    except UserClientes.DoesNotExist:
+        return redirect('login')
+
+def mostrar_qr_2fa_view(request):
+    """Vista para mostrar el código QR para configurar 2FA"""
+    username = request.session.get('usernameCliente')
+    configurando = request.session.get('configurando_2fa', False)
+    
+    if not username or not configurando:
+        return redirect('perfilUsuario')
+    
+    try:
+        usuario = UserClientes.objects.get(usernameCliente=username)
+        
+        if not usuario.two_factor_secret:
+            return redirect('activar_2fa')
+        
+        # Crear el URI para el código QR
+        totp = pyotp.TOTP(usuario.two_factor_secret)
+        provisioning_uri = totp.provisioning_uri(
+            name=usuario.email,
+            issuer_name='Tu Idea Hecha Realidad'
+        )
+        
+        # Generar código QR
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(provisioning_uri)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        # Convertir imagen a base64 para mostrar en template
+        buffer = BytesIO()
+        img.save(buffer, format='PNG')
+        buffer.seek(0)
+        img_base64 = base64.b64encode(buffer.getvalue()).decode()
+        
+        context = {
+            'usuario': usuario,
+            'qr_code': img_base64,
+            'secret_key': usuario.two_factor_secret,
+        }
+        
+        return render(request, 'core/mostrar_qr_2fa.html', context)
+        
+    except UserClientes.DoesNotExist:
+        return redirect('login')
+
+def verificar_2fa_setup_view(request):
+    """Vista para verificar el código 2FA durante la configuración"""
+    username = request.session.get('usernameCliente')
+    configurando = request.session.get('configurando_2fa', False)
+    
+    if not username or not configurando:
+        return redirect('perfilUsuario')
+    
+    try:
+        usuario = UserClientes.objects.get(usernameCliente=username)
+        
+        if request.method == 'POST':
+            codigo = request.POST.get('codigo')
+            
+            if not codigo:
+                messages.error(request, 'Por favor ingresa el código de verificación')
+                return redirect('mostrar_qr_2fa')
+            
+            # Verificar el código
+            totp = pyotp.TOTP(usuario.two_factor_secret)
+            if totp.verify(codigo, valid_window=1):
+                # Activar 2FA
+                usuario.two_factor_enabled = True
+                usuario.save()
+                
+                # Limpiar sesión
+                request.session.pop('configurando_2fa', None)
+                request.session.modified = True
+                
+                messages.success(request, '¡Autenticación de dos factores activada exitosamente!')
+                return redirect('perfilUsuario')
+            else:
+                messages.error(request, 'Código de verificación incorrecto. Intenta nuevamente.')
+                return redirect('mostrar_qr_2fa')
+        
+        return redirect('mostrar_qr_2fa')
+        
+    except UserClientes.DoesNotExist:
+        return redirect('login')
+
+def verificar_2fa_login_view(request):
+    """Vista para verificar el código 2FA durante el login"""
+    username_temp = request.session.get('username_2fa_temp')
+    
+    if not username_temp:
+        return redirect('login')
+    
+    try:
+        usuario = UserClientes.objects.get(usernameCliente=username_temp)
+        
+        if request.method == 'POST':
+            codigo = request.POST.get('codigo')
+            
+            if not codigo:
+                messages.error(request, 'Por favor ingresa el código de verificación')
+                return render(request, 'core/verificar_2fa_login.html', {'usuario': usuario})
+            
+            # Verificar el código
+            totp = pyotp.TOTP(usuario.two_factor_secret)
+            if totp.verify(codigo, valid_window=1):
+                # Login exitoso
+                request.session['usernameCliente'] = username_temp
+                request.session.pop('username_2fa_temp', None)
+                request.session.modified = True
+                
+                messages.success(request, '¡Inicio de sesión exitoso!')
+                return redirect('productos')
+            else:
+                messages.error(request, 'Código de verificación incorrecto. Intenta nuevamente.')
+                return render(request, 'core/verificar_2fa_login.html', {'usuario': usuario})
+        
+        context = {
+            'usuario': usuario,
+        }
+        return render(request, 'core/verificar_2fa_login.html', context)
+        
+    except UserClientes.DoesNotExist:
+        return redirect('login')
+
+def desactivar_2fa_view(request):
+    """Vista para desactivar la autenticación de dos factores"""
+    username = request.session.get('usernameCliente')
+    if not username:
+        return redirect('login')
+    
+    try:
+        usuario = UserClientes.objects.get(usernameCliente=username)
+        
+        if request.method == 'POST':
+            password = request.POST.get('passwordCliente')
+            
+            # Validar la contraseña
+            if password != usuario.passwordCliente:
+                messages.error(request, 'La contraseña es incorrecta')
+                return redirect('perfilUsuario')
+            
+            # Desactivar 2FA
+            usuario.two_factor_enabled = False
+            usuario.two_factor_secret = None
+            usuario.save()
+            
+            messages.success(request, 'Autenticación de dos factores desactivada exitosamente')
+            return redirect('perfilUsuario')
+        
+        return redirect('perfilUsuario')
+        
+    except UserClientes.DoesNotExist:
+        return redirect('login')
+
+
+# ==================== VISTAS PARA 2FA DE EMPRESAS (OBLIGATORIO) ====================
+
+def configurar_2fa_empresa_view(request):
+    """Vista para configuración OBLIGATORIA de 2FA para empresas"""
+    username_empresa = request.session.get('empresa_2fa_setup')
+    
+    if not username_empresa:
+        return redirect('loginEmpresa')
+    
+    try:
+        empresa = UserEmpresa.objects.get(usernameEmpresa=username_empresa)
+        
+        if request.method == 'POST':
+            email = request.POST.get('email')
+            password = request.POST.get('passwordEmpresa')
+            
+            # Validar que el email coincida
+            if email and email != empresa.email:
+                messages.error(request, 'El correo electrónico no coincide con el registrado')
+                return render(request, 'core/configurar_2fa_empresa.html', {'empresa': empresa})
+            
+            # Validar la contraseña
+            if password != empresa.passwordEmpresa:
+                messages.error(request, 'La contraseña es incorrecta')
+                return render(request, 'core/configurar_2fa_empresa.html', {'empresa': empresa})
+            
+            # Generar el secreto para 2FA
+            if not empresa.two_factor_secret:
+                secret = pyotp.random_base32()
+                empresa.two_factor_secret = secret
+                empresa.save()
+            
+            # Marcar que está en configuración
+            request.session['configurando_2fa_empresa'] = True
+            request.session.modified = True
+            
+            return redirect('mostrar_qr_2fa_empresa')
+        
+        context = {
+            'empresa': empresa,
+            'es_obligatorio': True,
+        }
+        return render(request, 'core/configurar_2fa_empresa.html', context)
+        
+    except UserEmpresa.DoesNotExist:
+        return redirect('loginEmpresa')
+
+def mostrar_qr_2fa_empresa_view(request):
+    """Vista para mostrar el código QR para configurar 2FA de empresa"""
+    username_empresa = request.session.get('empresa_2fa_setup')
+    configurando = request.session.get('configurando_2fa_empresa', False)
+    
+    if not username_empresa or not configurando:
+        return redirect('loginEmpresa')
+    
+    try:
+        empresa = UserEmpresa.objects.get(usernameEmpresa=username_empresa)
+        
+        if not empresa.two_factor_secret:
+            return redirect('configurar_2fa_empresa')
+        
+        # Crear el URI para el código QR
+        totp = pyotp.TOTP(empresa.two_factor_secret)
+        provisioning_uri = totp.provisioning_uri(
+            name=empresa.email if empresa.email else empresa.usernameEmpresa,
+            issuer_name='Tu Idea Hecha Realidad - Empresa'
+        )
+        
+        # Generar código QR
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(provisioning_uri)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        # Convertir imagen a base64
+        buffer = BytesIO()
+        img.save(buffer, format='PNG')
+        buffer.seek(0)
+        img_base64 = base64.b64encode(buffer.getvalue()).decode()
+        
+        context = {
+            'empresa': empresa,
+            'qr_code': img_base64,
+            'secret_key': empresa.two_factor_secret,
+            'es_obligatorio': True,
+        }
+        
+        return render(request, 'core/mostrar_qr_2fa_empresa.html', context)
+        
+    except UserEmpresa.DoesNotExist:
+        return redirect('loginEmpresa')
+
+def verificar_2fa_setup_empresa_view(request):
+    """Vista para verificar el código 2FA durante la configuración de empresa"""
+    username_empresa = request.session.get('empresa_2fa_setup')
+    configurando = request.session.get('configurando_2fa_empresa', False)
+    
+    if not username_empresa or not configurando:
+        return redirect('loginEmpresa')
+    
+    try:
+        empresa = UserEmpresa.objects.get(usernameEmpresa=username_empresa)
+        
+        if request.method == 'POST':
+            codigo = request.POST.get('codigo')
+            
+            if not codigo:
+                messages.error(request, 'Por favor ingresa el código de verificación')
+                return redirect('mostrar_qr_2fa_empresa')
+            
+            # Verificar el código
+            totp = pyotp.TOTP(empresa.two_factor_secret)
+            if totp.verify(codigo, valid_window=1):
+                # Activar 2FA
+                empresa.two_factor_enabled = True
+                empresa.save()
+                
+                # Limpiar sesiones de configuración
+                request.session.pop('empresa_2fa_setup', None)
+                request.session.pop('configurando_2fa_empresa', None)
+                
+                # Establecer sesión normal de empresa
+                request.session['usernameEmpresa'] = empresa.usernameEmpresa
+                request.session['empresa_id'] = empresa.id
+                request.session.modified = True
+                
+                messages.success(request, '¡Autenticación de dos factores configurada exitosamente!')
+                return redirect('dashboardEmpresa')
+            else:
+                messages.error(request, 'Código de verificación incorrecto. Intenta nuevamente.')
+                return redirect('mostrar_qr_2fa_empresa')
+        
+        return redirect('mostrar_qr_2fa_empresa')
+        
+    except UserEmpresa.DoesNotExist:
+        return redirect('loginEmpresa')
+
+def verificar_2fa_login_empresa_view(request):
+    """Vista para verificar el código 2FA durante el login de empresa"""
+    username_temp = request.session.get('username_2fa_temp_empresa')
+    
+    if not username_temp:
+        return redirect('loginEmpresa')
+    
+    try:
+        empresa = UserEmpresa.objects.get(usernameEmpresa=username_temp)
+        
+        if request.method == 'POST':
+            codigo = request.POST.get('codigo')
+            
+            if not codigo:
+                messages.error(request, 'Por favor ingresa el código de verificación')
+                return render(request, 'core/verificar_2fa_login_empresa.html', {'empresa': empresa})
+            
+            # Verificar el código
+            totp = pyotp.TOTP(empresa.two_factor_secret)
+            if totp.verify(codigo, valid_window=1):
+                # Login exitoso
+                request.session['usernameEmpresa'] = username_temp
+                request.session['empresa_id'] = empresa.id
+                request.session.pop('username_2fa_temp_empresa', None)
+                request.session.modified = True
+                
+                messages.success(request, '¡Inicio de sesión exitoso!')
+                return redirect('dashboardEmpresa')
+            else:
+                messages.error(request, 'Código de verificación incorrecto. Intenta nuevamente.')
+                return render(request, 'core/verificar_2fa_login_empresa.html', {'empresa': empresa})
+        
+        context = {
+            'empresa': empresa,
+        }
+        return render(request, 'core/verificar_2fa_login_empresa.html', context)
+        
+    except UserEmpresa.DoesNotExist:
+        return redirect('loginEmpresa')

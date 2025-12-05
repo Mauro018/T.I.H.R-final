@@ -47,7 +47,7 @@
                     </thead>
                     <tbody>
                         {% for user in users %}
-                        <tr>
+                        <tr class="{% if not user.is_active %}usuario-inactivo{% endif %}">
                             <td>Cliente</td>
                             <td>{{ user.usernameCliente }}</td>
                             <td>{{ user.email }}</td>
@@ -58,23 +58,6 @@
                                 <a href="#" class="button disable-user" data-id="{{ user.id }}" data-type="cliente">Desactivar</a>
                                 {% else %}
                                 <a href="#" class="button enable-user" data-id="{{ user.id }}" data-type="cliente">Activar</a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-
-                        {% for empresa in empresas %}
-                        <tr>
-                            <td>Empresa</td>
-                            <td>{{ empresa.usernameEmpresa }}</td>
-                            <td>N/A</td>
-                            <td>{% if empresa.is_active %}Activo{% else %}Inactivo{% endif %}</td>
-                            <td class="action-links">
-                                <a href="#" class="button edit-user" data-id="{{ empresa.id }}" data-type="empresa">Editar</a>
-                                {% if empresa.is_active %}
-                                <a href="#" class="button disable-user" data-id="{{ empresa.id }}" data-type="empresa">Desactivar</a>
-                                {% else %}
-                                <a href="#" class="button enable-user" data-id="{{ empresa.id }}" data-type="empresa">Activar</a>
                                 {% endif %}
                             </td>
                         </tr>
@@ -125,11 +108,15 @@
                     document.getElementById('userType').value = userType;
                     document.getElementById('username').value = row.children[1].textContent.trim();
                     
+                    // Mostrar email para ambos tipos de usuario
+                    document.getElementById('emailGroup').style.display = 'block';
+                    document.getElementById('email').value = row.children[2].textContent.trim();
+                    
+                    // Hacer el email obligatorio solo para clientes
                     if (userType === 'cliente') {
-                        document.getElementById('emailGroup').style.display = 'block';
-                        document.getElementById('email').value = row.children[2].textContent.trim();
+                        document.getElementById('email').required = true;
                     } else {
-                        document.getElementById('emailGroup').style.display = 'none';
+                        document.getElementById('email').required = false;
                     }
                     
                     modal.style.display = 'block';

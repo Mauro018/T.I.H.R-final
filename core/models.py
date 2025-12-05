@@ -66,6 +66,10 @@ class UserClientes(models.Model):
     status_changed_at = models.DateTimeField(null=True, blank=True)
     foto_perfil = models.ImageField(upload_to='uploads/perfiles/', blank=True, null=True)
     
+    # Campos para autenticación de dos factores (2FA)
+    two_factor_enabled = models.BooleanField(default=False)
+    two_factor_secret = models.CharField(max_length=32, blank=True, null=True)
+    
     # Dirección predeterminada para envíos
     nombre_completo = models.CharField(max_length=200, blank=True, null=True)
     telefono = models.CharField(max_length=20, blank=True, null=True, validators=[RegexValidator(r'^\d{7,15}$', 'Ingrese un número de teléfono válido (solo números, 7-15 dígitos)')])
@@ -86,9 +90,14 @@ class UserClientes(models.Model):
 class UserEmpresa(models.Model):
     usernameEmpresa = models.CharField(max_length=100, unique=True)
     passwordEmpresa = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100, blank=True)
     is_active = models.BooleanField(default=True)
     last_modified = models.DateTimeField(auto_now=True)
     status_changed_at = models.DateTimeField(null=True, blank=True)
+    
+    # Campos para autenticación de dos factores (2FA) - OBLIGATORIO para empresas
+    two_factor_enabled = models.BooleanField(default=False)
+    two_factor_secret = models.CharField(max_length=32, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if self.is_active != getattr(self, '_original_is_active', True):
