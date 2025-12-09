@@ -1267,3 +1267,229 @@ h1 {
         transform: scale(1.05);
     }
 }
+
+/* ========================================
+   MEDIA QUERIES - RESPONSIVE DESIGN
+   ======================================== */
+
+/* Móviles pequeños (hasta 480px) */
+@media (max-width: 480px) {
+    header {
+        padding: 1.5rem 1rem;
+        margin: 0 -10px 20px -10px;
+        width: calc(100% + 20px);
+    }
+    
+    header h1 {
+        font-size: 1.8rem;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .header-logo {
+        width: 40px;
+        height: 40px;
+        margin-right: 0;
+    }
+    
+    header .subtitulo {
+        font-size: 1rem;
+        margin-top: 0.25rem;
+        margin-bottom: 1rem;
+    }
+    
+    nav {
+        width: 95%;
+        padding: 0.5rem 0;
+    }
+    
+    nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0 0.5rem;
+    }
+    
+    nav ul li {
+        width: 100%;
+    }
+    
+    nav ul li a {
+        width: 100%;
+        text-align: center;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    nav ul li.right-aligned-button:first-of-type {
+        margin-left: 0;
+    }
+}
+
+/* Móviles (481px - 767px) */
+@media (min-width: 481px) and (max-width: 767px) {
+    header {
+        padding: 1.75rem 1.5rem;
+        margin: 0 -15px 25px -15px;
+        width: calc(100% + 30px);
+    }
+    
+    header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .header-logo {
+        width: 45px;
+        height: 45px;
+    }
+    
+    header .subtitulo {
+        font-size: 1.1rem;
+    }
+    
+    nav {
+        width: 92%;
+    }
+    
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    nav ul li a {
+        padding: 0.65rem 1.2rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* Tablets (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    header {
+        padding: 2rem 1.75rem;
+    }
+    
+    header h1 {
+        font-size: 2.5rem;
+    }
+    
+    nav ul {
+        gap: 0.6rem;
+    }
+    
+    nav ul li a {
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+/* Escritorio pequeño (992px - 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    header {
+        padding: 2rem 2rem;
+    }
+    
+    header h1 {
+        font-size: 2.6rem;
+    }
+    
+    nav {
+        width: 85%;
+    }
+}
+
+/* Escritorio (1200px+) */
+@media (min-width: 1200px) {
+    header {
+        padding: 2.5rem 3rem;
+    }
+    
+    header h1 {
+        font-size: 2.8rem;
+    }
+    
+    nav {
+        max-width: 1400px;
+    }
+}
+
+/* Orientación horizontal en móviles */
+@media (max-width: 991px) and (orientation: landscape) {
+    header {
+        padding: 1rem 1.5rem;
+    }
+    
+    header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .header-logo {
+        width: 35px;
+        height: 35px;
+    }
+    
+    header .subtitulo {
+        font-size: 0.95rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    nav {
+        padding: 0.5rem 0;
+    }
+    
+    nav ul {
+        gap: 0.3rem;
+    }
+    
+    nav ul li a {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Tablets en orientación horizontal */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    nav ul {
+        flex-wrap: nowrap;
+        justify-content: space-between;
+    }
+    
+    nav ul li a {
+        padding: 0.6rem 1.2rem;
+    }
+}
+
+/* Preferencias del usuario - Reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Estilos para impresión */
+@media print {
+    header {
+        background: #fff;
+        color: #000;
+        box-shadow: none;
+    }
+    
+    header::before {
+        display: none;
+    }
+    
+    nav,
+    button,
+    .btn,
+    .cart-badge {
+        display: none !important;
+    }
+    
+    * {
+        color: #000 !important;
+        background: #fff !important;
+    }
+}

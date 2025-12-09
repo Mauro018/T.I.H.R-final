@@ -29,17 +29,17 @@
 
 .floating-cart {
   position: fixed;
-  top: 16px;
+  bottom: 90px;
   right: 16px;
   z-index: 10001;
 }
 
 .floating-notif {
   position: fixed;
-  bottom: 16px;
+  top: 16px;
   right: 16px;
   background: #ff5722;
-  z-index: 10001;
+  z-index: 10002;
 }
 
 .fb-badge {

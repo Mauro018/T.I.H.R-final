@@ -4,8 +4,9 @@ from django.utils import timezone
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.db.models import Q, Sum, Case, When, IntegerField
 from .forms import LoginForm, AgregarForm, LoginFormEmpresa, IdeaForm
-from .models import UserClientes, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserEmpresa, Idea, Pago, Pedido, Comentario
+from .models import UserClientes, Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserEmpresa, Idea, Pago, Pedido, Comentario, CarritoTemporal
 from .logic import obtener_respuesta
 import json
 import pyotp
@@ -15,8 +16,6 @@ import base64
 
 # Create your views here.
 def home(request):
-    from django.db.models import Case, When, IntegerField
-    
     # Obtener comentarios aprobados primero, luego otros estados, limitado a 10
     comentarios = Comentario.objects.annotate(
         orden_estado=Case(
@@ -63,6 +62,63 @@ def productos(request):
     cajoneras = Cajoneras.objects.filter(is_active=True)[:10]
     escritorios = Escritorios.objects.filter(is_active=True)[:10]
     utensilios = Utensilios.objects.filter(is_active=True)[:10]
+    
+    # Filtrar productos que están completamente reservados en otros carritos
+    # (excluyendo el carrito del usuario actual si existe)
+    if usuario:
+        # Para cada categoría, verificar disponibilidad real
+        for mesa in mesas:
+            # Cantidad total en otros carritos (excluyendo el usuario actual)
+            en_otros_carritos = CarritoTemporal.objects.filter(
+                producto_tipo='mesa',
+                producto_id=mesa.id
+            ).exclude(usuario=usuario).aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+            
+            # Calcular disponibilidad real
+            mesa.disponibilidad_real = mesa.cantidad_disponible - en_otros_carritos
+            
+        for silla in sillas:
+            en_otros_carritos = CarritoTemporal.objects.filter(
+                producto_tipo='silla',
+                producto_id=silla.id
+            ).exclude(usuario=usuario).aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+            silla.disponibilidad_real = silla.cantidad_disponible - en_otros_carritos
+            
+        for armario in armarios:
+            en_otros_carritos = CarritoTemporal.objects.filter(
+                producto_tipo='armario',
+                producto_id=armario.id
+            ).exclude(usuario=usuario).aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+            armario.disponibilidad_real = armario.cantidad_disponible - en_otros_carritos
+            
+        for cajonera in cajoneras:
+            en_otros_carritos = CarritoTemporal.objects.filter(
+                producto_tipo='cajonera',
+                producto_id=cajonera.id
+            ).exclude(usuario=usuario).aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+            cajonera.disponibilidad_real = cajonera.cantidad_disponible - en_otros_carritos
+            
+        for escritorio in escritorios:
+            en_otros_carritos = CarritoTemporal.objects.filter(
+                producto_tipo='escritorio',
+                producto_id=escritorio.id
+            ).exclude(usuario=usuario).aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+            escritorio.disponibilidad_real = escritorio.cantidad_disponible - en_otros_carritos
+            
+        for utensilio in utensilios:
+            en_otros_carritos = CarritoTemporal.objects.filter(
+                producto_tipo='utensilio',
+                producto_id=utensilio.id
+            ).exclude(usuario=usuario).aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+            utensilio.disponibilidad_real = utensilio.cantidad_disponible - en_otros_carritos
+        
+        # Filtrar productos con disponibilidad real > 0
+        mesas = [m for m in mesas if m.disponibilidad_real > 0]
+        sillas = [s for s in sillas if s.disponibilidad_real > 0]
+        armarios = [a for a in armarios if a.disponibilidad_real > 0]
+        cajoneras = [c for c in cajoneras if c.disponibilidad_real > 0]
+        escritorios = [e for e in escritorios if e.disponibilidad_real > 0]
+        utensilios = [u for u in utensilios if u.disponibilidad_real > 0]
     
     context = {
         'usuario': usuario,
@@ -987,6 +1043,30 @@ def get_cantidad_disponible_view(request):
         
         producto = modelo.objects.get(id=producto_id)
         
+        # Obtener el usuario actual
+        usernameCliente = request.session.get('usernameCliente')
+        usuario = None
+        if usernameCliente:
+            try:
+                usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+            except UserClientes.DoesNotExist:
+                pass
+        
+        # Calcular cantidad en otros carritos (excluyendo el usuario actual)
+        if usuario:
+            en_otros_carritos = CarritoTemporal.objects.filter(
+                producto_tipo=tipo,
+                producto_id=producto_id
+            ).exclude(usuario=usuario).aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+        else:
+            en_otros_carritos = CarritoTemporal.objects.filter(
+                producto_tipo=tipo,
+                producto_id=producto_id
+            ).aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+        
+        # Disponibilidad real
+        cantidad_disponible_real = producto.cantidad_disponible - en_otros_carritos
+        
         # Obtener el nombre del producto según el tipo
         campo_nombre_map = {
             'mesa': 'nombre1',
@@ -1001,7 +1081,7 @@ def get_cantidad_disponible_view(request):
         nombre_producto = getattr(producto, campo_nombre, 'Producto')
         
         return JsonResponse({
-            'cantidad_disponible': producto.cantidad_disponible,
+            'cantidad_disponible': max(0, cantidad_disponible_real),
             'nombre': nombre_producto
         })
         
@@ -1486,3 +1566,62 @@ def verificar_2fa_login_empresa_view(request):
         
     except UserEmpresa.DoesNotExist:
         return redirect('loginEmpresa')
+
+
+# ==================== VISTAS PARA SINCRONIZACIÓN DE CARRITO ====================
+
+@require_http_methods(["POST"])
+@csrf_exempt
+def sincronizar_carrito_view(request):
+    """Vista para sincronizar el carrito del usuario con la base de datos"""
+    usernameCliente = request.session.get('usernameCliente')
+    if not usernameCliente:
+        return JsonResponse({'success': False, 'error': 'Usuario no autenticado'}, status=401)
+    
+    try:
+        from .models import CarritoTemporal
+        usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        
+        # Obtener datos del carrito desde el request
+        carrito_data = json.loads(request.body)
+        
+        # Limpiar carrito anterior del usuario
+        CarritoTemporal.objects.filter(usuario=usuario).delete()
+        
+        # Agregar nuevos items
+        for item in carrito_data:
+            CarritoTemporal.objects.create(
+                usuario=usuario,
+                producto_tipo=item['tipo'],
+                producto_id=item['id'],
+                cantidad=item['cantidad']
+            )
+        
+        return JsonResponse({'success': True, 'mensaje': 'Carrito sincronizado'})
+        
+    except UserClientes.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Usuario no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@require_http_methods(["POST"])
+@csrf_exempt
+def limpiar_carrito_view(request):
+    """Vista para limpiar el carrito del usuario en la base de datos"""
+    usernameCliente = request.session.get('usernameCliente')
+    if not usernameCliente:
+        return JsonResponse({'success': False, 'error': 'Usuario no autenticado'}, status=401)
+    
+    try:
+        usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
+        
+        # Eliminar todos los items del carrito del usuario
+        CarritoTemporal.objects.filter(usuario=usuario).delete()
+        
+        return JsonResponse({'success': True, 'mensaje': 'Carrito limpiado'})
+        
+    except UserClientes.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Usuario no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
