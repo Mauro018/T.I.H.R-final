@@ -15,10 +15,16 @@
 </div>
 
 <script>
+// Función para obtener la clave del carrito única por usuario
+function getCarritoKey() {
+    const username = '{{ usuario.usernameCliente|default:"guest" }}';
+    return `carrito_${username}`;
+}
+
 // Mostrar/ocultar botón de carrito según sessionStorage 'carrito'
 function updateFloatingCartButton() {
     try {
-        const raw = sessionStorage.getItem('carrito') || '[]';
+        const raw = sessionStorage.getItem(getCarritoKey()) || '[]';
         const carrito = JSON.parse(raw);
         const count = Array.isArray(carrito) ? carrito.reduce((s, it) => s + (it.cantidad || 0), 0) : 0;
         const btn = document.getElementById('floating-cart-btn');
@@ -73,7 +79,7 @@ function updateFloatingNotifButton() {
 // Si las páginas usan un indicador de cart en DOM, lo sincronizamos también
 function updateCartBadgeInMenus() {
     try {
-        const raw = sessionStorage.getItem('carrito') || '[]';
+        const raw = sessionStorage.getItem(getCarritoKey()) || '[]';
         const carrito = JSON.parse(raw);
         const count = Array.isArray(carrito) ? carrito.reduce((s, it) => s + (it.cantidad || 0), 0) : 0;
         const desktopBadge = document.getElementById('cart-count-badge');

@@ -5,7 +5,10 @@
 
 // Función para obtener el carrito de sessionStorage
 function getCartGlobal() {
-    return JSON.parse(sessionStorage.getItem('carrito') || '[]');
+    // Usar getCarritoKey() si está disponible (páginas con contexto de usuario)
+    // Si no, usar la clave genérica (fallback para páginas sin login)
+    const key = typeof getCarritoKey === 'function' ? getCarritoKey() : 'carrito_guest';
+    return JSON.parse(sessionStorage.getItem(key) || '[]');
 }
 
 // Función para actualizar el badge del carrito en todas las páginas

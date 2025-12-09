@@ -67,6 +67,9 @@ urlpatterns = [
     path('editar-ubicacion-pedido/<int:pedido_id>/', views.editar_ubicacion_pedido_view, name='editar_ubicacion_pedido'),
     # API para obtener cantidad disponible de productos
     path('api/producto/cantidad-disponible/', views.get_cantidad_disponible_view, name='api_cantidad_disponible'),
+    # API para sincronizar carrito
+    path('api/carrito/sincronizar/', views.sincronizar_carrito_view, name='sincronizar_carrito'),
+    path('api/carrito/limpiar/', views.limpiar_carrito_view, name='limpiar_carrito'),
     # Incluir URLs de core (APIs de chat)
     path('', include('core.urls')),
     path('',include('Productos.urls')),

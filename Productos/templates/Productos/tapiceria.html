@@ -181,6 +181,12 @@
 </div>
 
 <script>
+    // Función para obtener la clave del carrito única por usuario
+    function getCarritoKey() {
+        const username = '{{ usuario.usernameCliente|default:"guest" }}';
+        return `carrito_${username}`;
+    }
+
     // Variable global para el producto actual
     let currentProduct = null;    async function mostrarDetalles(tipo, id, nombre, descripcion, precio, imagen) {
         console.log('Mostrando detalles:', tipo, id, nombre);
@@ -214,7 +220,7 @@
             const data = await response.json();
             currentProduct.cantidad_disponible = data.cantidad_disponible || 0;
             
-            let carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+            let carrito = JSON.parse(sessionStorage.getItem(getCarritoKey()) || '[]');
             let existente = carrito.find(item => item.tipo === tipo && item.id === id);
             let cantidadEnCarrito = existente ? existente.cantidad : 0;
             currentProduct.cantidad_restante = currentProduct.cantidad_disponible - cantidadEnCarrito;
@@ -304,7 +310,7 @@
             }
             
             // Obtener carrito actual del sessionStorage
-            let carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+            let carrito = JSON.parse(sessionStorage.getItem(getCarritoKey()) || '[]');
             
             // Verificar si el producto ya existe en el carrito
             const productoExistente = carrito.find(item => 
@@ -340,7 +346,7 @@
             }
 
             // Guardar carrito actualizado
-            sessionStorage.setItem('carrito', JSON.stringify(carrito));
+            sessionStorage.setItem(getCarritoKey(), JSON.stringify(carrito));
             updateCartBadge();
             
             // Cerrar modal y redirigir al carrito

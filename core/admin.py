@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserClientes, UserEmpresa, Idea, MensajeIdea, Comentario, Pago, Pedido
+from .models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, UserClientes, UserEmpresa, Idea, MensajeIdea, Comentario, Pago, Pedido, CarritoTemporal
 
 admin.site.register(Mesas)
 admin.site.register(Sillas)
@@ -14,3 +14,4 @@ admin.site.register(MensajeIdea)
 admin.site.register(Comentario)
 admin.site.register(Pago)
 admin.site.register(Pedido)
+admin.site.register(CarritoTemporal)

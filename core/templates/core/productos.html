@@ -440,6 +440,12 @@
 </div>
 
 <script>
+    // Función para obtener la clave del carrito única por usuario
+    function getCarritoKey() {
+        const username = '{{ usuario.usernameCliente|default:"guest" }}';
+        return `carrito_${username}`;
+    }
+    
     let currentProduct = {};
 
     async function mostrarDetalles(tipo, id, nombre, descripcion, precio, imagen) {
@@ -482,7 +488,7 @@
             currentProduct.cantidad_disponible = data.cantidad_disponible || 0;
             
             // Obtener cantidad ya en el carrito
-            let carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+            let carrito = JSON.parse(sessionStorage.getItem(getCarritoKey()) || '[]');
             let existente = carrito.find(item => item.tipo === tipo && item.id === id);
             let cantidadEnCarrito = existente ? existente.cantidad : 0;
             
@@ -575,7 +581,7 @@
             const data = await response.json();
             
             // Obtener cantidad ya en el carrito
-            let carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+            let carrito = JSON.parse(sessionStorage.getItem(getCarritoKey()) || '[]');
             let existente = carrito.find(item => item.tipo === currentProduct.tipo && item.id === currentProduct.id);
             let cantidadEnCarrito = existente ? existente.cantidad : 0;
             let cantidadTotal = cantidadEnCarrito + cantidad;
@@ -606,7 +612,10 @@
                 });
             }
             
-            sessionStorage.setItem('carrito', JSON.stringify(carrito));
+            sessionStorage.setItem(getCarritoKey(), JSON.stringify(carrito));
+            
+            // Sincronizar carrito con el backend
+            await sincronizarCarritoConBackend(carrito);
             
             // Actualizar el badge del carrito (tanto en menú como botón flotante)
             updateCartBadge();
@@ -624,9 +633,28 @@
         }
     }
     
+    // Función para sincronizar carrito con el backend
+    async function sincronizarCarritoConBackend(carrito) {
+        try {
+            const response = await fetch('/api/carrito/sincronizar/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(carrito)
+            });
+            
+            if (!response.ok) {
+                console.error('Error al sincronizar carrito con el servidor');
+            }
+        } catch (error) {
+            console.error('Error en sincronización:', error);
+        }
+    }
+    
     // Función para actualizar el badge del carrito
     function updateCartBadge() {
-        const carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+        const carrito = JSON.parse(sessionStorage.getItem(getCarritoKey()) || '[]');
         const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
         
         // Actualizar botón flotante si existe la función global

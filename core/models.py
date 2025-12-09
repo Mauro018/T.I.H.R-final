@@ -263,3 +263,20 @@ class MensajePago(models.Model):
     
     def __str__(self):
         return f"{self.remitente_tipo} - Pago #{self.pago.id} - {self.fecha_envio}"
+
+
+class CarritoTemporal(models.Model):
+    """Modelo para rastrear productos temporalmente reservados en carritos de usuarios"""
+    usuario = models.ForeignKey(UserClientes, on_delete=models.CASCADE, related_name='carrito_items')
+    producto_tipo = models.CharField(max_length=20)  # 'mesa', 'silla', 'armario', etc.
+    producto_id = models.IntegerField()
+    cantidad = models.IntegerField(default=1)
+    fecha_agregado = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        unique_together = ('usuario', 'producto_tipo', 'producto_id')
+        ordering = ['-fecha_actualizacion']
+    
+    def __str__(self):
+        return f"{self.usuario.usernameCliente} - {self.producto_tipo} #{self.producto_id} ({self.cantidad})"
