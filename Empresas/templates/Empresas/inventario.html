@@ -60,7 +60,7 @@
                                 <td>{{ mesa.id }}</td>
                                 <td>{{ mesa.nombre1 }}</td>
                                 <td><span class="descripcion-cell">{{ mesa.descripcion1|truncatewords:10 }}</span></td>
-                                <td>${{ mesa.precio1 }}</td>
+                                <td>${{ mesa.precio1|floatformat:0 }}</td>
                                 <td>
                                     <span class="stock-badge {% if mesa.cantidad_disponible == 0 %}sin-stock{% elif mesa.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
                                         {{ mesa.cantidad_disponible }}
@@ -118,7 +118,7 @@
                                 <td>{{ silla.id }}</td>
                                 <td>{{ silla.nombre2 }}</td>
                                 <td><span class="descripcion-cell">{{ silla.descripcion2|truncatewords:10 }}</span></td>
-                                <td>${{ silla.precio2 }}</td>
+                                <td>${{ silla.precio2|floatformat:0 }}</td>
                                 <td>
                                     <span class="stock-badge {% if silla.cantidad_disponible == 0 %}sin-stock{% elif silla.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
                                         {{ silla.cantidad_disponible }}
@@ -176,7 +176,7 @@
                                 <td>{{ armario.id }}</td>
                                 <td>{{ armario.nombre3 }}</td>
                                 <td><span class="descripcion-cell">{{ armario.descripcion3|truncatewords:10 }}</span></td>
-                                <td>${{ armario.precio3 }}</td>
+                                <td>${{ armario.precio3|floatformat:0 }}</td>
                                 <td>
                                     <span class="stock-badge {% if armario.cantidad_disponible == 0 %}sin-stock{% elif armario.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
                                         {{ armario.cantidad_disponible }}
@@ -234,7 +234,7 @@
                                 <td>{{ cajonera.id }}</td>
                                 <td>{{ cajonera.nombre4 }}</td>
                                 <td><span class="descripcion-cell">{{ cajonera.descripcion4|truncatewords:10 }}</span></td>
-                                <td>${{ cajonera.precio4 }}</td>
+                                <td>${{ cajonera.precio4|floatformat:0 }}</td>
                                 <td>
                                     <span class="stock-badge {% if cajonera.cantidad_disponible == 0 %}sin-stock{% elif cajonera.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
                                         {{ cajonera.cantidad_disponible }}
@@ -292,7 +292,7 @@
                                 <td>{{ escritorio.id }}</td>
                                 <td>{{ escritorio.nombre5 }}</td>
                                 <td><span class="descripcion-cell">{{ escritorio.descripcion5|truncatewords:10 }}</span></td>
-                                <td>${{ escritorio.precio5 }}</td>
+                                <td>${{ escritorio.precio5|floatformat:0 }}</td>
                                 <td>
                                     <span class="stock-badge {% if escritorio.cantidad_disponible == 0 %}sin-stock{% elif escritorio.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
                                         {{ escritorio.cantidad_disponible }}
@@ -350,7 +350,7 @@
                                 <td>{{ utensilio.id }}</td>
                                 <td>{{ utensilio.nombre6 }}</td>
                                 <td><span class="descripcion-cell">{{ utensilio.descripcion6|truncatewords:10 }}</span></td>
-                                <td>${{ utensilio.precio6 }}</td>
+                                <td>${{ utensilio.precio6|floatformat:0 }}</td>
                                 <td>
                                     <span class="stock-badge {% if utensilio.cantidad_disponible == 0 %}sin-stock{% elif utensilio.cantidad_disponible < 10 %}bajo-stock{% else %}en-stock{% endif %}">
                                         {{ utensilio.cantidad_disponible }}

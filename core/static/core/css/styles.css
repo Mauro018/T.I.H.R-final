@@ -5,8 +5,7 @@
 }
 
 html {
-    overflow-x: hidden;
-    width: 100%;
+    height: 100%;
 }
 
 body {
@@ -17,9 +16,8 @@ body {
     color: #333;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    overflow-x: hidden;
-    width: 100%;
+    min-height: 100%;
+    height: auto;
 }
 
 /* Landing Page Navbar */
@@ -549,8 +547,10 @@ header .hearder-content {
 }
 .articulo img {
     width: 100%;
-    height: 300px;
-    object-fit: cover;
+    height: auto;
+    max-height: 300px;
+    object-fit: contain;
+    background-color: #fff;
     border-bottom: 1px solid #eee;
 }
 .contenido-articulo {
@@ -2247,6 +2247,17 @@ body:has(.sidebar ul li a[href*="registro"]) .sidebar ul li a:hover {
 .carousel-productos-track .carousel-item {
     flex: 0 0 calc(33.333% - 14px);
     min-width: 0;
+}
+
+/* Asegurar que las imágenes en el carrusel se ajusten correctamente */
+.carousel-productos-track .articulo img {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    min-height: 200px;
+    object-fit: contain;
+    background-color: #fff;
+    display: block;
 }
 
 @media (max-width: 1024px) {

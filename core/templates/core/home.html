@@ -4,6 +4,25 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Tu Idea Hecha Realidad - Encuentra gangazos en muebles artesanales de madera. Carpintería, marroquinería, vidriería y más. Productos colombianos de alta calidad a precios increíbles.">
+    <meta name="keywords" content="gangazos, muebles artesanales, carpintería, muebles de madera, muebles colombia, artesanias, marroquinería, vidriería, metaleria, ceramica, tapiceria, ofertas muebles, muebles personalizados">
+    <meta name="author" content="Tu Idea Hecha Realidad">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Spanish">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Tu Idea Hecha Realidad - Gangazos en Muebles Artesanales">
+    <meta property="og:description" content="Encuentra gangazos en muebles artesanales de madera. Productos colombianos de alta calidad a precios increíbles.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_CO">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tu Idea Hecha Realidad - Gangazos en Muebles Artesanales">
+    <meta name="twitter:description" content="Encuentra gangazos en muebles artesanales de madera. Productos colombianos de alta calidad.">
+    
     <title>{% block title %} {% endblock %} | ¡Oferta Exclusiva!</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
@@ -20,7 +39,7 @@
             <ul class="landing-nav-menu">
                 <li><a href="{% url 'home' %}">Inicio</a></li>
                 <li><a href="{% url 'reglas' %}">Sobre Gangazos y Reglas</a></li>
-                <li><a href="{% url 'registro' %}" class="btn-registro">Registro</a></li>
+                <li><a href="{% url 'login' %}" class="btn-registro">Iniciar sesión</a></li>
             </ul>
         </div>
     </nav>

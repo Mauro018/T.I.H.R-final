@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Explora nuestra colección de gangazos en muebles artesanales. Armarios, escritorios, sillas, cajoneras, mesas y utensilios de madera de alta calidad hechos en Colombia.">
+    <meta name="keywords" content="gangazos muebles, comprar muebles artesanales, armarios madera, escritorios artesanales, sillas madera, cajoneras, mesas artesanales, muebles economicos colombia">
+    <meta name="author" content="Tu Idea Hecha Realidad">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Gangazos - Muebles Artesanales de Calidad">
+    <meta property="og:description" content="Descubre nuestra colección de muebles artesanales: armarios, escritorios, sillas, mesas y más.">
+    <meta property="og:type" content="website">
+    
     <title>{% block title %} {% endblock %} | ¡Oferta Exclusiva!</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
@@ -27,7 +39,7 @@
         <span class="username-display">{{ usuario.usernameCliente }}</span>
     </div>
     <ul>
-        <li><a href="{% url 'productos' %}">Ofertas</a></li>
+        <li><a href="{% url 'productos' %}">Gangazos</a></li>
         <li><a href="{% url 'idea' %}">Crear Idea</a></li>
         <li><a href="{% url 'mis_pedidos' %}">Mis Pedidos</a></li>
         <li><a href="{% url 'contact' %}">Contáctenos</a></li>
@@ -60,7 +72,7 @@
       <img src="{% static 'core/img/Gemini_Generated_Image_tzay6utzay6utzay.jfif' %}" alt="Logo" class="header-logo">
       Tu Idea Hecha Realidad
     </h1>
-    <p class="subtitulo">Ofertas Exclusivas</p>
+    <p class="subtitulo">Gangazos Exclusivos</p>
   </header>
 
     <section>
@@ -70,9 +82,10 @@
         </div>
         
         <!-- Mesas -->
+        {% if mesas %}
         <section class="seccion-at">
             <div>
-                <h3>Mesas</h3>
+                <h3>Mesas:</h3>
                 <div class="carousel-productos-container" data-categoria="mesas">
                     <button class="carousel-btn prev-btn" onclick="moveProductosCarousel('mesas', -1)">❮</button>
                     
@@ -94,7 +107,7 @@
                                 <img src="{% static 'core/img/Mesa.jpg' %}" alt="{{ mesa.nombre1 }}">
                                 {% endif %}
                                 <div class="contenido-articulo">
-                                    <p class="precio-destacado">${{ mesa.precio1 }}</p>
+                                    <p class="precio-destacado">${{ mesa.precio1|floatformat:0 }}</p>
                                     <button class="btn-ver-detalles" onclick="mostrarDetalles('mesa', {{ mesa.id }}, '{{ mesa.nombre1|escapejs }}', '{{ mesa.descripcion1|escapejs }}', '{{ mesa.precio1 }}', '{% if mesa.imagen1 %}{{ mesa.imagen1.url }}{% else %}{% static 'core/img/Mesa.jpg' %}{% endif %}')">Ver Detalles</button>
                                 </div>
                             </div>
@@ -117,11 +130,13 @@
         </section>
         <br>
         <br>
+        {% endif %}
         
         <!-- Sillas -->
+        {% if sillas %}
         <section class="seccion-at">
             <div>
-                <h3>Sillas</h3>
+                <h3>Sillas:</h3>
                 <div class="carousel-productos-container" data-categoria="sillas">
                     <button class="carousel-btn prev-btn" onclick="moveProductosCarousel('sillas', -1)">❮</button>
                     
@@ -143,7 +158,7 @@
                                 <img src="{% static 'core/img/Sillas.jpg' %}" alt="{{ silla.nombre2 }}">
                                 {% endif %}
                                 <div class="contenido-articulo">
-                                    <p class="precio-destacado">${{ silla.precio2 }}</p>
+                                    <p class="precio-destacado">${{ silla.precio2|floatformat:0 }}</p>
                                     <button class="btn-ver-detalles" onclick="mostrarDetalles('silla', {{ silla.id }}, '{{ silla.nombre2|escapejs }}', '{{ silla.descripcion2|escapejs }}', '{{ silla.precio2 }}', '{% if silla.imagen2 %}{{ silla.imagen2.url }}{% else %}{% static 'core/img/Sillas.jpg' %}{% endif %}')">Ver Detalles</button>
                                 </div>
                             </div>
@@ -166,11 +181,13 @@
         </section>
         <br>
         <br>
+        {% endif %}
         
         <!-- Armarios -->
+        {% if armarios %}
         <section class="seccion-at">
             <div>
-                <h3>Armarios</h3>
+                <h3>Armarios:</h3>
                 <div class="carousel-productos-container" data-categoria="armarios">
                     <button class="carousel-btn prev-btn" onclick="moveProductosCarousel('armarios', -1)">❮</button>
                     
@@ -192,7 +209,7 @@
                                 <img src="{% static 'core/img/Armario.jpg' %}" alt="{{ armario.nombre3 }}">
                                 {% endif %}
                                 <div class="contenido-articulo">
-                                    <p class="precio-destacado">${{ armario.precio3 }}</p>
+                                    <p class="precio-destacado">${{ armario.precio3|floatformat:0 }}</p>
                                     <button class="btn-ver-detalles" onclick="mostrarDetalles('armario', {{ armario.id }}, '{{ armario.nombre3|escapejs }}', '{{ armario.descripcion3|escapejs }}', '{{ armario.precio3 }}', '{% if armario.imagen3 %}{{ armario.imagen3.url }}{% else %}{% static 'core/img/Armario.jpg' %}{% endif %}')">Ver Detalles</button>
                                 </div>
                             </div>
@@ -215,11 +232,13 @@
         </section>
         <br>
         <br>
+        {% endif %}
         
         <!-- Cajoneras -->
+        {% if cajoneras %}
         <section class="seccion-at">
             <div>
-                <h3>Cajoneras</h3>
+                <h3>Cajoneras:</h3>
                 <div class="carousel-productos-container" data-categoria="cajoneras">
                     <button class="carousel-btn prev-btn" onclick="moveProductosCarousel('cajoneras', -1)">❮</button>
                     
@@ -241,7 +260,7 @@
                                 <img src="{% static 'core/img/Cajonera1.webp' %}" alt="{{ cajonera.nombre4 }}">
                                 {% endif %}
                                 <div class="contenido-articulo">
-                                    <p class="precio-destacado">${{ cajonera.precio4 }}</p>
+                                    <p class="precio-destacado">${{ cajonera.precio4|floatformat:0 }}</p>
                                     <button class="btn-ver-detalles" onclick="mostrarDetalles('cajonera', {{ cajonera.id }}, '{{ cajonera.nombre4|escapejs }}', '{{ cajonera.descripcion4|escapejs }}', '{{ cajonera.precio4 }}', '{% if cajonera.imagen4 %}{{ cajonera.imagen4.url }}{% else %}{% static 'core/img/Cajonera1.webp' %}{% endif %}')">Ver Detalles</button>
                                 </div>
                             </div>
@@ -264,11 +283,13 @@
         </section>
         <br>
         <br>
+        {% endif %}
         
         <!-- Escritorios -->
+        {% if escritorios %}
         <section class="seccion-at">
             <div>
-                <h3>Escritorios</h3>
+                <h3>Escritorios:</h3>
                 <div class="carousel-productos-container" data-categoria="escritorios">
                     <button class="carousel-btn prev-btn" onclick="moveProductosCarousel('escritorios', -1)">❮</button>
                     
@@ -290,7 +311,7 @@
                                 <img src="{% static 'core/img/Escritorio.jpg' %}" alt="{{ escritorio.nombre5 }}">
                                 {% endif %}
                                 <div class="contenido-articulo">
-                                    <p class="precio-destacado">${{ escritorio.precio5 }}</p>
+                                    <p class="precio-destacado">${{ escritorio.precio5|floatformat:0 }}</p>
                                     <button class="btn-ver-detalles" onclick="mostrarDetalles('escritorio', {{ escritorio.id }}, '{{ escritorio.nombre5|escapejs }}', '{{ escritorio.descripcion5|escapejs }}', '{{ escritorio.precio5 }}', '{% if escritorio.imagen5 %}{{ escritorio.imagen5.url }}{% else %}{% static 'core/img/Escritorio.jpg' %}{% endif %}')">Ver Detalles</button>
                                 </div>
                             </div>
@@ -313,11 +334,13 @@
         </section>
         <br>
         <br>
+        {% endif %}
         
         <!-- Utensilios -->
+        {% if utensilios %}
         <section class="seccion-at">
             <div>
-                <h3>Utensilios</h3>
+                <h3>Utensilios:</h3>
                 <div class="carousel-productos-container" data-categoria="utensilios">
                     <button class="carousel-btn prev-btn" onclick="moveProductosCarousel('utensilios', -1)">❮</button>
                     
@@ -339,7 +362,7 @@
                                 <img src="{% static 'core/img/Cucharas.jpg' %}" alt="{{ utensilio.nombre6 }}">
                                 {% endif %}
                                 <div class="contenido-articulo">
-                                    <p class="precio-destacado">${{ utensilio.precio6 }}</p>
+                                    <p class="precio-destacado">${{ utensilio.precio6|floatformat:0 }}</p>
                                     <button class="btn-ver-detalles" onclick="mostrarDetalles('utensilio', {{ utensilio.id }}, '{{ utensilio.nombre6|escapejs }}', '{{ utensilio.descripcion6|escapejs }}', '{{ utensilio.precio6 }}', '{% if utensilio.imagen6 %}{{ utensilio.imagen6.url }}{% else %}{% static 'core/img/Cucharas.jpg' %}{% endif %}')">Ver Detalles</button>
                                 </div>
                             </div>
@@ -360,6 +383,7 @@
                 <button><a href="{% url 'tapiceria' %}">Conocer más</a></button>
             </div>
         </section>
+        {% endif %}
     </section>
     <footer>
         <div class="footer-content">
@@ -440,6 +464,11 @@
 </div>
 
 <script>
+    // Función para formatear números con separador de miles
+    function formatNumber(num) {
+        return Math.floor(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    
     // Función para obtener la clave del carrito única por usuario
     function getCarritoKey() {
         const username = '{{ usuario.usernameCliente|default:"guest" }}';
@@ -507,7 +536,7 @@
             // Actualizar elementos del modal
             document.getElementById('modalProductName').textContent = nombre;
             document.getElementById('modalProductDescription').textContent = descripcion;
-            document.getElementById('modalProductPrice').textContent = precio;
+            document.getElementById('modalProductPrice').textContent = formatNumber(precio);
             document.getElementById('modalImage').src = imagen;
             document.getElementById('quantity').value = 1;
             document.getElementById('quantity').max = currentProduct.cantidad_restante;
@@ -557,7 +586,7 @@
     function actualizarTotal() {
         let cantidad = parseInt(document.getElementById('quantity').value);
         let total = currentProduct.precio * cantidad;
-        document.getElementById('totalPrice').textContent = total.toFixed(2);
+        document.getElementById('totalPrice').textContent = formatNumber(total);
     }
     
     async function agregarAlCarrito() {
@@ -667,9 +696,13 @@
     document.addEventListener('DOMContentLoaded', function() {
         updateCartBadge();
         
+        // Inicializar solo los carruseles que existen en el DOM
         const categorias = ['mesas', 'sillas', 'armarios', 'cajoneras', 'escritorios', 'utensilios'];
         categorias.forEach(categoria => {
-            initProductosCarousel(categoria);
+            const track = document.getElementById(categoria + 'Track');
+            if (track && track.querySelectorAll('.carousel-item').length > 0) {
+                initProductosCarousel(categoria);
+            }
         });
     });
     
@@ -718,13 +751,17 @@
         const indicatorsContainer = document.getElementById(categoria + 'Indicators');
         
         if (indicatorsContainer && indicatorsContainer.children.length === 0) {
-            // Crear indicadores
-            items.forEach((_, index) => {
+            // Calcular cuántos "grupos" de items hay según el viewport
+            const itemsPerView = window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+            const maxIndex = Math.max(0, items.length - itemsPerView);
+            
+            // Crear indicadores solo para los grupos necesarios
+            for (let i = 0; i <= maxIndex; i++) {
                 const indicator = document.createElement('span');
                 indicator.className = 'indicator';
-                indicator.onclick = () => goToProducto(categoria, index);
+                indicator.onclick = () => goToProducto(categoria, i);
                 indicatorsContainer.appendChild(indicator);
-            });
+            }
         }
         
         updateProductosCarousel(categoria);

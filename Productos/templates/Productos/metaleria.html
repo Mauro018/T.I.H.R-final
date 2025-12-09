@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Cajoneras de madera artesanales - Compra cajoneras hechas a mano en Colombia. Gangazos en cajoneras para oficina, dormitorio y almacenamiento.">
+    <meta name="keywords" content="cajoneras madera, cajoneras artesanales, comprar cajoneras, cajoneras colombia, cajoneras oficina, muebles almacenamiento, cajoneras bogota">
+    <meta name="robots" content="index, follow">
+    
     <title>{% block title %} {% endblock %} | Tu Idea Hecha Realidad</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'Productos/css/styles1.css' %}">
@@ -27,7 +33,7 @@
         <span class="username-display">{{ usuario.usernameCliente }}</span>
     </div>
   <ul>
-    <li><a href="{% url 'productos' %}">Ofertas</a></li>
+    <li><a href="{% url 'productos' %}">Gangazos</a></li>
     <li><a href="{% url 'idea' %}">Crear Idea</a></li>
     <li><a href="{% url 'mis_pedidos' %}">Mis Pedidos</a></li>
     <li><a href="{% url 'contact' %}">Contáctenos</a></li>
@@ -86,7 +92,7 @@
                             <div class="contenido-articulo">
                                 <h3>{{ cajonera.nombre4 }}</h3>
                                 <p>{{ cajonera.descripcion4 }}</p>
-                                <p><strong>Precio: ${{ cajonera.precio4 }}</strong></p>
+                                <p><strong>Precio: ${{ cajonera.precio4|floatformat:0 }}</strong></p>
                                 <button class="btn-ver-detalles" onclick="mostrarDetalles('cajonera', {{ cajonera.id }}, '{{ cajonera.nombre4 }}', '{{ cajonera.descripcion4 }}', {{ cajonera.precio4 }}, '{% if cajonera.imagen4 %}{{ cajonera.imagen4.url }}{% else %}{% static 'Productos/img/Cajonera1.webp' %}{% endif %}')">Ver Detalles</button>
                             </div>
                         </div>
@@ -181,6 +187,11 @@
 </div>
 
 <script>
+    // Función para formatear números con separador de miles
+    function formatNumber(num) {
+        return Math.floor(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    
     // Función para obtener la clave del carrito única por usuario
     function getCarritoKey() {
         const username = '{{ usuario.usernameCliente|default:"guest" }}';
@@ -210,7 +221,7 @@
             if (currentProduct.cantidad_restante <= 0) { alert(`Ya tienes todas las unidades disponibles (${currentProduct.cantidad_disponible}) en tu carrito.`); return; }
             document.getElementById('modalProductName').textContent = nombre;
             document.getElementById('modalProductDescription').textContent = descripcion;
-            document.getElementById('modalProductPrice').textContent = precio;
+            document.getElementById('modalProductPrice').textContent = formatNumber(precio);
             document.getElementById('modalImage').src = imagen;
             document.getElementById('quantity').value = 1;
             document.getElementById('quantity').max = currentProduct.cantidad_restante;
@@ -242,7 +253,7 @@
     function actualizarTotal() {
         let cantidad = parseInt(document.getElementById('quantity').value);
         let total = currentProduct.precio * cantidad;
-        document.getElementById('totalPrice').textContent = total.toFixed(2);
+        document.getElementById('totalPrice').textContent = formatNumber(total);
     }
     async function agregarAlCarrito() {
         let cantidad = parseInt(document.getElementById('quantity').value);

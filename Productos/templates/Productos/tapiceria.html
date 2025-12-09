@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Utensilios de madera artesanales - Compra utensilios hechos a mano en Colombia. Gangazos en utensilios de cocina y hogar de alta calidad.">
+    <meta name="keywords" content="utensilios madera, utensilios artesanales, utensilios cocina, comprar utensilios, utensilios colombia, utensilios bogota, accesorios madera">
+    <meta name="robots" content="index, follow">
+    
     <title>{% block title %} {% endblock %} | Tu Idea Hecha Realidad</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'Productos/css/styles1.css' %}">
@@ -27,7 +33,7 @@
         <span class="username-display">{{ usuario.usernameCliente }}</span>
     </div>
   <ul>
-    <li><a href="{% url 'productos' %}">Ofertas</a></li>
+    <li><a href="{% url 'productos' %}">Gangazos</a></li>
     <li><a href="{% url 'idea' %}">Crear Idea</a></li>
     <li><a href="{% url 'mis_pedidos' %}">Mis Pedidos</a></li>
     <li><a href="{% url 'contact' %}">Contáctenos</a></li>
@@ -86,7 +92,7 @@
                             <div class="contenido-articulo">
                                 <h3>{{ utensilio.nombre6 }}</h3>
                                 <p>{{ utensilio.descripcion6 }}</p>
-                                <p><strong>Precio: ${{ utensilio.precio6 }}</strong></p>
+                                <p><strong>Precio: ${{ utensilio.precio6|floatformat:0 }}</strong></p>
                                 <button class="btn-ver-detalles" onclick="mostrarDetalles('utensilio', {{ utensilio.id }}, '{{ utensilio.nombre6 }}', '{{ utensilio.descripcion6 }}', {{ utensilio.precio6 }}, '{% if utensilio.imagen6 %}{{ utensilio.imagen6.url }}{% else %}{% static 'Productos/img/Cucharas.jpg' %}{% endif %}')">Ver Detalles</button>
                             </div>
                         </div>
@@ -181,6 +187,11 @@
 </div>
 
 <script>
+    // Función para formatear números con separador de miles
+    function formatNumber(num) {
+        return Math.floor(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    
     // Función para obtener la clave del carrito única por usuario
     function getCarritoKey() {
         const username = '{{ usuario.usernameCliente|default:"guest" }}';
@@ -237,7 +248,7 @@
             
             document.getElementById('modalProductName').textContent = nombre;
             document.getElementById('modalProductDescription').textContent = descripcion;
-            document.getElementById('modalProductPrice').textContent = precio;
+            document.getElementById('modalProductPrice').textContent = formatNumber(precio);
             document.getElementById('modalImage').src = imagen;
             document.getElementById('quantity').value = 1;
             document.getElementById('quantity').max = currentProduct.cantidad_restante;
@@ -290,7 +301,7 @@
         if (currentProduct) {
             const cantidad = parseInt(document.getElementById('quantity').value);
             const total = currentProduct.precio * cantidad;
-            document.getElementById('totalPrice').textContent = total.toFixed(2);
+            document.getElementById('totalPrice').textContent = formatNumber(total);
         }
     }
 

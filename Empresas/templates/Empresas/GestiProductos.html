@@ -59,7 +59,7 @@
                         <tr class="{% if not armario.is_active %}producto-inactivo{% endif %}">
                             <td>{{ armario.nombre3 }}</td>
                             <td>{{ armario.descripcion3 }}</td>
-                            <td>${{ armario.precio3 }}</td>
+                            <td>${{ armario.precio3|floatformat:0 }}</td>
                             <td>
                                 {% if armario.is_active %}
                                     <span class="badge-activo">Activo</span>
@@ -108,7 +108,7 @@
                         <tr class="{% if not mesa.is_active %}producto-inactivo{% endif %}">
                             <td>{{ mesa.nombre1 }}</td>
                             <td>{{ mesa.descripcion1 }}</td>
-                            <td>${{ mesa.precio1 }}</td>
+                            <td>${{ mesa.precio1|floatformat:0 }}</td>
                             <td>
                                 {% if mesa.is_active %}
                                     <span class="badge-activo">Activo</span>
@@ -157,7 +157,7 @@
                         <tr class="{% if not silla.is_active %}producto-inactivo{% endif %}">
                             <td>{{ silla.nombre2 }}</td>
                             <td>{{ silla.descripcion2 }}</td>
-                            <td>${{ silla.precio2 }}</td>
+                            <td>${{ silla.precio2|floatformat:0 }}</td>
                             <td>
                                 {% if silla.is_active %}
                                     <span class="badge-activo">Activo</span>
@@ -206,7 +206,7 @@
                         <tr class="{% if not cajonera.is_active %}producto-inactivo{% endif %}">
                             <td>{{ cajonera.nombre4 }}</td>
                             <td>{{ cajonera.descripcion4 }}</td>
-                            <td>${{ cajonera.precio4 }}</td>
+                            <td>${{ cajonera.precio4|floatformat:0 }}</td>
                             <td>
                                 {% if cajonera.is_active %}
                                     <span class="badge-activo">Activo</span>
@@ -255,7 +255,7 @@
                         <tr class="{% if not escritorio.is_active %}producto-inactivo{% endif %}">
                             <td>{{ escritorio.nombre5 }}</td>
                             <td>{{ escritorio.descripcion5 }}</td>
-                            <td>${{ escritorio.precio5 }}</td>
+                            <td>${{ escritorio.precio5|floatformat:0 }}</td>
                             <td>
                                 {% if escritorio.is_active %}
                                     <span class="badge-activo">Activo</span>
@@ -304,7 +304,7 @@
                         <tr class="{% if not utensilio.is_active %}producto-inactivo{% endif %}">
                             <td>{{ utensilio.nombre6 }}</td>
                             <td>{{ utensilio.descripcion6 }}</td>
-                            <td>${{ utensilio.precio6 }}</td>
+                            <td>${{ utensilio.precio6|floatformat:0 }}</td>
                             <td>
                                 {% if utensilio.is_active %}
                                     <span class="badge-activo">Activo</span>
