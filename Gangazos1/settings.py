@@ -11,9 +11,14 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Cargar variables de entorno desde archivo .env
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -77,12 +82,35 @@ WSGI_APPLICATION = 'Gangazos1.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Por defecto usa SQLite (por problemas de DNS con Supabase en tu red)
+# Para usar PostgreSQL de Supabase, configura: USE_SUPABASE=true en .env
+USE_SUPABASE = os.environ.get('USE_SUPABASE', 'false').lower() == 'true'
+
+if USE_SUPABASE:
+    # Configuración PostgreSQL de Supabase
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': 'db.mfljyzhitpwyezzxljk.supabase.co',
+            'PORT': '5432',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': os.environ.get('SUPABASE_DB_PASSWORD'),
+            'OPTIONS': {
+                'sslmode': 'require',
+                'connect_timeout': 10,
+            },
+        }
     }
-}
+else:
+    # SQLite para desarrollo local (predeterminado)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
 
 
 # Password validation
