@@ -4,10 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Contáctanos en Tu Idea Hecha Realidad. Estamos aquí para ayudarte con tus compras de muebles artesanales, ideas personalizadas y más.">
+    <meta name="keywords" content="contacto, atención al cliente, soporte, muebles artesanales, ayuda">
+    <meta name="author" content="Tu Idea Hecha Realidad">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Contacto - Tu Idea Hecha Realidad">
+    <meta property="og:description" content="Contáctanos para cualquier consulta sobre muebles artesanales.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_CO">
+    
     <title>{% block title %} {% endblock %} | ¡Oferta Exclusiva!</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'core/css/responsive.css' %}">
+    <script src="{% static 'core/javascript/sidebar-toggle.js' %}"></script>
 </head>
 <body>
 
@@ -71,7 +85,20 @@
                 <main>
                     <h3>Formulario de Contacto</h3>
                     
-                    <form class="formulario-cuerpo"> 
+                    {% if mensaje_enviado %}
+                    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                        ✓ Tu mensaje ha sido enviado exitosamente. Te responderemos pronto.
+                    </div>
+                    {% endif %}
+                    
+                    {% if error_mensaje %}
+                    <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                        ✗ {{ error_mensaje }}
+                    </div>
+                    {% endif %}
+                    
+                    <form class="formulario-cuerpo" method="POST" action="{% url 'contact' %}">
+                        {% csrf_token %}
                         <div class="grupo-campo-custom">
                             <label for="nombre">Nombre:</label>
                             <input
@@ -79,7 +106,8 @@
                                 id="nombre"
                                 name="nombre"
                                 placeholder="Tu Nombre Completo"
-                                aria-label="Nombre">
+                                aria-label="Nombre"
+                                required>
                         </div>
                         
                         <div class="grupo-campo-custom">
@@ -89,7 +117,8 @@
                                 id="email"
                                 name="email"
                                 placeholder="tu.email@ejemplo.com"
-                                aria-label="Email">
+                                aria-label="Email"
+                                required>
                         </div>
                         
                         <div class="grupo-campo-custom">
@@ -99,7 +128,8 @@
                                 name="mensaje"
                                 rows="5"
                                 placeholder="Escribe tu mensaje aquí..."
-                                aria-label="Mensaje"></textarea>
+                                aria-label="Mensaje"
+                                required></textarea>
                         </div>
                         
                         <button type="submit" class="btn-enviar-contacto">Enviar Mensaje</button>
@@ -160,18 +190,12 @@
         <div class="footer-section">
             <h3 class="footer-title">🌐 Síguenos</h3>
             <div class="footer-social">
-                <div class="social-container">
-                    <a href="https://www.instagram.com/tu_idea_hecha_realidad?igsh=Y3ByM2lyZGcwNHVy" class="social-icon" aria-label="Instagram">
-                        <span>📷</span>
+                <a href="https://www.instagram.com/tu_idea_hecha_realidad?igsh=Y3ByM2lyZGcwNHVy" class="social-icon-img" aria-label="Instagram">
+                        <img src="{% static 'core/img/Instagram.webp' %}" alt="Instagram" class="social-logo" width="40" height="40">
                     </a>
-                    <div class="social-username">@Gangazos Thir</div>
-                </div>
-                <div class="social-container">
-                    <a href="https://www.facebook.com/share/1ACEVZbZHV/" class="social-icon" aria-label="Facebook">
-                        <span>📘</span>
+                    <a href="https://www.facebook.com/share/1ACEVZbZHV/" class="social-icon-img" aria-label="Facebook">
+                        <img src="{% static 'core/img/Facebook.png' %}" alt="Facebook" class="social-logo" width="40" height="40">
                     </a>
-                    <div class="social-username">/gangazoz_thir</div>
-                </div>
             </div>
         </div>
     </div>

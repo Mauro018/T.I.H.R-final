@@ -3,6 +3,12 @@ from django.views.decorators.csrf import csrf_exempt
 from . import views
 
 urlpatterns = [
+    # Registro y autenticación de empresas (registro como página principal)
+    path('', views.registro_empresa_view, name='registro_empresa'),
+    path('registro/', views.registro_empresa_view, name='registro_empresa_alt'),
+    path('login/', views.login_empresa_view, name='login_empresa'),
+    path('configurar-2fa/', views.configurar_2fa_empresa_view, name='configurar_2fa_empresa'),
+    
     path('dashboardEmpresa/',views.Dasboard_view,name='dashboardEmpresa'),
     path('GestiProductos/',views.GestionarProductos_view,name='GestiProductos'),
     path('agregar_producto2/', views.agregar_producto_view2, name='agregar_producto2'),

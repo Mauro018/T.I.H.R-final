@@ -2,12 +2,27 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Comparte tus ideas de muebles artesanales en Tu Idea Hecha Realidad. Convierte tu creatividad en productos reales fabricados por artesanos colombianos.">
+  <meta name="keywords" content="ideas muebles, diseños personalizados, muebles a medida, ideas artesanales, creatividad muebles">
+  <meta name="author" content="Tu Idea Hecha Realidad">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Publicar Idea - Tu Idea Hecha Realidad">
+  <meta property="og:description" content="Comparte tus ideas de muebles y conviértelas en realidad.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CO">
+  
   <title>Tu Idea Hecha Realidad</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
   <link rel="stylesheet" href="{% static 'core/css/idea.css' %}">
   <link rel="stylesheet" href="{% static 'core/css/responsive.css' %}">
+  <script src="{% static 'core/javascript/sidebar-toggle.js' %}"></script>
 </head>
 <body>
 
@@ -198,18 +213,12 @@
         <div class="footer-section">
             <h3 class="footer-title">🌐 Síguenos</h3>
             <div class="footer-social">
-                <div class="social-container">
-                    <a href="https://www.instagram.com/tu_idea_hecha_realidad?igsh=Y3ByM2lyZGcwNHVy" class="social-icon" aria-label="Instagram">
-                        <span>📷</span>
+                <a href="https://www.instagram.com/tu_idea_hecha_realidad?igsh=Y3ByM2lyZGcwNHVy" class="social-icon-img" aria-label="Instagram">
+                        <img src="{% static 'core/img/Instagram.webp' %}" alt="Instagram" class="social-logo" width="40" height="40">
                     </a>
-                    <div class="social-username">@Gangazos Thir</div>
-                </div>
-                <div class="social-container">
-                    <a href="https://www.facebook.com/share/1ACEVZbZHV/" class="social-icon" aria-label="Facebook">
-                        <span>📘</span>
+                    <a href="https://www.facebook.com/share/1ACEVZbZHV/" class="social-icon-img" aria-label="Facebook">
+                        <img src="{% static 'core/img/Facebook.png' %}" alt="Facebook" class="social-logo" width="40" height="40">
                     </a>
-                    <div class="social-username">/gangazoz_thir</div>
-                </div>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+﻿from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
@@ -6,15 +6,146 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.middleware.csrf import get_token
 from django.utils import timezone
-from core.models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, Idea, UserEmpresa, UserClientes, Pago, Pedido
+from functools import wraps
+from core.models import Mesas, Sillas, Armarios, Cajoneras, Escritorios, Utensilios, Idea, UserClientes, Pago, Pedido
 from core.forms import IdeaForm
+from .models import EmpresaRegistrada
+from .forms import EmpresaRegistroForm, EmpresaRegistroSimpleForm
 import json
+import hashlib
+
+# Decorador personalizado para verificar autenticación de empresas
+def empresa_login_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if 'empresa_id' not in request.session:
+            messages.warning(request, 'Debe iniciar sesión para acceder a esta página.')
+            return redirect('loginEmpresa_login')
+        return view_func(request, *args, **kwargs)
+    return wrapper
 
 # Importar vistas adicionales
 from .views_estadisticas import estadisticas_view, inventario_view, actualizar_inventario_view
 
+# Vista para registro de empresas simplificado
+def registro_empresa_view(request):
+    """Vista para el registro de nuevas empresas (simplificado)"""
+    if request.method == 'POST':
+        form = EmpresaRegistroSimpleForm(request.POST)
+        if form.is_valid():
+            try:
+                empresa = form.save()
+                # Guardar el ID de la empresa en la sesión para configurar 2FA
+                request.session['empresa_temp_id'] = empresa.id
+                messages.success(request, f'¡Empresa registrada exitosamente! Para iniciar sesión use su NIT: {empresa.nit}')
+                return redirect('configurar_2fa_empresa')
+            except Exception as e:
+                messages.error(request, f'Error al registrar la empresa: {str(e)}')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+    else:
+        form = EmpresaRegistroSimpleForm()
+    
+    return render(request, 'Empresas/registro_empresa_simple.html', {'form': form})
+
+# Vista para login de empresas
+def login_empresa_view(request):
+    """Vista para el login de empresas registradas"""
+    if request.method == 'POST':
+        nombre_empresa = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        if not nombre_empresa or not password:
+            messages.error(request, 'Por favor complete todos los campos.')
+            return render(request, 'Empresas/login_empresa.html')
+        
+        password_hash = hashlib.sha256(password.encode()).hexdigest()
+        
+        try:
+            # Buscar por nombre de empresa
+            empresa = None
+            
+            # Primero verificar si la empresa existe
+            usuario_existe = EmpresaRegistrada.objects.filter(nombre_empresa__iexact=nombre_empresa).exists()
+            
+            if not usuario_existe:
+                messages.error(request, 'No existe una empresa con ese nombre.')
+                return render(request, 'Empresas/login_empresa.html')
+            
+            # Buscar por nombre de empresa (case insensitive)
+            try:
+                empresa = EmpresaRegistrada.objects.get(nombre_empresa__iexact=nombre_empresa, password=password_hash)
+            except EmpresaRegistrada.DoesNotExist:
+                messages.error(request, 'Credenciales incorrectas. Verifique el nombre de la empresa y contraseña.')
+                return render(request, 'Empresas/login_empresa.html')
+            
+            if empresa:
+                if not empresa.is_active:
+                    messages.error(request, 'Su cuenta está inactiva. Contacte al administrador.')
+                    return render(request, 'Empresas/login_empresa.html')
+                
+                # Guardar sesión
+                request.session['empresa_id'] = empresa.id
+                request.session['empresa_username'] = empresa.username
+                request.session['empresa_nombre'] = empresa.nombre_empresa
+                empresa.last_login = timezone.now()
+                empresa.save()
+                
+                messages.success(request, f'¡Bienvenido {empresa.nombre_empresa}!')
+                return redirect('dashboardEmpresa')
+        except Exception as e:
+            messages.error(request, 'Error al iniciar sesión. Intente nuevamente.')
+    
+    return render(request, 'Empresas/login_empresa.html')
+
+# Vista para configurar 2FA después del registro
+def configurar_2fa_empresa_view(request):
+    """Vista para configurar la autenticación de dos factores después del registro"""
+    empresa_id = request.session.get('empresa_temp_id')
+    
+    if not empresa_id:
+        messages.error(request, 'Sesión inválida. Por favor, registre su empresa nuevamente.')
+        return redirect('registro_empresa')
+    
+    try:
+        empresa = EmpresaRegistrada.objects.get(id=empresa_id)
+    except EmpresaRegistrada.DoesNotExist:
+        messages.error(request, 'Empresa no encontrada.')
+        return redirect('registro_empresa')
+    
+    if request.method == 'POST':
+        accion = request.POST.get('accion')
+        
+        if accion == 'omitir':
+            # El usuario decide configurar 2FA más tarde
+            del request.session['empresa_temp_id']
+            messages.info(request, 'Puede configurar la autenticación de dos factores más tarde desde su perfil.')
+            return redirect('loginEmpresa_login')
+        
+        elif accion == 'configurar':
+            # Configurar 2FA
+            telefono_2fa = request.POST.get('telefono_2fa')
+            email_2fa = request.POST.get('email_2fa')
+            
+            if not telefono_2fa and not email_2fa:
+                messages.error(request, 'Debe proporcionar al menos un método de autenticación.')
+            else:
+                empresa.telefono_2fa = telefono_2fa
+                empresa.email_2fa = email_2fa
+                empresa.two_factor_enabled = True
+                empresa.save()
+                
+                del request.session['empresa_temp_id']
+                messages.success(request, '¡Autenticación de dos factores configurada exitosamente!')
+                return redirect('loginEmpresa_login')
+    
+    return render(request, 'Empresas/configurar_2fa.html', {'empresa': empresa})
+
 # Create your views here.
 
+@empresa_login_required
 def Dasboard_view(request):
     return render(request,'Empresas/dashboardEmpresa.html')
 
@@ -234,19 +365,15 @@ def eliminar_producto_view2(request, categoria, producto_id):
 def listid(request):
     return render(request,'Empresas/listid.html')
 
+@empresa_login_required
 def empresa_ideas_view(request):
     """
     Vista para que las empresas gestionen las ideas.
     """
-    # Verificar si hay una sesión activa de empresa
-    empresa = None
-    if 'usernameEmpresa' in request.session:
-        try:
-            empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
-        except UserEmpresa.DoesNotExist:
-            return redirect('loginEmpresa')
-    else:
-        messages.error(request, 'Debes iniciar sesión como empresa')
+    # Obtener empresa de la sesión
+    try:
+        empresa = EmpresaRegistrada.objects.get(id=request.session['empresa_id'])
+    except EmpresaRegistrada.DoesNotExist:
         return redirect('loginEmpresa')
 
     # Agrupar ideas por autor (usuario)
@@ -279,14 +406,11 @@ def empresa_ideas_view(request):
 def perfilUsuario_view(request):
     return render(request,'Empresas/listid.html')
 
+@empresa_login_required
 def ver_imagen_idea(request, idea_id):
     """
     Vista para que las empresas vean la imagen de una idea.
     """
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        messages.error(request, 'Debes iniciar sesión como empresa')
-        return redirect('loginEmpresa')
     
     idea = get_object_or_404(Idea, pk=idea_id)
     
@@ -296,14 +420,11 @@ def ver_imagen_idea(request, idea_id):
     
     return render(request, 'Empresas/ver_imagen_idea.html', context)
 
+@empresa_login_required
 def ver_modelo_3d_idea(request, idea_id):
     """
     Vista para que las empresas vean el modelo 3D de una idea.
     """
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        messages.error(request, 'Debes iniciar sesión como empresa')
-        return redirect('loginEmpresa')
     
     idea = get_object_or_404(Idea, pk=idea_id)
     
@@ -314,17 +435,13 @@ def ver_modelo_3d_idea(request, idea_id):
     return render(request, 'Empresas/ver_modelo_3d_idea.html', context)
 
 @ensure_csrf_cookie
+@empresa_login_required
 def usuarios_view(request):
     """
     Vista para gestión de usuarios (clientes y empresas)
     """
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        messages.error(request, 'Debes iniciar sesión como empresa')
-        return redirect('loginEmpresa')
-    
     users = UserClientes.objects.all()
-    empresas = UserEmpresa.objects.all()
+    empresas = EmpresaRegistrada.objects.all()
     context = {
         'users': users,
         'empresas': empresas,
@@ -347,7 +464,7 @@ def toggle_user_status(request, user_id, user_type, action):
         if user_type == 'cliente':
             user = UserClientes.objects.get(id=user_id)
         elif user_type == 'empresa':
-            user = UserEmpresa.objects.get(id=user_id)
+            user = EmpresaRegistrada.objects.get(id=user_id)
         else:
             return JsonResponse({'success': False, 'error': 'Tipo de usuario inválido'}, status=400)
             
@@ -365,17 +482,14 @@ def toggle_user_status(request, user_id, user_type, action):
             'status': 'Activo' if user.is_active else 'Inactivo',
             'action': 'disable' if user.is_active else 'enable'
         })
-    except (UserClientes.DoesNotExist, UserEmpresa.DoesNotExist):
+    except (UserClientes.DoesNotExist, EmpresaRegistrada.DoesNotExist):
         return JsonResponse({'success': False, 'error': 'Usuario no encontrado'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
+@empresa_login_required
 def gestion_pedidos_view(request):
     """Vista para gestión de pedidos por parte de la empresa"""
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        messages.error(request, 'Debes iniciar sesión como empresa')
-        return redirect('loginEmpresa')
     
     # Agrupar pedidos por cliente
     from django.db.models import Count
@@ -393,12 +507,9 @@ def gestion_pedidos_view(request):
     return render(request, 'Empresas/gestion_pedidos.html', context)
 
 
+@empresa_login_required
 def obtener_pedidos_cliente_view(request, cliente_id):
     """Vista para obtener los pedidos de un cliente específico"""
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
-    
     try:
         cliente = UserClientes.objects.get(id=cliente_id)
         pedidos = Pedido.objects.filter(cliente=cliente).select_related('pago').order_by('-fecha_creacion')
@@ -443,12 +554,9 @@ def obtener_pedidos_cliente_view(request, cliente_id):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 @require_POST
+@empresa_login_required
 def actualizar_estado_pedido_view(request, pedido_id):
     """Vista para actualizar el estado de un pedido"""
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
-    
     try:
         pedido = Pedido.objects.get(id=pedido_id)
         nuevo_estado = request.POST.get('estado')
@@ -483,12 +591,10 @@ def actualizar_estado_pedido_view(request, pedido_id):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
+@empresa_login_required
+@empresa_login_required
 def gestion_pagos_view(request):
     """Vista para gestión de pagos por parte de la empresa"""
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        messages.error(request, 'Debes iniciar sesión como empresa')
-        return redirect('loginEmpresa')
     
     # Agrupar pagos por cliente
     from django.db.models import Count
@@ -506,12 +612,9 @@ def gestion_pagos_view(request):
     return render(request, 'Empresas/gestion_pagos.html', context)
 
 
+@empresa_login_required
 def obtener_pagos_cliente_view(request, cliente_id):
     """Vista para obtener los pagos de un cliente específico"""
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
-    
     try:
         cliente = UserClientes.objects.get(id=cliente_id)
         pagos = Pago.objects.filter(cliente=cliente).order_by('-fecha_creacion')
@@ -551,13 +654,10 @@ def obtener_pagos_cliente_view(request, cliente_id):
 def confirmar_pago_view(request, pago_id):
     """Vista para confirmar un pago y crear pedido automáticamente"""
     # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
-    
+@empresa_login_required
+def confirmar_pago_view(request, pago_id):
+    """Vista para confirmar un pago y crear pedido automáticamente"""
     try:
-        from core.models import Pedido
-        from datetime import timedelta
-        
         pago = Pago.objects.get(id=pago_id)
         
         # Verificar que el pago no haya sido confirmado anteriormente
@@ -696,16 +796,13 @@ def confirmar_pago_view(request, pago_id):
 def rechazar_pago_view(request, pago_id):
     """Vista para rechazar un pago"""
     # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
-    
+@empresa_login_required
+def rechazar_pago_view(request, pago_id):
+    """Vista para rechazar un pago"""
     try:
         from core.models import MensajePago
         
-        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
-        pago = Pago.objects.get(id=pago_id)
-        pago.estado = 'rechazado'
-        
+        empresa = EmpresaRegistrada.objects.get(id=request.session['empresa_id'])
         # Obtener notas obligatorias al rechazar
         notas = request.POST.get('notas', '')
         if not notas:
@@ -718,7 +815,7 @@ def rechazar_pago_view(request, pago_id):
         MensajePago.objects.create(
             pago=pago,
             remitente_tipo='empresa',
-            remitente_nombre=empresa.usernameEmpresa,
+            remitente_nombre=empresa.username,
             mensaje=f"Pago rechazado. Motivo: {notas}",
             leido=False
         )
@@ -760,9 +857,9 @@ def update_user(request):
             user.usernameCliente = username
             user.email = email
         elif user_type == 'empresa':
-            user = UserEmpresa.objects.get(id=user_id)
+            user = EmpresaRegistrada.objects.get(id=user_id)
             # Verificar si el nombre de usuario ya existe
-            if UserEmpresa.objects.filter(usernameEmpresa=username).exclude(id=user_id).exists():
+            if EmpresaRegistrada.objects.filter(username=username).exclude(id=user_id).exists():
                 return JsonResponse({'success': False, 'error': 'El nombre de usuario ya está en uso'}, status=400)
             
             # Actualizar email de empresa también
@@ -770,7 +867,7 @@ def update_user(request):
             if email:
                 user.email = email
             
-            user.usernameEmpresa = username
+            user.username = username
         else:
             return JsonResponse({'success': False, 'error': 'Tipo de usuario inválido'}, status=400)
             
@@ -786,7 +883,7 @@ def update_user(request):
                 'is_active': user.is_active
             }
         })
-    except (UserClientes.DoesNotExist, UserEmpresa.DoesNotExist):
+    except (UserClientes.DoesNotExist, EmpresaRegistrada.DoesNotExist):
         return JsonResponse({'success': False, 'error': 'Usuario no encontrado'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
@@ -795,23 +892,19 @@ def update_user(request):
 # No debe estar duplicada aquí
 
 @require_POST
+@empresa_login_required
 def contactar_usuario_idea(request, idea_id):
     """Vista para que la empresa contacte al usuario sobre la idea"""
     from core.models import MensajeIdea
     
     print(f"=== CONTACTAR USUARIO IDEA ===")
     print(f"Idea ID: {idea_id}")
-    print(f"Session: {request.session.get('usernameEmpresa', 'No session')}")
+    print(f"Session empresa_id: {request.session.get('empresa_id')}")
     print(f"POST data: {request.POST}")
     
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        print("ERROR: No hay sesión de empresa")
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
-    
     try:
-        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
-        print(f"Empresa encontrada: {empresa.usernameEmpresa}")
+        empresa = EmpresaRegistrada.objects.get(id=request.session['empresa_id'])
+        print(f"Empresa encontrada: {empresa.username}")
         
         idea = Idea.objects.get(id=idea_id)
         print(f"Idea encontrada: {idea.titulo}")
@@ -832,7 +925,7 @@ def contactar_usuario_idea(request, idea_id):
         MensajeIdea.objects.create(
             idea=idea,
             remitente_tipo='empresa',
-            remitente_nombre=empresa.usernameEmpresa,
+            remitente_nombre=empresa.username,
             mensaje=mensaje,
             leido=False,
             es_solicitud_permiso=False
@@ -851,7 +944,7 @@ def contactar_usuario_idea(request, idea_id):
     except Idea.DoesNotExist:
         print("ERROR: Idea no encontrada")
         return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
-    except UserEmpresa.DoesNotExist:
+    except EmpresaRegistrada.DoesNotExist:
         print("ERROR: Empresa no encontrada")
         return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
     except Exception as e:
@@ -859,23 +952,19 @@ def contactar_usuario_idea(request, idea_id):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 @require_POST
+@empresa_login_required
 def solicitar_permiso_publicacion(request, idea_id):
     """Vista para que la empresa solicite permiso para publicar la idea"""
     from core.models import MensajeIdea
     
     print(f"=== SOLICITAR PERMISO PUBLICACIÓN ===")
     print(f"Idea ID: {idea_id}")
-    print(f"Session: {request.session.get('usernameEmpresa', 'No session')}")
+    print(f"Session empresa_id: {request.session.get('empresa_id')}")
     print(f"POST data: {request.POST}")
     
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        print("ERROR: No hay sesión de empresa")
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
-    
     try:
-        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
-        print(f"Empresa encontrada: {empresa.usernameEmpresa}")
+        empresa = EmpresaRegistrada.objects.get(id=request.session['empresa_id'])
+        print(f"Empresa encontrada: {empresa.username}")
         
         idea = Idea.objects.get(id=idea_id)
         print(f"Idea encontrada: {idea.titulo}, Estado: {idea.estado}")
@@ -900,7 +989,7 @@ def solicitar_permiso_publicacion(request, idea_id):
         MensajeIdea.objects.create(
             idea=idea,
             remitente_tipo='empresa',
-            remitente_nombre=empresa.usernameEmpresa,
+            remitente_nombre=empresa.username,
             mensaje=mensaje,
             leido=False,
             es_solicitud_permiso=True  # Marca especial para solicitudes de permiso
@@ -919,7 +1008,7 @@ def solicitar_permiso_publicacion(request, idea_id):
     except Idea.DoesNotExist:
         print("ERROR: Idea no encontrada")
         return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
-    except UserEmpresa.DoesNotExist:
+    except EmpresaRegistrada.DoesNotExist:
         print("ERROR: Empresa no encontrada")
         return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
     except Exception as e:
@@ -927,15 +1016,11 @@ def solicitar_permiso_publicacion(request, idea_id):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
+@empresa_login_required
 def publicar_idea_como_producto(request, idea_id):
     """Vista para publicar una idea como producto"""
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        messages.error(request, 'Debes iniciar sesión como empresa')
-        return redirect('loginEmpresa')
-    
     try:
-        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        empresa = EmpresaRegistrada.objects.get(id=request.session['empresa_id'])
         idea = Idea.objects.get(id=idea_id)
         
         # Verificar permisos
@@ -1033,7 +1118,7 @@ def publicar_idea_como_producto(request, idea_id):
     except Idea.DoesNotExist:
         messages.error(request, 'Idea no encontrada')
         return redirect('empresa_ideas')
-    except UserEmpresa.DoesNotExist:
+    except EmpresaRegistrada.DoesNotExist:
         messages.error(request, 'Empresa no encontrada')
         return redirect('loginEmpresa')
     except Exception as e:
@@ -1041,13 +1126,10 @@ def publicar_idea_como_producto(request, idea_id):
         return redirect('empresa_ideas')
 
 
+@empresa_login_required
 def obtener_mensajes_pago_view(request, pago_id):
     """Vista para obtener los mensajes de un pago"""
     from core.models import MensajePago
-    
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
     
     try:
         pago = Pago.objects.get(id=pago_id)
@@ -1077,16 +1159,13 @@ def obtener_mensajes_pago_view(request, pago_id):
 
 
 @require_POST
+@empresa_login_required
 def enviar_mensaje_pago_view(request, pago_id):
     """Vista para enviar un mensaje en el chat de un pago"""
     from core.models import MensajePago
     
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
-    
     try:
-        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        empresa = EmpresaRegistrada.objects.get(id=request.session['empresa_id'])
         pago = Pago.objects.get(id=pago_id)
         
         mensaje = request.POST.get('mensaje', '').strip()
@@ -1099,7 +1178,7 @@ def enviar_mensaje_pago_view(request, pago_id):
         nuevo_mensaje = MensajePago.objects.create(
             pago=pago,
             remitente_tipo='empresa',
-            remitente_nombre=empresa.usernameEmpresa,
+            remitente_nombre=empresa.username,
             mensaje=mensaje if mensaje else '[Imagen enviada]',
             imagen=imagen,
             leido=False
@@ -1112,18 +1191,15 @@ def enviar_mensaje_pago_view(request, pago_id):
         
     except Pago.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Pago no encontrado'}, status=404)
-    except UserEmpresa.DoesNotExist:
+    except EmpresaRegistrada.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
+@empresa_login_required
 def obtener_ideas_usuario_view(request, usuario_id):
     """Vista para obtener las ideas de un usuario específico"""
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
-    
     try:
         usuario = UserClientes.objects.get(id=usuario_id)
         ideas = Idea.objects.filter(autor=usuario.usernameCliente).order_by('-fecha_creacion')
@@ -1138,7 +1214,7 @@ def obtener_ideas_usuario_view(request, usuario_id):
                 'fecha_creacion': idea.fecha_creacion.strftime('%d/%m/%Y'),
                 'tiene_imagen': bool(idea.imagen),
                 'tiene_modelo_3d': bool(idea.modelo_3d),
-                'empresa_asignada': idea.empresa_asignada.usernameEmpresa if idea.empresa_asignada else None,
+                'empresa_asignada': idea.empresa_asignada.username if idea.empresa_asignada else None,
                 'permiso_publicacion': idea.permiso_publicacion,
                 'publicada_como_producto': idea.publicada_como_producto,
             })
@@ -1160,23 +1236,19 @@ def obtener_ideas_usuario_view(request, usuario_id):
 
 
 @require_POST
+@empresa_login_required
 def rechazar_idea_view(request, idea_id):
     """Vista para rechazar una idea y enviar mensaje al usuario"""
     from core.models import MensajeIdea
     
     print(f"=== RECHAZAR IDEA ===")
     print(f"Idea ID: {idea_id}")
-    print(f"Session: {request.session.get('usernameEmpresa', 'No session')}")
+    print(f"Session empresa_id: {request.session.get('empresa_id')}")
     print(f"POST data: {request.POST}")
     
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        print("ERROR: No hay sesión de empresa")
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
-    
     try:
-        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
-        print(f"Empresa encontrada: {empresa.usernameEmpresa}")
+        empresa = EmpresaRegistrada.objects.get(id=request.session['empresa_id'])
+        print(f"Empresa encontrada: {empresa.username}")
         
         idea = Idea.objects.get(id=idea_id)
         print(f"Idea encontrada: {idea.titulo}, Estado: {idea.estado}")
@@ -1202,7 +1274,7 @@ def rechazar_idea_view(request, idea_id):
         MensajeIdea.objects.create(
             idea=idea,
             remitente_tipo='empresa',
-            remitente_nombre=empresa.usernameEmpresa,
+            remitente_nombre=empresa.username,
             mensaje=f"Idea rechazada. Motivo: {motivo}",
             leido=False,
             es_solicitud_permiso=False
@@ -1218,7 +1290,7 @@ def rechazar_idea_view(request, idea_id):
     except Idea.DoesNotExist:
         print("ERROR: Idea no encontrada")
         return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
-    except UserEmpresa.DoesNotExist:
+    except EmpresaRegistrada.DoesNotExist:
         print("ERROR: Empresa no encontrada")
         return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
     except Exception as e:
@@ -1227,14 +1299,11 @@ def rechazar_idea_view(request, idea_id):
 
 
 @require_POST
+@empresa_login_required
 def aceptar_idea_view(request, idea_id):
     """Vista para aceptar una idea pendiente"""
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
-    
     try:
-        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        empresa = EmpresaRegistrada.objects.get(id=request.session['empresa_id'])
         idea = Idea.objects.get(id=idea_id)
         
         # Verificar que la idea esté pendiente
@@ -1253,21 +1322,18 @@ def aceptar_idea_view(request, idea_id):
         
     except Idea.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
-    except UserEmpresa.DoesNotExist:
+    except EmpresaRegistrada.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
 @require_POST
+@empresa_login_required
 def completar_idea_view(request, idea_id):
     """Vista para completar una idea en proceso"""
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
-    
     try:
-        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        empresa = EmpresaRegistrada.objects.get(id=request.session['empresa_id'])
         idea = Idea.objects.get(id=idea_id)
         
         # Verificar permisos
@@ -1288,21 +1354,18 @@ def completar_idea_view(request, idea_id):
         
     except Idea.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
-    except UserEmpresa.DoesNotExist:
+    except EmpresaRegistrada.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
 @require_POST
+@empresa_login_required
 def finalizar_idea_view(request, idea_id):
     """Vista para finalizar una idea completada"""
-    # Verificar si hay una sesión activa de empresa
-    if 'usernameEmpresa' not in request.session:
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=401)
-    
     try:
-        empresa = UserEmpresa.objects.get(usernameEmpresa=request.session['usernameEmpresa'])
+        empresa = EmpresaRegistrada.objects.get(id=request.session['empresa_id'])
         idea = Idea.objects.get(id=idea_id)
         
         # Verificar permisos
@@ -1323,7 +1386,7 @@ def finalizar_idea_view(request, idea_id):
         
     except Idea.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Idea no encontrada'}, status=404)
-    except UserEmpresa.DoesNotExist:
+    except EmpresaRegistrada.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Empresa no encontrada'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)

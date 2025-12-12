@@ -19,6 +19,7 @@ from django.urls import path,include,re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from core import views
+from Empresas import views as empresas_views
 
 urlpatterns = [
     path('',views.home,name='home'),
@@ -29,7 +30,8 @@ urlpatterns = [
     path('registro/',views.registro,name='registro'),
     path('verificar-codigo/',views.verificar_codigo,name='verificar_codigo'),
     path('login/',views.Login_view,name='login'),
-    path('loginEmpresa/',views.LoginEmpresa_view,name='loginEmpresa'),
+    path('loginEmpresa/',empresas_views.registro_empresa_view,name='loginEmpresa'),
+    path('loginEmpresa/login/',empresas_views.login_empresa_view,name='loginEmpresa_login'),
     path('logout/',views.Logout_view,name='logout'),
     path('home2/',views.Home2_view,name='home2'),
     path('home3/',views.Home3_view,name='home3'),

@@ -141,7 +141,56 @@ def contact(request):
             usuario = UserClientes.objects.get(usernameCliente=usernameCliente)
         except UserClientes.DoesNotExist:
             pass
-    return render(request, 'core/contact.html', {'usuario': usuario})
+    
+    mensaje_enviado = False
+    error_mensaje = None
+    
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre', '').strip()
+        email = request.POST.get('email', '').strip()
+        mensaje = request.POST.get('mensaje', '').strip()
+        
+        # Validar campos
+        if not nombre or not email or not mensaje:
+            error_mensaje = 'Por favor, completa todos los campos.'
+        else:
+            try:
+                from django.core.mail import send_mail
+                from django.conf import settings
+                
+                # Preparar el correo
+                asunto = f'Nuevo mensaje de contacto de {nombre}'
+                contenido = f"""
+Has recibido un nuevo mensaje desde el formulario de contacto:
+
+Nombre: {nombre}
+Email: {email}
+
+Mensaje:
+{mensaje}
+
+---
+Este mensaje fue enviado desde el formulario de contacto de Tu Idea Hecha Realidad.
+                """
+                
+                # Enviar correo a la empresa
+                send_mail(
+                    asunto,
+                    contenido,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [settings.EMAIL_HOST_USER],  # Correo de la empresa
+                    fail_silently=False,
+                )
+                
+                mensaje_enviado = True
+            except Exception as e:
+                error_mensaje = f'Error al enviar el mensaje: {str(e)}'
+    
+    return render(request, 'core/contact.html', {
+        'usuario': usuario,
+        'mensaje_enviado': mensaje_enviado,
+        'error_mensaje': error_mensaje
+    })
 
 def Login_view(request):
     if request.method == 'POST':

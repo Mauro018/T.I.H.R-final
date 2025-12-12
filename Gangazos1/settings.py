@@ -57,6 +57,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Configuración de sesiones - Cada usuario tiene su propia sesión
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Sesiones en base de datos
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_COOKIE_AGE = 86400  # 24 horas
+SESSION_SAVE_EVERY_REQUEST = True  # Actualizar sesión en cada request
+SESSION_COOKIE_HTTPONLY = True  # Seguridad: no accesible desde JavaScript
+SESSION_COOKIE_SECURE = False  # Cambiar a True en producción con HTTPS
+SESSION_COOKIE_SAMESITE = 'Lax'  # Protección CSRF
+
 ROOT_URLCONF = 'Gangazos1.urls'
 
 TEMPLATES = [

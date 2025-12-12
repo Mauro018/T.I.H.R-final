@@ -14,6 +14,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'Productos/css/styles1.css' %}">
     <link rel="stylesheet" href="{% static 'core/css/responsive.css' %}">
+    <script src="{% static 'core/javascript/sidebar-toggle.js' %}"></script>
 </head>
 <body>
 
@@ -135,18 +136,12 @@
             <div class="footer-section">
                 <h3 class="footer-title">🌐 Síguenos</h3>
                 <div class="footer-social">
-                    <div class="social-container">
-                        <a href="https://www.instagram.com/tu_idea_hecha_realidad?igsh=Y3ByM2lyZGcwNHVy" class="social-icon" aria-label="Instagram">
-                            <span>📷</span>
-                        </a>
-                        <div class="social-username">@Gangazos Thir</div>
-                    </div>
-                    <div class="social-container">
-                        <a href="https://www.facebook.com/share/1ACEVZbZHV/" class="social-icon" aria-label="Facebook">
-                            <span>📘</span>
-                        </a>
-                        <div class="social-username">/gangazoz_thir</div>
-                    </div>
+                    <a href="https://www.instagram.com/tu_idea_hecha_realidad?igsh=Y3ByM2lyZGcwNHVy" class="social-icon-img" aria-label="Instagram">
+                        <img src="{% static 'core/img/Instagram.webp' %}" alt="Instagram" class="social-logo" width="24" height="24">
+                    </a>
+                    <a href="https://www.facebook.com/share/1ACEVZbZHV/" class="social-icon-img" aria-label="Facebook">
+                        <img src="{% static 'core/img/Facebook.png' %}" alt="Facebook" class="social-logo" width="24" height="24">
+                    </a>
                 </div>
             </div>
         </div>

@@ -3,10 +3,25 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Gestiona tu perfil en Tu Idea Hecha Realidad. Actualiza tu información personal, configura tu seguridad y revisa tu historial de compras.">
+  <meta name="keywords" content="perfil usuario, mi cuenta, datos personales, configuración cuenta">
+  <meta name="author" content="Tu Idea Hecha Realidad">
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Mi Perfil - Tu Idea Hecha Realidad">
+  <meta property="og:description" content="Gestiona tu perfil y configuración de cuenta.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CO">
+  
   <title>Mi Perfil - TIHR</title>
   <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
   <link rel="stylesheet" href="{% static 'core/css/responsive.css' %}">
+  <script src="{% static 'core/javascript/sidebar-toggle.js' %}"></script>
 </head>
 <body>
 
@@ -161,18 +176,12 @@
         <div class="footer-section">
             <h3 class="footer-title">🌐 Síguenos</h3>
             <div class="footer-social">
-                <div class="social-container">
-                    <a href="https://www.instagram.com/tu_idea_hecha_realidad?igsh=Y3ByM2lyZGcwNHVy" class="social-icon" aria-label="Instagram">
-                        <span>📷</span>
+                <a href="https://www.instagram.com/tu_idea_hecha_realidad?igsh=Y3ByM2lyZGcwNHVy" class="social-icon-img" aria-label="Instagram">
+                        <img src="{% static 'core/img/Instagram.webp' %}" alt="Instagram" class="social-logo" width="40" height="40">
                     </a>
-                    <div class="social-username">@Gangazos Thir</div>
-                </div>
-                <div class="social-container">
-                    <a href="https://www.facebook.com/share/1ACEVZbZHV/" class="social-icon" aria-label="Facebook">
-                        <span>📘</span>
+                    <a href="https://www.facebook.com/share/1ACEVZbZHV/" class="social-icon-img" aria-label="Facebook">
+                        <img src="{% static 'core/img/Facebook.png' %}" alt="Facebook" class="social-logo" width="40" height="40">
                     </a>
-                    <div class="social-username">/gangazoz_thir</div>
-                </div>
             </div>
         </div>
     </div>
@@ -211,3 +220,4 @@
 {% include 'core/modal_notificaciones.html' %}
 </body>
 </html>
+
